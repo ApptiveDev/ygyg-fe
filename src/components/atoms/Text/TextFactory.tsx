@@ -29,6 +29,13 @@ export const TextBody = {
     },
     as: 'p',
   }),
+  XSmall: createTextComponent({
+    defaultSize: '10px',
+    responsiveSize: {
+      sm: '14px',
+    },
+    as: 'p',
+  }),
 }
 
 export const Heading = {

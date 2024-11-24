@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import SearchBar from '../SearchBar/SearchBar'
 import styles from './Header.module.scss'
 import logo from '@/assets/images/logo.svg'
+import { useEffect, useState } from 'react'
 
 export const Header = () => {
   const navigate = useNavigate()
