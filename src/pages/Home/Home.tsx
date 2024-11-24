@@ -1,3 +1,3 @@
 export const HomePage = () => {
-  return <div>dd</div>
+  return <div>홈 화면</div>
 }

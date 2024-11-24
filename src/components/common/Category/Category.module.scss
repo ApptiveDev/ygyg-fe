@@ -1,0 +1,23 @@
+.categoryWrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 48px;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.category {
+  width: 120px;
+  height: 120px;
+  border-radius: 24px;
+  border: none;
+  background-color: white;
+  color: var(--point-color);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+.category.selected {
+  background-color: var(--point-color);
+  color: white;
+}
