@@ -1,16 +1,17 @@
-import './App.css';
-import CategoryTabs from '../src/components/CategoryTabs/CategoryTabs';
+import '@/App.css'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { Routes } from './routes/routes'
 
+const queryClient = new QueryClient()
 
 function App() {
   return (
-    <div className = 'App'>
-      <header className = 'App-header'></header>
-      <main>
-        <CategoryTabs />
-      </main>
-    </div>
-  );
+    <QueryClientProvider client={queryClient}>
+      <div className="App">
+        <Routes />
+      </div>
+    </QueryClientProvider>
+  )
 }
 
 export default App;
