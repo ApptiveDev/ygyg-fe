@@ -3,6 +3,8 @@ export const colors = {
   sub1: '#ED8481',
   sub2: '#F9BE51',
   background: '#FEFBF8',
-  gray: '#ededed',
-  dark_gray: '#B0B0B0',
+  gray1: '#f4f4f4',
+  gray2: '#ededed',
+  gray3: '#B0B0B0',
+  placeholderGray: '#7c7c7c',
 }

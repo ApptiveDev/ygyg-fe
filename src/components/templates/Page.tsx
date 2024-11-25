@@ -29,7 +29,7 @@ const PageWrapper = styled.div`
   justify-content: center;
   align-items: start;
   height: 100%;
-  width: 100vw;
+  width: 100%;
   box-sizing: border-box;
 `
 

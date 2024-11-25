@@ -6,6 +6,7 @@ import Category from '@/components/common/Category/Category'
 import InputText from '@/components/atoms/InputText/InputText'
 import { useState, useEffect } from 'react'
 import Button from '@/components/common/Button/Button'
+import { TextArea } from '@/components/atoms/TextArea/TextArea'
 
 export const PostPage = () => {
   const [checked, setChecked] = useState(false)
@@ -83,6 +84,22 @@ export const PostPage = () => {
       })
     }
 
+  const handleTextAreaChange =
+    (field: string, setter: React.Dispatch<React.SetStateAction<string>>) =>
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      const value = e.target.value
+      setter(value)
+
+      // Update errors based on the new value
+      setErrors((prevErrors) => {
+        const newErrors = { ...prevErrors }
+        if (value.trim()) {
+          delete newErrors[field] // Remove error for this field if it's not empty
+        }
+        return newErrors
+      })
+    }
+
   const handleCategorySelect = (selectedCategory: string | null) => {
     setCategory(selectedCategory)
     setErrors((prevErrors) => {
@@ -101,7 +118,10 @@ export const PostPage = () => {
       <Heading.Medium className={styles.mainTitle}>양념장 소분 게시글 작성하기</Heading.Medium>
       <Container size="full-width" direction="column" style={{ gap: '36px', marginBottom: '46px' }}>
         <Container gap="7px">
-          <Heading.XSmall>소분하고자 하는 양념의 카테고리를 선택해주세요.</Heading.XSmall>
+          <Heading.XSmall>
+            소분하고자 하는 양념의 카테고리를 선택해주세요.{' '}
+            <span style={{ color: 'var(--point-color)' }}>*</span>
+          </Heading.XSmall>
           {errors.category && (
             <TextBody.XSmall style={{ color: 'red' }}>{errors.category}</TextBody.XSmall>
           )}
@@ -113,7 +133,9 @@ export const PostPage = () => {
         />
       </Container>
       <Container size="full-width" direction="column" style={{ gap: '16px', marginBottom: '46px' }}>
-        <Heading.XSmall>게시글 제목</Heading.XSmall>
+        <Heading.XSmall>
+          게시글 제목 <span style={{ color: 'var(--point-color)' }}>*</span>
+        </Heading.XSmall>
         <Container gap="7px" direction="column" style={{ width: '100%' }}>
           <InputText
             placeholder="제목을 입력해주세요."
@@ -128,7 +150,13 @@ export const PostPage = () => {
         </Container>
       </Container>
       <Container size="full-width" direction="column" style={{ gap: '16px', marginBottom: '46px' }}>
-        <Heading.XSmall>온라인 구매의 경우 제품 링크(선택)</Heading.XSmall>
+        <Heading.XSmall>
+          양념장 이미지 <span style={{ color: 'var(--point-color)' }}>*</span>
+        </Heading.XSmall>
+        <Container gap="7px" direction="column" style={{ width: '100%' }}></Container>
+      </Container>
+      <Container size="full-width" direction="column" style={{ gap: '16px', marginBottom: '46px' }}>
+        <Heading.XSmall>온라인 구매의 경우 제품 링크</Heading.XSmall>
         <InputText
           placeholder="링크를 입력해주세요."
           width="100%"
@@ -137,23 +165,31 @@ export const PostPage = () => {
         />
       </Container>
       <Container size="full-width" direction="column" style={{ gap: '16px', marginBottom: '46px' }}>
-        <Heading.XSmall>함께 구매하고자 하는 양념장의 가격(원 단위)</Heading.XSmall>
+        <Heading.XSmall>
+          함께 구매하고자 하는 양념장의 가격 <span style={{ color: 'var(--point-color)' }}>*</span>
+        </Heading.XSmall>
 
         <Container gap="7px" direction="column" style={{ width: '100%' }}>
-          <InputText
-            placeholder="양념장 총액을 입력해주세요."
-            width="100%"
-            value={price}
-            onChange={handleInputChange('price', setPrice)}
-            error={!!errors.price}
-          />
+          <Container align="center" gap={17} style={{ width: '30%' }}>
+            <InputText
+              placeholder="양념장 총액을 입력해주세요."
+              width="50%"
+              value={price}
+              onChange={handleInputChange('price', setPrice)}
+              error={!!errors.price}
+            />
+            <TextBody.Large style={{ fontWeight: '500' }}>원</TextBody.Large>
+          </Container>
+
           {errors.content && (
             <TextBody.XSmall style={{ color: 'red' }}>{errors.price}</TextBody.XSmall>
           )}
         </Container>
       </Container>
       <Container size="full-width" direction="column" style={{ gap: '16px', marginBottom: '46px' }}>
-        <Heading.XSmall>원하는 소분 인원</Heading.XSmall>
+        <Heading.XSmall>
+          원하는 소분 인원 <span style={{ color: 'var(--point-color)' }}>*</span>
+        </Heading.XSmall>
 
         <Container style={{ width: '100%', gap: '20px' }}>
           <Container gap="7px" direction="column" style={{ width: '100%' }}>
@@ -184,15 +220,18 @@ export const PostPage = () => {
       </Container>
       {/* <Heading.XSmall>소분을 원하는 날짜와 시간</Heading.XSmall> */}
       <Container size="full-width" direction="column" style={{ gap: '16px', marginBottom: '46px' }}>
-        <Heading.XSmall>게시글 내용(소분 상세 설명)</Heading.XSmall>
+        <Heading.XSmall>
+          게시글 내용 <span style={{ color: 'var(--point-color)' }}>*</span>
+        </Heading.XSmall>
 
         <Container gap="7px" direction="column" style={{ width: '100%' }}>
-          <InputText
-            placeholder="내용을 입력해주세요."
+          <TextArea
+            placeholder="자세한 소분 내용을 입력해주세요."
             width="100%"
             height="200px"
             value={content}
-            onChange={handleInputChange('content', setContent)}
+            customSize="large"
+            onChange={handleTextAreaChange('content', setContent)}
             error={!!errors.content}
           />
           {errors.content && (
@@ -201,7 +240,10 @@ export const PostPage = () => {
         </Container>
       </Container>
       <Container size="full-width" direction="column" style={{ gap: '16px', marginBottom: '46px' }}>
-        <Heading.XSmall>소분 희망 장소(아래 지도에서 선택해주세요.)</Heading.XSmall>
+        <Heading.XSmall>
+          소분 희망 장소(아래 지도에서 선택해주세요.){' '}
+          <span style={{ color: 'var(--point-color)' }}>*</span>
+        </Heading.XSmall>
         <Map />
         <TextBody.Medium style={{ fontWeight: '500' }}>상세 위치(선택)</TextBody.Medium>
         <InputText placeholder="내용을 입력해주세요" width="100%" />

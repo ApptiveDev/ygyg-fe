@@ -25,7 +25,7 @@ const themeStyles = {
     border: `2px solid ${colors.point}`,
   },
   gray: {
-    background: colors.dark_gray,
+    background: colors.gray3,
     color: 'white',
     border: 'none',
   },
