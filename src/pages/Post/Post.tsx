@@ -268,7 +268,8 @@ export const PostPage = () => {
             {checked ? <FaCheck style={{ color: 'white' }} /> : null}
           </div>
           <TextBody.Small style={{ fontWeight: '700' }}>
-            더 나은 야금야금 서비스를 위해 노쇼 방지에 동참해주세요.
+            더 나은 야금야금 서비스를 위해 노쇼 방지에 동참해주세요.{' '}
+            <span style={{ color: 'var(--point-color)' }}>*</span>
           </TextBody.Small>
         </Container>
         {errors.checked && (
