@@ -4,13 +4,13 @@ import styled from '@emotion/styled'
 import { Outlet } from 'react-router-dom'
 interface PageProps {
   // children?: ReactNode
-  hideHeader?: boolean
+  home?: boolean
 }
 
-function Page({ hideHeader = false }: PageProps) {
+function Page({ home = false }: PageProps) {
   return (
     <PageWrapper>
-      {hideHeader ? null : <Header />}
+      {home ? <Header isHome={true} /> : <Header />}
       <InnerWrapper>
         <Outlet />
       </InnerWrapper>
