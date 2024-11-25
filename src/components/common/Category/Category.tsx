@@ -5,13 +5,16 @@ import styles from './Category.module.scss'
 interface CategoryProps {
   icons?: string[]
   text?: string[]
+  onSelect?: (selected: string | null) => void // onSelect 타입 추가
 }
 
-function Category({ icons, text }: CategoryProps) {
+function Category({ icons, text, onSelect }: CategoryProps) {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
 
   const categoryClick = (label: string) => {
-    setSelectedCategory((prev) => (prev === label ? null : label)) // 선택/해제 토글
+    const newSelection = selectedCategory === label ? null : label
+    setSelectedCategory(newSelection)
+    onSelect?.(newSelection)
   }
 
   return (
