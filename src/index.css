@@ -1,13 +1,38 @@
 :root {
   background-color: var(--background-color);
+  font-family: Arial, Helvetica, sans-serif;
   font-weight: 400;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow: overlay;
+
   --point-color: #d6282c;
   --sub-color1: #ed8481;
   --sub-color2: #f9be51;
   --background-color: #fefbf8;
+  --gray-color1: #f4f4f4;
+  --gray-color2: #ededed;
+  --gray-color3: #b0b0b0;
+  --place-holder-gray: #7c7c7c;
+
+  ::placeholder {
+    color: #7c7c7c;
+  }
+
+  ::-webkit-scrollbar {
+    display: block;
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--place-holder-gray);
+  }
+
+  ::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-button {
+    display: none;
+  }
 }
