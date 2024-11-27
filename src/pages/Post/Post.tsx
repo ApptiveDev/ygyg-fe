@@ -1,26 +1,33 @@
 import { Heading, TextBody } from '@/components/atoms/Text/TextFactory'
 import styles from './Post.module.scss'
 import { FaCheck } from 'react-icons/fa6'
+import { PiUploadSimpleBold } from 'react-icons/pi'
 import Container from '@/components/atoms/Container/Container'
 import Category from '@/components/common/Category/Category'
 import InputText from '@/components/atoms/InputText/InputText'
 import { useState, useEffect } from 'react'
 import Button from '@/components/common/Button/Button'
 import { TextArea } from '@/components/atoms/TextArea/TextArea'
+import DropDown from '@/components/atoms/DropDown/DropDown'
 
 export const PostPage = () => {
+  const categories = ['액체류', '소스류', '가루류', '잼류', '기타']
+  const units = ['ml', 'L', 'g', 'kg']
+
   const [checked, setChecked] = useState(false)
   const [isDone, setIsDone] = useState(false)
 
-  // 필드 값 상태 추가
   const [category, setCategory] = useState<string | null>(null)
   const [title, setTitle] = useState<string>('')
   const [link, setLink] = useState<string>('')
   const [price, setPrice] = useState<string>('')
+  const [amount, setAmount] = useState<string>('')
   const [minPeople, setMinPeople] = useState<string>('')
   const [maxPeople, setMaxPeople] = useState<string>('')
   const [content, setContent] = useState<string>('')
   const [location, setLocation] = useState<string>('')
+
+  const [unit, setUnit] = useState<string>('단위')
 
   const [errors, setErrors] = useState<Record<string, string>>({})
 
@@ -60,8 +67,10 @@ export const PostPage = () => {
     if (!category) newErrors.category = '* 카테고리를 선택하세요'
     if (!title.trim()) newErrors.title = '* 제목을 입력하세요.'
     if (!price.trim()) newErrors.price = '* 가격을 입력하세요.'
-    if (!minPeople.trim()) newErrors.minPeople = '* 최소 인원을 입력하세요.'
-    if (!maxPeople.trim()) newErrors.maxPeople = '* 최대 인원을 입력하세요.'
+    if (!amount.trim()) newErrors.amount = '* 용량을 입력하세요.'
+    if (unit == '단위') newErrors.unit = '* 단위를 선택하세요.'
+    if (!minPeople.trim()) newErrors.minPeople = '* 최소 인원을 선택하세요.'
+    if (!maxPeople.trim()) newErrors.maxPeople = '* 최대 인원을 선택하세요.'
     if (!content.trim()) newErrors.content = '* 내용을 입력하세요.'
     if (!checked) newErrors.checked = '* 노쇼 방지 동참에 동의해주세요.'
 
@@ -74,11 +83,10 @@ export const PostPage = () => {
       const value = e.target.value
       setter(value)
 
-      // Update errors based on the new value
       setErrors((prevErrors) => {
         const newErrors = { ...prevErrors }
         if (value.trim()) {
-          delete newErrors[field] // Remove error for this field if it's not empty
+          delete newErrors[field]
         }
         return newErrors
       })
@@ -90,11 +98,10 @@ export const PostPage = () => {
       const value = e.target.value
       setter(value)
 
-      // Update errors based on the new value
       setErrors((prevErrors) => {
         const newErrors = { ...prevErrors }
         if (value.trim()) {
-          delete newErrors[field] // Remove error for this field if it's not empty
+          delete newErrors[field]
         }
         return newErrors
       })
@@ -105,6 +112,15 @@ export const PostPage = () => {
     setErrors((prevErrors) => {
       const newErrors = { ...prevErrors }
       delete newErrors.category
+      return newErrors
+    })
+  }
+
+  const handleDropDownSelect = (selectedValue: string) => {
+    setUnit(selectedValue)
+    setErrors((prevErrors) => {
+      const newErrors = { ...prevErrors }
+      delete newErrors.unit
       return newErrors
     })
   }
@@ -127,10 +143,7 @@ export const PostPage = () => {
           )}
         </Container>
 
-        <Category
-          text={['액체류', '소스류', '가루류', '잼류', '기타']}
-          onSelect={handleCategorySelect}
-        />
+        <Category text={categories} onSelect={handleCategorySelect} />
       </Container>
       <Container size="full-width" direction="column" style={{ gap: '16px', marginBottom: '46px' }}>
         <Heading.XSmall>
@@ -153,7 +166,9 @@ export const PostPage = () => {
         <Heading.XSmall>
           양념장 이미지 <span style={{ color: 'var(--point-color)' }}>*</span>
         </Heading.XSmall>
-        <Container gap="7px" direction="column" style={{ width: '100%' }}></Container>
+        <Container gap="7px" direction="column" style={{ width: '100%' }}>
+          <PiUploadSimpleBold style={{ color: 'var(--point-color)' }} />
+        </Container>
       </Container>
       <Container size="full-width" direction="column" style={{ gap: '16px', marginBottom: '46px' }}>
         <Heading.XSmall>온라인 구매의 경우 제품 링크</Heading.XSmall>
@@ -164,28 +179,73 @@ export const PostPage = () => {
           onChange={handleInputChange('link', setLink)}
         />
       </Container>
-      <Container size="full-width" direction="column" style={{ gap: '16px', marginBottom: '46px' }}>
-        <Heading.XSmall>
-          함께 구매하고자 하는 양념장의 가격 <span style={{ color: 'var(--point-color)' }}>*</span>
-        </Heading.XSmall>
+      <Container size="full-width" gap={16}>
+        <Container
+          size={{ width: '50%', height: '100%' }}
+          direction="column"
+          style={{ gap: '16px', marginBottom: '46px' }}
+        >
+          <Heading.XSmall>
+            함께 구매하고자 하는 양념장의 가격{' '}
+            <span style={{ color: 'var(--point-color)' }}>*</span>
+          </Heading.XSmall>
 
-        <Container gap="7px" direction="column" style={{ width: '100%' }}>
-          <Container align="center" gap={17} style={{ width: '30%' }}>
-            <InputText
-              placeholder="양념장 총액을 입력해주세요."
-              width="50%"
-              value={price}
-              onChange={handleInputChange('price', setPrice)}
-              error={!!errors.price}
-            />
-            <TextBody.Large style={{ fontWeight: '500' }}>원</TextBody.Large>
+          <Container gap="7px" direction="column" style={{ width: '100%' }}>
+            <Container align="center" gap={17} style={{ width: '90%' }}>
+              <InputText
+                placeholder="양념장 총액을 입력해주세요."
+                value={price}
+                onChange={handleInputChange('price', setPrice)}
+                error={!!errors.price}
+              />
+              <TextBody.Large style={{ fontWeight: '500' }}>원</TextBody.Large>
+            </Container>
+
+            {errors.content && (
+              <TextBody.XSmall style={{ color: 'red' }}>{errors.price}</TextBody.XSmall>
+            )}
           </Container>
+        </Container>
+        <Container
+          size={{ width: '50%', height: '100%' }}
+          direction="column"
+          style={{ gap: '16px', marginBottom: '46px' }}
+        >
+          <Heading.XSmall>
+            소분할 양념장 총 용량 <span style={{ color: 'var(--point-color)' }}>*</span>
+          </Heading.XSmall>
 
-          {errors.content && (
-            <TextBody.XSmall style={{ color: 'red' }}>{errors.price}</TextBody.XSmall>
-          )}
+          <Container gap="7px" direction="column" style={{ width: '100%' }}>
+            <Container align="center" gap={17} style={{ width: '100%' }}>
+              <InputText
+                placeholder="숫자만 입력해주세요."
+                value={amount}
+                onChange={handleInputChange('amount', setAmount)}
+                error={!!errors.amount}
+              />
+              <DropDown
+                placeholder={unit}
+                children={units}
+                width="120px"
+                setValue={handleDropDownSelect}
+              />
+            </Container>
+            <Container style={{ width: '100%' }}>
+              <div style={{ flexGrow: '1' }}>
+                {errors.content && (
+                  <TextBody.XSmall style={{ color: 'red' }}>{errors.amount}</TextBody.XSmall>
+                )}
+              </div>
+              <div style={{ width: '120px' }}>
+                {errors.content && (
+                  <TextBody.XSmall style={{ color: 'red' }}>{errors.unit}</TextBody.XSmall>
+                )}
+              </div>
+            </Container>
+          </Container>
         </Container>
       </Container>
+
       <Container size="full-width" direction="column" style={{ gap: '16px', marginBottom: '46px' }}>
         <Heading.XSmall>
           원하는 소분 인원 <span style={{ color: 'var(--point-color)' }}>*</span>
