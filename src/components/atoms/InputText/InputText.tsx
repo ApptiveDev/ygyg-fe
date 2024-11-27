@@ -9,18 +9,14 @@ interface InputTextProps {
   error?: boolean
 }
 
-function InputText({
-  height,
-  width,
-  value,
-  placeholder,
-  onChange,
-  error = false, // Default value is false
-}: InputTextProps) {
+function InputText({ height, width, value, placeholder, onChange, error = false }: InputTextProps) {
   return (
-    <div className={`${styles.Wrapper} ${error ? styles.error : ''}`} style={{ height, width }}>
+    <div
+      className={`${styles.Wrapper} ${error ? styles.error : ''}`}
+      style={{ height: height, width: width }}
+    >
       <input
-        className={styles.InputWrapper} // Apply error class if there's an error
+        className={styles.InputWrapper}
         placeholder={placeholder}
         value={value}
         onChange={onChange}

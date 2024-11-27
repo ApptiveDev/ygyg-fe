@@ -35,11 +35,11 @@ const PageWrapper = styled.div`
 
 const InnerWrapper = styled.div`
   margin-top: 120px;
-  padding: 0;
+  padding: 0 20px;
   display: flex;
   justify-content: center;
   align-items: start;
   height: 100%;
-  width: 1050px;
+  width: 1060px;
   box-sizing: border-box;
 `
