@@ -22,13 +22,14 @@
   }
 
   ::-webkit-scrollbar {
-    display: block;
+    display: inline;
     width: 6px;
     height: 6px;
   }
 
   ::-webkit-scrollbar-thumb {
     background: var(--place-holder-gray);
+    border-radius: 8px;
   }
 
   ::-webkit-scrollbar-track,

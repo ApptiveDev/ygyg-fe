@@ -1,4 +1,4 @@
-import { ReactNode, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import styles from './DropDown.module.scss'
 import useDetectClick from '@/hooks/useDetectClick'
 import { IoIosArrowDown } from 'react-icons/io'
@@ -25,22 +25,28 @@ function DropDown({ placeholder, children, width, setValue }: DropdownProps) {
     e.stopPropagation()
     setIsOpen((prev) => !prev)
   }
-  console.log(isOpen)
+
+  const isPlaceholder = value === placeholder
+
   return (
     <div>
-      <div className={styles.dropDownWrapper} style={{ width: width }} onClick={toggleDropdown}>
+      <div
+        className={styles.dropDownWrapper}
+        style={{ width: width, color: isPlaceholder ? 'var(--gray-color3)' : 'var(--black-color)' }}
+        onClick={toggleDropdown}
+      >
         {value}
-        <IoIosArrowDown />
+        <IoIosArrowDown style={{ color: 'var(--gray-color3)' }} />
       </div>
       <ul
         ref={dropDownRef}
         style={{ width: width }}
         className={`${styles.dropDownMenu} ${isOpen ? styles.active : ''}`}
       >
-        {children.map((value, index) => (
+        {children.map((child, index) => (
           <div key={index}>
-            <li onClick={() => handleUnitChange(value)} className={styles.menu}>
-              {value}
+            <li onClick={() => handleUnitChange(child)} className={styles.menu}>
+              {child}
             </li>
             {index < children.length - 1 && <hr className={styles.separator} />}
           </div>
