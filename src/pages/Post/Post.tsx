@@ -11,8 +11,8 @@ import Button from '@/components/common/Button/Button'
 import { TextArea } from '@/components/atoms/TextArea/TextArea'
 import DropDown from '@/components/atoms/DropDown/DropDown'
 import { Calendar } from '@/components/features/Calendar/Calendar'
-import Map from '@/components/features/Map/Map'
 import { CalendarIcon } from '@/components/features/CalendarIcon/CalendarIcon'
+import Map from '@/components/features/Map/Map'
 
 function NewPicture() {
   return (
