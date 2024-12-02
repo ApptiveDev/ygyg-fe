@@ -1,0 +1,88 @@
+.mapSection {
+  display: flex;
+  width: 100%;
+  height: 350px;
+  .mapWrap {
+    width: 100%;
+    height: 100%;
+  }
+  .map {
+    width: 100%;
+    height: 100%;
+  }
+
+  .menuDiv {
+    display: flex;
+    position: relative;
+    z-index: 2;
+    font-size: 12px;
+
+    .menuWrap {
+      position: relative;
+      width: 400px;
+      height: 600px;
+      border-radius: 20px;
+      overflow-y: scroll;
+      background: rgba(255, 255, 255, 0.7);
+      display: none;
+
+      &.open {
+        display: block;
+      }
+    }
+
+    .form {
+      display: flex;
+      justify-content: space-between;
+      padding: 0px 15px 10px 15px;
+
+      .keyword {
+        width: 100%;
+        border: none;
+        outline: none;
+      }
+
+      .submitBtn {
+        background-color: #ff6e30;
+        border: none;
+        outline: none;
+        cursor: pointer;
+      }
+    }
+
+    .placesList .item {
+      border-bottom: 1px solid #888;
+      overflow: hidden;
+      cursor: pointer;
+
+      h5 {
+        color: #ff6e30;
+      }
+    }
+
+    .pagination .on {
+      font-weight: bold;
+      color: #ff6e30;
+    }
+  }
+
+  .btnDiv {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .searchBtn {
+      width: 20px;
+      height: 70px;
+      background-color: #ffa230;
+      border: none;
+      outline: none;
+
+      .leftDisplayButton,
+      .rightDisplayButton {
+        color: #fff;
+        cursor: pointer;
+      }
+    }
+  }
+}

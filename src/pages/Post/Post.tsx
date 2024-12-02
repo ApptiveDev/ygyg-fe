@@ -14,6 +14,12 @@ import { Calendar } from '@/components/features/Calendar/Calendar'
 import Map from '@/components/features/Map/Map'
 import { CalendarIcon } from '@/components/features/CalendarIcon/CalendarIcon'
 
+function NewPicture() {
+  return (
+    <Container>이미지를 추가해주세요. (미추가 시 기본 일러스트로 게시글이 업로드됩니다.)</Container>
+  )
+}
+
 export const PostPage = () => {
   const categories = ['액체류', '소스류', '가루류', '잼류', '기타']
   const units = ['ml', 'L', 'g', 'kg']
@@ -191,6 +197,7 @@ export const PostPage = () => {
           양념장 이미지 <span style={{ color: 'var(--point-color)' }}>*</span>
         </Heading.XSmall>
         <Container gap="7px" direction="column" style={{ width: '100%' }}>
+          <NewPicture />
           <PiUploadSimpleBold style={{ color: 'var(--point-color)' }} />
         </Container>
       </Container>
@@ -404,8 +411,8 @@ export const PostPage = () => {
       </Container>
       <Container size="full-width" direction="column" style={{ gap: '23px', marginBottom: '46px' }}>
         <Heading.XSmall>
-          소분 희망 장소(아래 지도에서 선택해주세요.)
-          <span style={{ color: 'var(--point-color)' }}>*</span>
+          소분 희망 장소
+          <span style={{ color: 'var(--point-color)' }}> *</span>
         </Heading.XSmall>
         <Map />
         <TextBody.Medium style={{ fontWeight: '500' }}>상세 위치(선택)</TextBody.Medium>
