@@ -10,4 +10,63 @@
   text-align: center;
   gap: 20px;
   line-height: 1.4rem;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+}
+
+.uploadInput {
+  display: none;
+}
+
+.imagePreviewContainer {
+  height: 450px;
+  width: 450px;
+  position: relative;
+}
+
+.uploadPlaceholder {
+  display: flex;
+  justify-content: center;
+  align-items: end;
+  height: 450px;
+  width: 450px;
+  position: relative;
+  padding-bottom: 150px;
+}
+.uploadedImage {
+  height: 450px;
+  width: 450px;
+  overflow: hidden;
+  object-fit: cover;
+  object-position: center;
+}
+
+.icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* 중앙 정렬 */
+  display: flex;
+}
+.placeholderText {
+  position: absolute;
+  top: 62%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* 중앙 정렬 */
+  display: flex;
+  width: max-content;
+}
+.removeButton {
+  cursor: pointer;
+  font-size: 15px;
+  gap: 5px;
+  color: var(--point-color);
+  text-decoration: underline;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  background-color: transparent;
 }

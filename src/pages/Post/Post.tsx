@@ -5,7 +5,7 @@ import { PiUploadSimpleBold } from 'react-icons/pi'
 import Container from '@/components/atoms/Container/Container'
 import Category from '@/components/common/Category/Category'
 import InputText from '@/components/atoms/InputText/InputText'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, Dispatch, SetStateAction } from 'react'
 import Button from '@/components/common/Button/Button'
 import { TextArea } from '@/components/atoms/TextArea/TextArea'
 import DropDown from '@/components/atoms/DropDown/DropDown'
@@ -52,8 +52,8 @@ export const PostPage = () => {
       category &&
       title.trim() &&
       price.trim() &&
-      // minPeople.trim() &&
-      // maxPeople.trim() &&
+      minPeople.trim() &&
+      maxPeople.trim() &&
       content.trim() &&
       checked === true
     ) {
@@ -275,10 +275,32 @@ export const PostPage = () => {
       </Container>
 
       <Container size="full-width" direction="column" style={{ gap: '23px', marginBottom: '46px' }}>
-        <Heading.XSmall>
-          원하는 소분 인원 <span style={{ color: 'var(--point-color)' }}>*</span>
-        </Heading.XSmall>
-        <SetPeople price={price} amount={amount} unit={unit} />
+        <Container gap="7px">
+          <Heading.XSmall>
+            원하는 소분 인원 <span style={{ color: 'var(--point-color)' }}>*</span>
+          </Heading.XSmall>
+          {errors.minPeople && (
+            <TextBody.XSmall style={{ color: 'red', marginTop: '5px' }}>
+              {errors.minPeople}
+            </TextBody.XSmall>
+          )}
+          {errors.maxPeople && (
+            <TextBody.XSmall style={{ color: 'red', marginTop: '5px' }}>
+              {errors.maxPeople}
+            </TextBody.XSmall>
+          )}
+        </Container>
+        <SetPeople
+          price={price}
+          amount={amount}
+          unit={unit}
+          onChangeMinPeople={(selectedValue) =>
+            handleDropDownSelect(setMinPeople, selectedValue, 'minPeople')
+          }
+          onChangeMaxPeople={(selectedValue) =>
+            handleDropDownSelect(setMaxPeople, selectedValue, 'maxPeople')
+          }
+        />
       </Container>
       <Container size="full-width" direction="column" style={{ gap: '33px', marginBottom: '46px' }}>
         <Heading.XSmall>
@@ -440,70 +462,77 @@ interface setPeopleProps {
   price: string
   amount: string
   unit: string
+  onChangeMinPeople: (selectedValue: string) => void
+  onChangeMaxPeople: (selectedValue: string) => void
 }
 
-function SetPeople({ price, amount, unit }: setPeopleProps) {
-  const [minPeople, setMinPeople] = useState<number | null>(null)
-  const [maxPeople, setMaxPeople] = useState<number | null>(null)
+function SetPeople({ price, amount, unit, onChangeMinPeople, onChangeMaxPeople }: setPeopleProps) {
+  const [minPeopleLocal, setMinPeopleLocal] = useState<number | null>(null)
+  const [maxPeopleLocal, setMaxPeopleLocal] = useState<number | null>(null)
   const [isMinSet, setIsMinSet] = useState(false)
   const [isMaxSet, setIsMaxSet] = useState(false)
 
   const { calculatedAmount: minAmount, displayUnit: minUnit } = useSetAmount({
     amount,
     unit,
-    people: maxPeople,
+    people: maxPeopleLocal,
   })
 
   const { calculatedAmount: maxAmount, displayUnit: maxUnit } = useSetAmount({
     amount,
     unit,
-    people: minPeople,
+    people: minPeopleLocal,
   })
 
   const [minPrice, setMinPrice] = useState(0)
   const [maxPrice, setMaxPrice] = useState(0)
 
   useEffect(() => {
-    if (price && minPeople !== null && maxPeople !== null) {
+    if (price && minPeopleLocal !== null && maxPeopleLocal !== null) {
       const numericPrice = Number(price)
       if (!isNaN(numericPrice) && numericPrice > 0) {
-        setMinPrice(Math.floor(numericPrice / maxPeople))
-        setMaxPrice(Math.floor(numericPrice / minPeople))
+        setMinPrice(Math.floor(numericPrice / maxPeopleLocal))
+        setMaxPrice(Math.floor(numericPrice / minPeopleLocal))
       }
     }
-  }, [price, minPeople, maxPeople])
+  }, [price, minPeopleLocal, maxPeopleLocal])
+
+  useEffect(() => {
+    if (isMinSet) onChangeMinPeople(minPeopleLocal!.toString())
+    if (isMaxSet) onChangeMaxPeople(maxPeopleLocal!.toString())
+  }, [isMinSet, isMaxSet])
 
   const setMinMaxPeople = (num: number) => {
     if (num === 10) {
-      if (!isMinSet && isMaxSet && maxPeople === 10) {
-        setMaxPeople(null)
+      if (!isMinSet && isMaxSet && maxPeopleLocal === 10) {
+        setMaxPeopleLocal(null)
         setIsMaxSet(false)
-      } else if (isMinSet && isMaxSet && maxPeople === 10) {
+      } else if (isMinSet && isMaxSet && maxPeopleLocal === 10) {
       } else {
-        setMaxPeople(num)
+        setMaxPeopleLocal(num)
         setIsMaxSet(true)
       }
     } else {
       if (isMinSet) {
-        if (minPeople! < num) {
-          setMaxPeople(num)
+        if (minPeopleLocal! < num) {
+          setMaxPeopleLocal(num)
           setIsMaxSet(true)
-        } else if (minPeople === num) {
+        } else if (minPeopleLocal === num) {
           if (isMaxSet) {
-            setMinPeople(null)
+            setMinPeopleLocal(null)
             setIsMinSet(false)
-            setMaxPeople(null)
+            setMaxPeopleLocal(null)
             setIsMaxSet(false)
           } else {
-            setMinPeople(null)
+            setMinPeopleLocal(null)
             setIsMinSet(false)
           }
         } else {
-          setMinPeople(num)
+          setMinPeopleLocal(num)
           setIsMinSet(true)
         }
       } else {
-        setMinPeople(num)
+        setMinPeopleLocal(num)
         setIsMinSet(true)
       }
     }
@@ -533,10 +562,10 @@ function SetPeople({ price, amount, unit }: setPeopleProps) {
               key={value}
               className={`${styles.numberBlock} ${
                 isMaxSet && isMinSet
-                  ? value >= minPeople! && value <= maxPeople!
+                  ? value >= minPeopleLocal! && value <= maxPeopleLocal!
                     ? styles.isIn
                     : ''
-                  : value === minPeople || value === maxPeople
+                  : value === minPeopleLocal || value === maxPeopleLocal
                     ? styles.isIn
                     : ''
               }`}
@@ -551,13 +580,13 @@ function SetPeople({ price, amount, unit }: setPeopleProps) {
         <Container gap={16} direction="column" style={{ width: '100%' }}>
           <TextBody.Medium weight={500}>최소 인원(2명 이상)</TextBody.Medium>
           <div className={`${styles.peopleBox} ${isMinSet ? '' : styles.notSetted}`}>
-            {isMinSet ? minPeople : '숫자를 선택하면 최소 인원이 나타나요.'}
+            {isMinSet ? minPeopleLocal : '숫자를 선택하면 최소 인원이 나타나요.'}
           </div>
         </Container>
         <Container gap={16} direction="column" style={{ width: '100%' }}>
           <TextBody.Medium weight={500}>최대 인원(10명 이하)</TextBody.Medium>
           <div className={`${styles.peopleBox} ${isMaxSet ? '' : styles.notSetted}`}>
-            {isMaxSet ? maxPeople : '숫자를 선택하면 최대 인원이 나타나요.'}
+            {isMaxSet ? maxPeopleLocal : '숫자를 선택하면 최대 인원이 나타나요.'}
           </div>
         </Container>
       </Container>
