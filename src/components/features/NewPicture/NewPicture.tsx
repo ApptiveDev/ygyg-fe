@@ -3,7 +3,6 @@ import { TextBody } from '@/components/atoms/Text/TextFactory'
 import plusIcon from '@/assets/icons/plus_icon.svg'
 import styles from './NewPicture.module.scss'
 import Container from '@/components/atoms/Container/Container'
-import { FaRegTrashAlt } from 'react-icons/fa'
 
 function NewPicture() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
@@ -54,8 +53,7 @@ function NewPicture() {
       </label>
       {selectedImage ? (
         <button onClick={handleRemoveImage} className={styles.removeButton}>
-          <FaRegTrashAlt />
-          <div>이미지 삭제</div>
+          <div>이미지 삭제하기</div>
         </button>
       ) : null}
     </Container>
