@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import styles from './Map.module.scss'
 
 declare const window: typeof globalThis & {
@@ -6,6 +6,9 @@ declare const window: typeof globalThis & {
 }
 
 const Map = (props: any) => {
+  const markersRef = useRef<any[]>([]) // 마커 배열 관리
+  const mapRef = useRef<any>(null) // 지도 객체 관리
+
   useEffect(() => {
     const script = document.createElement('script')
     script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${import.meta.env.VITE_KAKAO_MAP_API_KEY}&libraries=services&autoload=false`
@@ -13,23 +16,14 @@ const Map = (props: any) => {
 
     script.onload = () => {
       window.kakao.maps.load(() => {
-        let markers: any[] = []
-
         const container = document.querySelector(`.${styles.map}`)
         const options = {
           center: new window.kakao.maps.LatLng(35.2314079, 129.0843855),
           level: 3,
         }
 
-        const map = new window.kakao.maps.Map(container, options)
-
-        const markerPosition = new window.kakao.maps.LatLng(35.2314079, 129.0843855)
-
-        const marker = new window.kakao.maps.Marker({
-          position: markerPosition,
-        })
-
-        marker.setMap(map)
+        // 지도 객체를 useRef에 저장
+        mapRef.current = new window.kakao.maps.Map(container, options)
 
         const ps = new window.kakao.maps.services.Places()
 
@@ -48,23 +42,21 @@ const Map = (props: any) => {
             alert('키워드를 입력해주세요!')
             return false
           }
-
           ps.keywordSearch(keyword, placesSearchCB)
         }
 
-        function placesSearchCB(data: any, status: any, pagination: any) {
+        const placesSearchCB = (data: any, status: any, pagination: any) => {
           if (status === window.kakao.maps.services.Status.OK) {
+            removeMarkers() // 기존 마커 제거
             displayPlaces(data)
 
-            displayPagination(pagination)
-
             const bounds = new window.kakao.maps.LatLngBounds()
-            for (let i = 0; i < data.length; i++) {
-              displayMarker(data[i])
-              bounds.extend(new window.kakao.maps.LatLng(data[i].y, data[i].x))
-            }
-
-            map.setBounds(bounds)
+            data.forEach((place: any) => {
+              const marker = displayMarker(place)
+              bounds.extend(new window.kakao.maps.LatLng(place.y, place.x))
+              markersRef.current.push(marker)
+            })
+            mapRef.current.setBounds(bounds)
           } else if (status === window.kakao.maps.services.Status.ZERO_RESULT) {
             alert('검색 결과가 존재하지 않습니다.')
           } else if (status === window.kakao.maps.services.Status.ERROR) {
@@ -74,79 +66,31 @@ const Map = (props: any) => {
 
         const displayMarker = (place: any) => {
           const marker = new window.kakao.maps.Marker({
-            map,
+            map: mapRef.current,
             position: new window.kakao.maps.LatLng(place.y, place.x),
           })
 
           window.kakao.maps.event.addListener(marker, 'click', () => {
             infowindow.setContent(`<div>${place.place_name}</div>`)
-            infowindow.open(map, marker)
+            infowindow.open(mapRef.current, marker)
             const moveLatLon = new window.kakao.maps.LatLng(place.y, place.x)
-            map.panTo(moveLatLon)
+            mapRef.current.panTo(moveLatLon)
           })
+
+          return marker
         }
 
         const displayPlaces = (places: any) => {
           const listEl = document.querySelector(`.${styles.placesList}`)
-          const menuEl = document.querySelector(`.${styles.menuWrap}`)
           const fragment = document.createDocumentFragment()
-          // const bounds = new window.kakao.maps.LatLngBounds();
           removeAllChildNodes(listEl)
-          removeMarker()
-          for (let i = 0; i < places.length; i++) {
-            const placePosition = new window.kakao.maps.LatLng(places[i].y, places[i].x)
-            const marker = addMarker(placePosition, i)
-            const itemEl = getListItem(i, places[i])
-            // bounds.extend(placePosition);
-            ;(function (marker, title) {
-              window.kakao.maps.event.addListener(marker, 'mouseover', function () {
-                displayInfowindow(marker, title)
-              })
 
-              window.kakao.maps.event.addListener(marker, 'mouseout', function () {
-                infowindow.close()
-              })
-
-              itemEl.addEventListener('click', function (e) {
-                displayInfowindow(marker, title)
-                props.setAddress(places[i])
-                map.panTo(placePosition)
-              })
-            })(marker, places[i].place_name)
-
-            fragment.appendChild(itemEl)
-          }
           places.forEach((place: any, index: number) => {
             const itemEl = getListItem(index, place)
-            listEl?.appendChild(itemEl)
+            fragment.appendChild(itemEl)
           })
-        }
 
-        const displayPagination = (pagination: any) => {
-          const paginationEl = document.querySelector(`.${styles.pagination}`)
-          const fragment = document.createDocumentFragment()
-          while (paginationEl?.hasChildNodes()) {
-            paginationEl.removeChild(paginationEl.lastChild!)
-          }
-
-          for (let i = 1; i <= pagination.last; i++) {
-            const el = document.createElement('a')
-            el.href = '#'
-            el.innerHTML = String(i)
-
-            if (i === pagination.current) {
-              el.className = 'on'
-            } else {
-              el.onclick = (function (i) {
-                return function () {
-                  pagination.gotoPage(i)
-                }
-              })(i)
-            }
-
-            fragment.appendChild(el)
-          }
-          paginationEl?.appendChild(fragment)
+          listEl?.appendChild(fragment)
         }
 
         const getListItem = (index: number, places: any) => {
@@ -180,55 +124,17 @@ const Map = (props: any) => {
 
           return el
         }
+
         const removeAllChildNodes = (el: any) => {
           while (el?.firstChild) {
             el.removeChild(el.firstChild)
           }
         }
 
-        function addMarker(position: any, idx: any) {
-          const imageSrc =
-            'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png'
-          const imageSize = new window.kakao.maps.Size(36, 37)
-          const imgOptions = {
-            spriteSize: new window.kakao.maps.Size(36, 691),
-            spriteOrigin: new window.kakao.maps.Point(0, idx * 46 + 10),
-            offset: new window.kakao.maps.Point(13, 37),
-          }
-
-          const markerImage = new window.kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions)
-
-          const marker = new window.kakao.maps.Marker({
-            position,
-            image: markerImage,
-          })
-
-          marker.setMap(map)
-          markers.push(marker)
-
-          return marker
+        const removeMarkers = () => {
+          markersRef.current.forEach((marker) => marker.setMap(null))
+          markersRef.current = [] // 배열 초기화
         }
-
-        function removeMarker() {
-          for (let i = 0; i < markers.length; i++) {
-            markers[i].setMap(null)
-          }
-          markers = []
-        }
-
-        function displayInfowindow(marker: any, title: any) {
-          const content = '<div style={{padding:"5px", zIndex:"1"}}>' + title + '</div>'
-
-          infowindow.setContent(content)
-          infowindow.open(map, marker)
-        }
-
-        document.querySelector(`.${styles.submitBtn}`)?.addEventListener('click', (e) => {
-          e.preventDefault()
-          // removeAllChildNodes
-          removeMarker()
-          searchPlaces()
-        })
       })
     }
   }, [])
