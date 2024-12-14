@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import styles from './Map.module.scss'
 import InputText from '@/components/atoms/InputText/InputText'
+import SearchBar from '@/components/common/SearchBar/SearchBar'
+import Container from '@/components/atoms/Container/Container'
 
 declare const window: typeof globalThis & {
   kakao: any
@@ -10,6 +12,9 @@ const Map = (props: any) => {
   const markersRef = useRef<any[]>([])
   const mapRef = useRef<any>(null)
   const [keyword, setKeyword] = useState('')
+  const [selectedPlace, setSelectedPlace] = useState('')
+  const [places, setPlaces] = useState<any[]>([])
+  const [isOpen, setIsOpen] = useState(false)
 
   useEffect(() => {
     const script = document.createElement('script')
@@ -46,8 +51,8 @@ const Map = (props: any) => {
     ps.keywordSearch(keyword, (data: any, status: any, pagination: any) => {
       if (status === window.kakao.maps.services.Status.OK) {
         removeMarkers()
-        displayPlaces(data)
-
+        setPlaces(data)
+        setIsOpen(true)
         const bounds = new window.kakao.maps.LatLngBounds()
         data.forEach((place: any) => {
           const marker = displayMarker(place, infowindow)
@@ -79,57 +84,6 @@ const Map = (props: any) => {
     return marker
   }
 
-  const displayPlaces = (places: any) => {
-    const listEl = document.querySelector(`.${styles.placesList}`)
-    const fragment = document.createDocumentFragment()
-    removeAllChildNodes(listEl)
-
-    places.forEach((place: any, index: number) => {
-      const itemEl = getListItem(index, place)
-      fragment.appendChild(itemEl)
-    })
-
-    listEl?.appendChild(fragment)
-  }
-
-  const getListItem = (index: number, places: any) => {
-    const el = document.createElement('li')
-
-    let itemStr =
-      '<span class="markerbg marker_' +
-      (index + 1) +
-      '"></span>' +
-      '<div class="info">' +
-      '   <h5>' +
-      places.place_name +
-      '</h5>'
-
-    if (places.road_address_name) {
-      itemStr +=
-        '    <span>' +
-        places.road_address_name +
-        '</span>' +
-        '   <span class="jibun gray">' +
-        `<img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png">
-        </img>` +
-        places.address_name +
-        '</span>'
-    } else {
-      itemStr += '    <span>' + places.address_name + '</span>'
-    }
-
-    el.innerHTML = itemStr
-    el.className = 'item'
-
-    return el
-  }
-
-  const removeAllChildNodes = (el: any) => {
-    while (el?.firstChild) {
-      el.removeChild(el.firstChild)
-    }
-  }
-
   const removeMarkers = () => {
     markersRef.current.forEach((marker) => marker.setMap(null))
     markersRef.current = []
@@ -139,28 +93,62 @@ const Map = (props: any) => {
     setKeyword(e.target.value)
   }
 
+  const onPlaceClick = (place: any) => {
+    // setIsOpen(false)
+    setSelectedPlace(place.place_name)
+    const moveLatLon = new window.kakao.maps.LatLng(place.y, place.x)
+    mapRef.current.panTo(moveLatLon)
+  }
+
   return (
-    <div className={styles.mapSection}>
-      <div className={styles.mapWrap}>
-        <div className={styles.map}></div>
-        <div className={styles.menuDiv}>
-          <div className={styles.menuWrap}>
-            <div className={styles.form}>
-              <InputText
-                placeholder="장소를 검색해주세요."
-                value={keyword}
-                width="100%"
-                onChange={handleInputChange}
-              />
-              <button className={styles.submitBtn} onClick={searchPlaces}>
-                검색
-              </button>
-            </div>
-            <ul className={styles.placesList}></ul>
-          </div>
+    <Container direction="column" gap={14} style={{ width: '100%' }}>
+      <div className={styles.mapSection}>
+        <div className={styles.mapWrap}>
+          <div className={styles.map} />
         </div>
       </div>
-    </div>
+      <Container gap={14} justify="space-between" style={{ width: '100%' }}>
+        <Container direction="column">
+          <SearchBar
+            placeholder="장소를 검색해주세요"
+            value={keyword}
+            radius={8}
+            width="200px"
+            isOpen={isOpen} // 현재 열림 상태
+            onChange={handleInputChange}
+            onSubmit={searchPlaces}
+            onToggle={() => setIsOpen((prev) => !prev)} // 화살표 버튼 클릭 이벤트
+          />
+          {isOpen ? (
+            <div className={styles.menuDiv}>
+              <div className={styles.menuWrap}>
+                <ul className={`${styles.placesList} ${isOpen ? styles.active : ''}`}>
+                  {places.map((place, index) => (
+                    <div>
+                      <li
+                        key={index}
+                        className={`${styles.listItem} ${
+                          place.place_name === selectedPlace ? styles.selected : ''
+                        }`}
+                        onClick={() => onPlaceClick(place)}
+                      >
+                        <h5 className={styles.placeName}>{place.place_name}</h5>
+                        <p className={styles.address}>
+                          {place.road_address_name || place.address_name}
+                        </p>
+                      </li>
+                      {index < places.length - 1 && <hr className={styles.separator} />}
+                    </div>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ) : null}
+        </Container>
+
+        <InputText placeholder="장소를 선택해주세요" value={selectedPlace} />
+      </Container>
+    </Container>
   )
 }
 

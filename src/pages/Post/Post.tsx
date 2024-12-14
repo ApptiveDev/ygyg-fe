@@ -415,8 +415,8 @@ export const PostPage = () => {
           <span style={{ color: 'var(--point-color)' }}> *</span>
         </Heading.XSmall>
         <Map />
-        <TextBody.Medium style={{ fontWeight: '500' }}>상세 위치(선택)</TextBody.Medium>
-        <InputText placeholder="내용을 입력해주세요" width="100%" />
+        {/* <TextBody.Medium style={{ fontWeight: '500' }}>(선택) 상세 위치</TextBody.Medium> */}
+        {/* <InputText placeholder="상세한 위치를 입력해주세요" width="100%" /> */}
       </Container>
       <Container
         gap="7px"
