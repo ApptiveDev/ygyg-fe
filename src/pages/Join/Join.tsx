@@ -70,6 +70,20 @@ export const JoinPage = () => {
     }
   }, [name, email, authorized, id, password, rePassword, nickname, selectedRoute, checked])
 
+  useEffect(() => {
+    if (rePassword.trim() && password !== rePassword) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        rePassword: '* 비밀번호가 일치하지 않습니다.',
+      }))
+    } else {
+      setErrors((prevErrors) => {
+        const { rePassword, ...rest } = prevErrors
+        return rest
+      })
+    }
+  }, [password, rePassword])
+
   const notDone = () => {
     const newErrors: Record<string, string> = {}
 
@@ -78,7 +92,7 @@ export const JoinPage = () => {
     if (!authorized) newErrors.authorized = '* 인증번호를 입력하고 인증해주세요.'
     if (!id.trim()) newErrors.id = '* 아이디를 입력하세요.'
     if (!password.trim()) newErrors.password = '* 비밀번호를 입력하세요.'
-    if (!rePassword.trim()) newErrors.rePassword = '* 비밀번호를 한번 더 입력하세요.'
+    if (!rePassword.trim()) newErrors.rePassword = '* 비밀번호가 일치하지 않습니다.'
     if (!nickname.trim()) newErrors.nickname = '* 닉네임을 입력하세요.'
     if (!selectedRoute.trim()) newErrors.selectedRoute = '* 가입 경로를 선택하세요.'
     if (!checked) newErrors.checked = '* 이용약관 및 개인정보처리방침에 동의해주세요.'
