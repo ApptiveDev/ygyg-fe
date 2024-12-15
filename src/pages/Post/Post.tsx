@@ -1,24 +1,18 @@
-import { Heading, TextBody } from '@/components/atoms/Text/TextFactory'
+import { Heading, Paragraph, TextBody } from '@/components/atoms/Text/TextFactory'
 import styles from './Post.module.scss'
 import { FaCheck } from 'react-icons/fa6'
 import { PiUploadSimpleBold } from 'react-icons/pi'
 import Container from '@/components/atoms/Container/Container'
 import Category from '@/components/common/Category/Category'
 import InputText from '@/components/atoms/InputText/InputText'
-import { useState, useEffect, useRef } from 'react'
-import { MdOutlineCalendarToday } from 'react-icons/md'
+import { useState, useEffect, useRef, Dispatch, SetStateAction } from 'react'
 import Button from '@/components/common/Button/Button'
 import { TextArea } from '@/components/atoms/TextArea/TextArea'
 import DropDown from '@/components/atoms/DropDown/DropDown'
-import { Calendar } from '@/components/features/Calendar/Calendar'
-import Map from '@/components/features/Map/Map'
 import { CalendarIcon } from '@/components/features/CalendarIcon/CalendarIcon'
-
-function NewPicture() {
-  return (
-    <Container>이미지를 추가해주세요. (미추가 시 기본 일러스트로 게시글이 업로드됩니다.)</Container>
-  )
-}
+import Map from '@/components/features/Map/Map'
+import NewPicture from '../../components/features/NewPicture/NewPicture'
+import useSetAmount from '@/hooks/useSetAmount'
 
 export const PostPage = () => {
   const categories = ['액체류', '소스류', '가루류', '잼류', '기타']
@@ -195,12 +189,15 @@ export const PostPage = () => {
         </Container>
       </Container>
       <Container size="full-width" direction="column" style={{ gap: '23px', marginBottom: '46px' }}>
-        <Heading.XSmall>
-          양념장 이미지 <span style={{ color: 'var(--point-color)' }}>*</span>
-        </Heading.XSmall>
-        <Container gap="7px" direction="column" style={{ width: '100%' }}>
+        <Heading.XSmall>양념장 이미지</Heading.XSmall>
+        <Container
+          gap="7px"
+          direction="column"
+          justify="center"
+          align="center"
+          style={{ width: '100%' }}
+        >
           <NewPicture />
-          <PiUploadSimpleBold style={{ color: 'var(--point-color)' }} />
         </Container>
       </Container>
       <Container size="full-width" direction="column" style={{ gap: '23px', marginBottom: '46px' }}>
@@ -280,36 +277,32 @@ export const PostPage = () => {
       </Container>
 
       <Container size="full-width" direction="column" style={{ gap: '23px', marginBottom: '46px' }}>
-        <Heading.XSmall>
-          원하는 소분 인원 <span style={{ color: 'var(--point-color)' }}>*</span>
-        </Heading.XSmall>
-
-        <Container style={{ width: '100%', gap: '20px' }}>
-          <Container gap="7px" direction="column" style={{ width: '100%' }}>
-            <InputText
-              placeholder="숫자를 선택하면 최소 인원이 나타나요."
-              width="100%"
-              value={minPeople}
-              onChange={handleInputChange('minPeople', setMinPeople)}
-              error={!!errors.minPeople}
-            />
-            {errors.minPeople && (
-              <TextBody.XSmall style={{ color: 'red' }}>{errors.minPeople}</TextBody.XSmall>
-            )}
-          </Container>
-          <Container gap="7px" direction="column" style={{ width: '100%' }}>
-            <InputText
-              placeholder="숫자를 선택하면 최대 인원이 나타나요."
-              width="100%"
-              value={maxPeople}
-              onChange={handleInputChange('maxPeople', setMaxPeople)}
-              error={!!errors.maxPeople}
-            />
-            {errors.maxPeople && (
-              <TextBody.XSmall style={{ color: 'red' }}>{errors.maxPeople}</TextBody.XSmall>
-            )}
-          </Container>
+        <Container gap="7px">
+          <Heading.XSmall>
+            원하는 소분 인원 <span style={{ color: 'var(--point-color)' }}>*</span>
+          </Heading.XSmall>
+          {errors.minPeople && (
+            <TextBody.XSmall style={{ color: 'red', marginTop: '5px' }}>
+              {errors.minPeople}
+            </TextBody.XSmall>
+          )}
+          {errors.maxPeople && (
+            <TextBody.XSmall style={{ color: 'red', marginTop: '5px' }}>
+              {errors.maxPeople}
+            </TextBody.XSmall>
+          )}
         </Container>
+        <SetPeople
+          price={price}
+          amount={amount}
+          unit={unit}
+          onChangeMinPeople={(selectedValue) =>
+            handleDropDownSelect(setMinPeople, selectedValue, 'minPeople')
+          }
+          onChangeMaxPeople={(selectedValue) =>
+            handleDropDownSelect(setMaxPeople, selectedValue, 'maxPeople')
+          }
+        />
       </Container>
       <Container size="full-width" direction="column" style={{ gap: '33px', marginBottom: '46px' }}>
         <Heading.XSmall>
@@ -341,7 +334,7 @@ export const PostPage = () => {
               <TextBody.XSmall style={{ color: 'red' }}>{errors.selectedDate}</TextBody.XSmall>
             )}
           </Container>
-          <Container gap="13px" direction="row" justify="center" align="center">
+          <Container gap="13px" direction="row" justify="center" align="flex-start">
             <Container direction="column" gap={10}>
               <DropDown
                 placeholder={'오전/오후'}
@@ -467,6 +460,186 @@ export const PostPage = () => {
         >
           소분 게시물 등록하기
         </Button>
+      </Container>
+    </Container>
+  )
+}
+
+interface setPeopleProps {
+  price: string
+  amount: string
+  unit: string
+  onChangeMinPeople: (selectedValue: string) => void
+  onChangeMaxPeople: (selectedValue: string) => void
+}
+
+function SetPeople({ price, amount, unit, onChangeMinPeople, onChangeMaxPeople }: setPeopleProps) {
+  const [minPeopleLocal, setMinPeopleLocal] = useState<number | null>(null)
+  const [maxPeopleLocal, setMaxPeopleLocal] = useState<number | null>(null)
+  const [isMinSet, setIsMinSet] = useState(false)
+  const [isMaxSet, setIsMaxSet] = useState(false)
+
+  const { calculatedAmount: minAmount, displayUnit: minUnit } = useSetAmount({
+    amount,
+    unit,
+    people: maxPeopleLocal,
+  })
+
+  const { calculatedAmount: maxAmount, displayUnit: maxUnit } = useSetAmount({
+    amount,
+    unit,
+    people: minPeopleLocal,
+  })
+
+  const [minPrice, setMinPrice] = useState(0)
+  const [maxPrice, setMaxPrice] = useState(0)
+
+  useEffect(() => {
+    if (price && minPeopleLocal !== null && maxPeopleLocal !== null) {
+      const numericPrice = Number(price)
+      if (!isNaN(numericPrice) && numericPrice > 0) {
+        setMinPrice(Math.floor(numericPrice / maxPeopleLocal))
+        setMaxPrice(Math.floor(numericPrice / minPeopleLocal))
+      }
+    }
+  }, [price, minPeopleLocal, maxPeopleLocal])
+
+  useEffect(() => {
+    if (isMinSet) onChangeMinPeople(minPeopleLocal!.toString())
+    if (isMaxSet) onChangeMaxPeople(maxPeopleLocal!.toString())
+  }, [isMinSet, isMaxSet])
+
+  const setMinMaxPeople = (num: number) => {
+    if (num === 10) {
+      if (!isMinSet && isMaxSet && maxPeopleLocal === 10) {
+        setMaxPeopleLocal(null)
+        setIsMaxSet(false)
+      } else if (isMinSet && isMaxSet && maxPeopleLocal === 10) {
+      } else {
+        setMaxPeopleLocal(num)
+        setIsMaxSet(true)
+      }
+    } else {
+      if (isMinSet) {
+        if (minPeopleLocal! < num) {
+          setMaxPeopleLocal(num)
+          setIsMaxSet(true)
+        } else if (minPeopleLocal === num) {
+          if (isMaxSet) {
+            setMinPeopleLocal(null)
+            setIsMinSet(false)
+            setMaxPeopleLocal(null)
+            setIsMaxSet(false)
+          } else {
+            setMinPeopleLocal(null)
+            setIsMinSet(false)
+          }
+        } else {
+          setMinPeopleLocal(num)
+          setIsMinSet(true)
+        }
+      } else {
+        setMinPeopleLocal(num)
+        setIsMinSet(true)
+      }
+    }
+  }
+
+  return (
+    <Container
+      direction="column"
+      justify="center"
+      align="center"
+      gap={23}
+      style={{ width: '100%' }}
+    >
+      <Container
+        direction="column"
+        justify="center"
+        align="center"
+        gap={16}
+        style={{ width: '100%', margin: '16px 0' }}
+      >
+        <TextBody.Medium weight={500}>
+          최소인원(2명 이상) 클릭 후, 최대 인원(10명 이하)을 선택해 주세요.
+        </TextBody.Medium>
+        <Container gap={16}>
+          {[2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => (
+            <div
+              key={value}
+              className={`${styles.numberBlock} ${
+                isMaxSet && isMinSet
+                  ? value >= minPeopleLocal! && value <= maxPeopleLocal!
+                    ? styles.isIn
+                    : ''
+                  : value === minPeopleLocal || value === maxPeopleLocal
+                    ? styles.isIn
+                    : ''
+              }`}
+              onClick={() => setMinMaxPeople(value)}
+            >
+              <TextBody.Small weight={700}>{value}</TextBody.Small>
+            </div>
+          ))}
+        </Container>
+      </Container>
+      <Container style={{ width: '100%', gap: '20px' }}>
+        <Container gap={16} direction="column" style={{ width: '100%' }}>
+          <TextBody.Medium weight={500}>최소 인원(2명 이상)</TextBody.Medium>
+          <div className={`${styles.peopleBox} ${isMinSet ? '' : styles.notSetted}`}>
+            {isMinSet ? minPeopleLocal : '숫자를 선택하면 최소 인원이 나타나요.'}
+          </div>
+        </Container>
+        <Container gap={16} direction="column" style={{ width: '100%' }}>
+          <TextBody.Medium weight={500}>최대 인원(10명 이하)</TextBody.Medium>
+          <div className={`${styles.peopleBox} ${isMaxSet ? '' : styles.notSetted}`}>
+            {isMaxSet ? maxPeopleLocal : '숫자를 선택하면 최대 인원이 나타나요.'}
+          </div>
+        </Container>
+      </Container>
+      <Container style={{ width: '100%', gap: '20px' }}>
+        <Container gap={16} direction="column" style={{ width: '100%' }}>
+          <TextBody.Medium weight={500}>최저 소분가</TextBody.Medium>
+          <div className={`${styles.peopleBox} ${isMaxSet && isMinSet ? '' : styles.notSetted}`}>
+            {isMaxSet && isMinSet
+              ? price === ''
+                ? '가격을 입력해주세요'
+                : `${minPrice} 원`
+              : '인원을 설정하면 최저 소분가가 나타나요.'}
+          </div>
+        </Container>
+        <Container gap={16} direction="column" style={{ width: '100%' }}>
+          <TextBody.Medium weight={500}>최고 소분가</TextBody.Medium>
+          <div className={`${styles.peopleBox} ${isMaxSet && isMinSet ? '' : styles.notSetted}`}>
+            {isMaxSet && isMinSet
+              ? price === ''
+                ? '가격을 입력해주세요'
+                : `${maxPrice} 원`
+              : '인원을 설정하면 최고 소분가 나타나요.'}
+          </div>
+        </Container>
+      </Container>
+      <Container style={{ width: '100%', gap: '20px' }}>
+        <Container gap={16} direction="column" style={{ width: '100%' }}>
+          <TextBody.Medium weight={500}>최소 소분량</TextBody.Medium>
+          <div className={`${styles.peopleBox} ${isMaxSet && isMinSet ? '' : styles.notSetted}`}>
+            {isMaxSet && isMinSet
+              ? amount === ''
+                ? '총 용량을 입력해주세요'
+                : `${minAmount} ${minUnit}`
+              : '인원을 설정하면 최소 소분량이 나타나요.'}
+          </div>
+        </Container>
+        <Container gap={16} direction="column" style={{ width: '100%' }}>
+          <TextBody.Medium weight={500}>최대 소분량</TextBody.Medium>
+          <div className={`${styles.peopleBox} ${isMaxSet && isMinSet ? '' : styles.notSetted}`}>
+            {isMaxSet && isMinSet
+              ? amount === ''
+                ? '총 용량을 입력해주세요'
+                : `${maxAmount} ${maxUnit}`
+              : '인원을 설정하면 최대 소분량이 나타나요.'}
+          </div>
+        </Container>
       </Container>
     </Container>
   )
