@@ -22,7 +22,7 @@ const themeStyles = {
   'light-outlined': {
     background: 'transparent',
     color: colors.point,
-    border: `2px solid ${colors.point}`,
+    border: `1px solid ${colors.point}`,
   },
   gray: {
     background: colors.gray3,

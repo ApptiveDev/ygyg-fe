@@ -7,9 +7,18 @@ interface InputTextProps {
   placeholder?: string
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
   error?: boolean
+  isPassword?: boolean
 }
 
-function InputText({ height, width, value, placeholder, onChange, error = false }: InputTextProps) {
+function InputText({
+  height,
+  width,
+  value,
+  placeholder,
+  onChange,
+  error = false,
+  isPassword,
+}: InputTextProps) {
   return (
     <div
       className={`${styles.Wrapper} ${error ? styles.error : ''}`}
@@ -18,6 +27,7 @@ function InputText({ height, width, value, placeholder, onChange, error = false 
       <input
         className={styles.InputWrapper}
         placeholder={placeholder}
+        type={isPassword ? 'password' : 'text'}
         value={value}
         onChange={onChange}
       />
