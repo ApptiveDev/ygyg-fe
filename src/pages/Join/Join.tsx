@@ -150,7 +150,7 @@ export const JoinPage = () => {
       size="full-width"
       align="center"
       direction="column"
-      gap={80}
+      gap={60}
       style={{ marginTop: '40px' }}
     >
       <img src={logo} className={styles.logo} />
