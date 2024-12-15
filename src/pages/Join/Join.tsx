@@ -22,6 +22,36 @@ export const JoinPage = () => {
   const [isDone, setIsDone] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
+  const [clicked, setClicked] = useState(false)
+  const [timer, setTimer] = useState<number | null>(null)
+  const [timeLeft, setTimeLeft] = useState(0)
+
+  useEffect(() => {
+    if (timeLeft > 0) {
+      const countdown = setInterval(() => {
+        setTimeLeft((prevTime) => prevTime - 1)
+      }, 1000)
+      return () => clearInterval(countdown)
+    } else if (timeLeft === 0 && timer !== null) {
+      setTimer(null)
+    }
+  }, [timeLeft, timer])
+
+  const formatTime = (time: number): string => {
+    const minutes = Math.floor(time / 60)
+      .toString()
+      .padStart(2, '0')
+    const seconds = (time % 60).toString().padStart(2, '0')
+    return `${minutes}:${seconds}`
+  }
+
+  const handleRequestAuth = () => {
+    setTimeLeft(300) // 5분
+    setTimer(Date.now())
+    setClicked(true)
+    alert('인증번호가 발송되었습니다. 5분 내에 입력해주세요.')
+  }
+
   useEffect(() => {
     if (
       name.trim() &&
@@ -139,7 +169,13 @@ export const JoinPage = () => {
               theme="light-outlined"
               width="190px"
               height="64px"
-              style={{ borderRadius: '8px', backgroundColor: 'white', fontSize: '16px' }}
+              onClick={handleRequestAuth}
+              style={{
+                borderRadius: '8px',
+                backgroundColor: 'white',
+                fontSize: '16px',
+                minWidth: '170px',
+              }}
             >
               중복 확인
             </Button>
@@ -154,12 +190,18 @@ export const JoinPage = () => {
             <InputText
               placeholder="우측 버튼을 누르고, 이메일 받은 인증번호를 입력해주세요."
               width="100%"
+              timer={clicked ? `${formatTime(timeLeft)}` : ''}
             />
             <Button
               theme="light-outlined"
               width="190px"
               height="64px"
-              style={{ borderRadius: '8px', backgroundColor: 'white', fontSize: '16px' }}
+              style={{
+                borderRadius: '8px',
+                backgroundColor: 'white',
+                fontSize: '16px',
+                minWidth: '170px',
+              }}
             >
               인증번호 받기
             </Button>
@@ -219,7 +261,12 @@ export const JoinPage = () => {
               theme="light-outlined"
               width="190px"
               height="64px"
-              style={{ borderRadius: '8px', backgroundColor: 'white', fontSize: '16px' }}
+              style={{
+                borderRadius: '8px',
+                backgroundColor: 'white',
+                fontSize: '16px',
+                minWidth: '170px',
+              }}
             >
               중복 확인
             </Button>

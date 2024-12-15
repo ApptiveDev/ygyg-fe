@@ -4,10 +4,21 @@ import logo from '@/assets/images/logo.svg'
 import { Heading, TextBody } from '@/components/atoms/Text/TextFactory'
 import InputText from '@/components/atoms/InputText/InputText'
 import Button from '@/components/common/Button/Button'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useState } from 'react'
 
 export const LoginPage = () => {
+  const [id, setId] = useState('')
+  const [password, setPassword] = useState('')
+
   const navigate = useNavigate()
+
+  const handleInputChange =
+    (setter: React.Dispatch<React.SetStateAction<string>>) =>
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value
+      setter(value)
+    }
 
   return (
     <Container size="full-width" align="center" direction="column">
@@ -25,14 +36,25 @@ export const LoginPage = () => {
       <Container gap={24} align="center" direction="column" style={{ marginBottom: '100px' }}>
         <Heading.Medium>로그인</Heading.Medium>
         <Container gap={14} align="center" direction="column">
-          <InputText width="416px" placeholder="아이디" />
-          <InputText width="416px" placeholder="비밀번호" isPassword={true} />
+          <InputText
+            width="416px"
+            placeholder="아이디"
+            value={id}
+            onChange={handleInputChange(setId)}
+          />
+          <InputText
+            width="416px"
+            placeholder="비밀번호"
+            isPassword={true}
+            value={password}
+            onChange={handleInputChange(setPassword)}
+          />
         </Container>
         <Button
-          theme="red"
+          theme={id && password ? 'red' : 'gray'}
           width="416px"
           shadow="0 0 10px rgba(0, 0, 0, 0.15)"
-          style={{ borderRadius: '8px', backgroundColor: 'white' }}
+          style={{ borderRadius: '8px' }}
         >
           로그인
         </Button>
@@ -44,7 +66,7 @@ export const LoginPage = () => {
             theme="light-outlined"
             width="416px"
             shadow="0 0 10px rgba(0, 0, 0, 0.15)"
-            style={{ borderRadius: '8px' }}
+            style={{ borderRadius: '8px', backgroundColor: 'white' }}
             onClick={() => navigate('/join')}
           >
             회원가입 하기

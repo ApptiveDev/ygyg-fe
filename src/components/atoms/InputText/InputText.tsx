@@ -1,3 +1,4 @@
+import { TextBody } from '../Text/TextFactory'
 import styles from './InputText.module.scss'
 
 interface InputTextProps {
@@ -8,6 +9,7 @@ interface InputTextProps {
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
   error?: boolean
   isPassword?: boolean
+  timer?: string
 }
 
 function InputText({
@@ -18,6 +20,7 @@ function InputText({
   onChange,
   error = false,
   isPassword,
+  timer,
 }: InputTextProps) {
   return (
     <div
@@ -31,6 +34,11 @@ function InputText({
         value={value}
         onChange={onChange}
       />
+      {timer ? (
+        <TextBody.XSmall style={{ width: '30px', color: 'var(--point-color)' }}>
+          {timer}
+        </TextBody.XSmall>
+      ) : null}
     </div>
   )
 }
