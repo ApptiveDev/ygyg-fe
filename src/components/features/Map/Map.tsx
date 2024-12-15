@@ -8,13 +8,19 @@ declare const window: typeof globalThis & {
   kakao: any
 }
 
-const Map = (props: any) => {
+interface MapProps {
+  selectedPlace: string
+  setSelectedPlace: (place: string) => void
+}
+
+const Map = ({ selectedPlace, setSelectedPlace }: MapProps) => {
   const markersRef = useRef<any[]>([])
   const mapRef = useRef<any>(null)
   const [keyword, setKeyword] = useState('')
-  const [selectedPlace, setSelectedPlace] = useState('')
+  // const [selectedPlace, setSelectedPlace] = useState('')
   const [places, setPlaces] = useState<any[]>([])
   const [isOpen, setIsOpen] = useState(false)
+  const [isActive, setIsActive] = useState(false)
 
   useEffect(() => {
     const script = document.createElement('script')
@@ -36,11 +42,13 @@ const Map = (props: any) => {
 
   const searchPlaces = () => {
     if (!keyword.trim()) {
+      setIsActive(false)
       alert('키워드를 입력해주세요!')
       return
     }
 
     if (!window.kakao || !window.kakao.maps || !mapRef.current) {
+      setIsActive(false)
       alert('맵이 아직 로드되지 않았습니다.')
       return
     }
@@ -53,6 +61,7 @@ const Map = (props: any) => {
         removeMarkers()
         setPlaces(data)
         setIsOpen(true)
+        setIsActive(true)
         const bounds = new window.kakao.maps.LatLngBounds()
         data.forEach((place: any) => {
           const marker = displayMarker(place, infowindow)
@@ -61,8 +70,11 @@ const Map = (props: any) => {
         })
         mapRef.current.setBounds(bounds)
       } else if (status === window.kakao.maps.services.Status.ZERO_RESULT) {
+        setIsActive(false)
+
         alert('검색 결과가 존재하지 않습니다.')
       } else if (status === window.kakao.maps.services.Status.ERROR) {
+        setIsActive(false)
         alert('검색 결과 중 오류가 발생했습니다.')
       }
     })
@@ -79,6 +91,7 @@ const Map = (props: any) => {
       infowindow.open(mapRef.current, marker)
       const moveLatLon = new window.kakao.maps.LatLng(place.y, place.x)
       mapRef.current.panTo(moveLatLon)
+      setSelectedPlace(place.place_name)
     })
 
     return marker
@@ -114,10 +127,11 @@ const Map = (props: any) => {
             value={keyword}
             radius={8}
             width="200px"
-            isOpen={isOpen} // 현재 열림 상태
+            isOpen={isOpen}
+            toggleActive={isActive}
             onChange={handleInputChange}
             onSubmit={searchPlaces}
-            onToggle={() => setIsOpen((prev) => !prev)} // 화살표 버튼 클릭 이벤트
+            onToggle={() => setIsOpen((prev) => !prev)}
           />
           {isOpen ? (
             <div className={styles.menuDiv}>
@@ -145,7 +159,6 @@ const Map = (props: any) => {
             </div>
           ) : null}
         </Container>
-
         <InputText placeholder="장소를 선택해주세요" value={selectedPlace} />
       </Container>
     </Container>

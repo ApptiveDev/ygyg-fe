@@ -24,9 +24,15 @@
   }
 }
 
+.toggleButton {
+  cursor: pointer;
+  height: 15px;
+  width: 15px;
+}
+
 .searchButton {
   cursor: pointer;
-  height: 24px;
-  width: 24px;
+  min-height: 22px;
+  min-width: 22px;
   color: var(--point-color);
 }

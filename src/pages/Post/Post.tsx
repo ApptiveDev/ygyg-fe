@@ -47,7 +47,7 @@ export const PostPage = () => {
   const [minPeople, setMinPeople] = useState<string>('')
   const [maxPeople, setMaxPeople] = useState<string>('')
   const [content, setContent] = useState<string>('')
-  const [location, setLocation] = useState<string>('')
+  const [selectedPlace, setSelectedPlace] = useState('')
 
   const [unit, setUnit] = useState<string>('')
 
@@ -61,13 +61,14 @@ export const PostPage = () => {
       minPeople.trim() &&
       maxPeople.trim() &&
       content.trim() &&
+      selectedPlace.trim() &&
       checked === true
     ) {
       setIsDone(true)
     } else {
       setIsDone(false)
     }
-  }, [category, title, price, minPeople, maxPeople, content, checked])
+  }, [category, title, price, minPeople, maxPeople, content, selectedPlace, checked])
 
   const clickCheckBox =
     (field: string, setter: React.Dispatch<React.SetStateAction<boolean>>) =>
@@ -98,6 +99,7 @@ export const PostPage = () => {
     if (!selectedHour.trim()) newErrors.selectedHour = '* 시를 선택하세요.'
     if (!selectedMinute.trim()) newErrors.selectedMinute = '* 분을 선택하세요.'
     if (!content.trim()) newErrors.content = '* 내용을 입력하세요.'
+    if (!selectedPlace.trim()) newErrors.selectedPlace = '* 소분 희망 장소를 입력하세요.'
     if (!checked) newErrors.checked = '* 노쇼 방지 동참에 동의해주세요.'
 
     setErrors(newErrors)
@@ -410,13 +412,18 @@ export const PostPage = () => {
         </Container>
       </Container>
       <Container size="full-width" direction="column" style={{ gap: '23px', marginBottom: '46px' }}>
-        <Heading.XSmall>
-          소분 희망 장소
-          <span style={{ color: 'var(--point-color)' }}> *</span>
-        </Heading.XSmall>
-        <Map />
-        {/* <TextBody.Medium style={{ fontWeight: '500' }}>(선택) 상세 위치</TextBody.Medium> */}
-        {/* <InputText placeholder="상세한 위치를 입력해주세요" width="100%" /> */}
+        <Container gap="7px">
+          <Heading.XSmall>
+            소분 희망 장소
+            <span style={{ color: 'var(--point-color)' }}> *</span>
+          </Heading.XSmall>
+          {errors.selectedPlace && (
+            <TextBody.XSmall style={{ color: 'red' }}>{errors.selectedPlace}</TextBody.XSmall>
+          )}
+        </Container>
+        <Map selectedPlace={selectedPlace} setSelectedPlace={setSelectedPlace} />
+        <TextBody.Medium style={{ fontWeight: '500' }}>(선택) 상세 위치</TextBody.Medium>
+        <InputText placeholder="상세한 위치를 입력해주세요" width="100%" />
       </Container>
       <Container
         gap="7px"

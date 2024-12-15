@@ -9,8 +9,9 @@ interface SearchBarProps {
   placeholder?: string
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
   onSubmit?: (event: React.MouseEvent<HTMLOrSVGElement>) => void
-  onToggle?: () => void // 화살표 버튼 클릭 이벤트 핸들러
-  isOpen?: boolean // 화살표 방향 상태
+  onToggle?: () => void
+  isOpen?: boolean
+  toggleActive?: boolean
   error?: boolean
 }
 
@@ -24,6 +25,7 @@ function SearchBar({
   onSubmit,
   onToggle,
   isOpen,
+  toggleActive,
   error = false,
 }: SearchBarProps) {
   return (
@@ -42,7 +44,13 @@ function SearchBar({
         onChange={onChange}
       />
       <div className={styles.arrowWrapper} onClick={onToggle}>
-        {isOpen == null ? null : isOpen ? <IoMdArrowDropup /> : <IoMdArrowDropdown />}
+        {isOpen == null ? null : toggleActive ? (
+          isOpen ? (
+            <IoMdArrowDropup className={styles.toggleButton} />
+          ) : (
+            <IoMdArrowDropdown className={styles.toggleButton} />
+          )
+        ) : null}
       </div>
       <IoIosSearch onClick={onSubmit} className={styles.searchButton} />
     </div>
