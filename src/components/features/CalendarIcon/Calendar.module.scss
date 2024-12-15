@@ -1,0 +1,42 @@
+.calendarIcon {
+  height: 64px;
+  width: 64px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  border: 1px solid var(--point-color);
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  &:hover {
+    background-color: var(--point-color);
+    .icon {
+      color: white;
+    }
+  }
+}
+
+.icon {
+  height: 20px;
+  width: 20px;
+  color: var(--point-color);
+}
+
+.dropDownCalendar {
+  position: absolute;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-5px);
+  cursor: pointer;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    visibility 0s 0.2s ease;
+}
+
+.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(6px);
+}
