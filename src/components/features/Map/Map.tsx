@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import styles from './Map.module.scss'
-import InputText from '@/components/atoms/InputText/InputText'
 import SearchBar from '@/components/common/SearchBar/SearchBar'
 import Container from '@/components/atoms/Container/Container'
 
@@ -9,15 +8,15 @@ declare const window: typeof globalThis & {
 }
 
 interface MapProps {
-  selectedPlace: string
-  setSelectedPlace: (place: string) => void
+  setValue: (selectedValue: string) => void
 }
 
-const Map = ({ selectedPlace, setSelectedPlace }: MapProps) => {
+const Map = ({ setValue }: MapProps) => {
   const markersRef = useRef<any[]>([])
   const mapRef = useRef<any>(null)
+  const menuRef = useRef<HTMLDivElement>(null) // menuDiv에 대한 참조
   const [keyword, setKeyword] = useState('')
-  // const [selectedPlace, setSelectedPlace] = useState('')
+  const [selectedPlace, setSelectedPlace] = useState('')
   const [places, setPlaces] = useState<any[]>([])
   const [isOpen, setIsOpen] = useState(false)
   const [isActive, setIsActive] = useState(false)
@@ -40,6 +39,19 @@ const Map = ({ selectedPlace, setSelectedPlace }: MapProps) => {
     }
   }, [])
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
   const searchPlaces = () => {
     if (!keyword.trim()) {
       setIsActive(false)
@@ -55,29 +67,38 @@ const Map = ({ selectedPlace, setSelectedPlace }: MapProps) => {
 
     const ps = new window.kakao.maps.services.Places()
     const infowindow = new window.kakao.maps.InfoWindow({ zIndex: 1 })
+    var searchOptions = {
+      location: new window.kakao.maps.LatLng(35.2314079, 129.0843855),
+      radius: 3000,
+      sort: window.kakao.maps.services.SortBy.DISTANCE,
+    }
 
-    ps.keywordSearch(keyword, (data: any, status: any, pagination: any) => {
-      if (status === window.kakao.maps.services.Status.OK) {
-        removeMarkers()
-        setPlaces(data)
-        setIsOpen(true)
-        setIsActive(true)
-        const bounds = new window.kakao.maps.LatLngBounds()
-        data.forEach((place: any) => {
-          const marker = displayMarker(place, infowindow)
-          bounds.extend(new window.kakao.maps.LatLng(place.y, place.x))
-          markersRef.current.push(marker)
-        })
-        mapRef.current.setBounds(bounds)
-      } else if (status === window.kakao.maps.services.Status.ZERO_RESULT) {
-        setIsActive(false)
+    ps.keywordSearch(
+      keyword,
+      (data: any, status: any) => {
+        if (status === window.kakao.maps.services.Status.OK) {
+          removeMarkers()
+          setPlaces(data)
+          setIsOpen(true)
+          setIsActive(true)
+          const bounds = new window.kakao.maps.LatLngBounds()
+          data.forEach((place: any) => {
+            const marker = displayMarker(place, infowindow)
+            bounds.extend(new window.kakao.maps.LatLng(place.y, place.x))
+            markersRef.current.push(marker)
+          })
+          mapRef.current.setBounds(bounds)
+        } else if (status === window.kakao.maps.services.Status.ZERO_RESULT) {
+          setIsActive(false)
 
-        alert('검색 결과가 존재하지 않습니다.')
-      } else if (status === window.kakao.maps.services.Status.ERROR) {
-        setIsActive(false)
-        alert('검색 결과 중 오류가 발생했습니다.')
-      }
-    })
+          alert('검색 결과가 존재하지 않습니다.')
+        } else if (status === window.kakao.maps.services.Status.ERROR) {
+          setIsActive(false)
+          alert('검색 결과 중 오류가 발생했습니다.')
+        }
+      },
+      searchOptions,
+    )
   }
 
   const displayMarker = (place: any, infowindow: any) => {
@@ -89,9 +110,8 @@ const Map = ({ selectedPlace, setSelectedPlace }: MapProps) => {
     window.kakao.maps.event.addListener(marker, 'click', () => {
       infowindow.setContent(`<div>${place.place_name}</div>`)
       infowindow.open(mapRef.current, marker)
-      const moveLatLon = new window.kakao.maps.LatLng(place.y, place.x)
-      mapRef.current.panTo(moveLatLon)
       setSelectedPlace(place.place_name)
+      setValue(place.place_name)
     })
 
     return marker
@@ -107,8 +127,8 @@ const Map = ({ selectedPlace, setSelectedPlace }: MapProps) => {
   }
 
   const onPlaceClick = (place: any) => {
-    // setIsOpen(false)
     setSelectedPlace(place.place_name)
+    setValue(place.place_name)
     const moveLatLon = new window.kakao.maps.LatLng(place.y, place.x)
     mapRef.current.panTo(moveLatLon)
   }
@@ -121,7 +141,7 @@ const Map = ({ selectedPlace, setSelectedPlace }: MapProps) => {
         </div>
       </div>
       <Container gap={14} justify="space-between" style={{ width: '100%' }}>
-        <Container direction="column">
+        <Container direction="column" ref={menuRef}>
           <SearchBar
             placeholder="장소를 검색해주세요"
             value={keyword}
@@ -138,9 +158,8 @@ const Map = ({ selectedPlace, setSelectedPlace }: MapProps) => {
               <div className={styles.menuWrap}>
                 <ul className={`${styles.placesList} ${isOpen ? styles.active : ''}`}>
                   {places.map((place, index) => (
-                    <div>
+                    <div key={index}>
                       <li
-                        key={index}
                         className={`${styles.listItem} ${
                           place.place_name === selectedPlace ? styles.selected : ''
                         }`}
@@ -159,7 +178,9 @@ const Map = ({ selectedPlace, setSelectedPlace }: MapProps) => {
             </div>
           ) : null}
         </Container>
-        <InputText placeholder="장소를 선택해주세요" value={selectedPlace} />
+        <div className={`${styles.selectedPlaceBox} ${selectedPlace ? '' : styles.notSetted}`}>
+          {selectedPlace ? selectedPlace : '장소를 검색하고 선택해주세요'}
+        </div>
       </Container>
     </Container>
   )

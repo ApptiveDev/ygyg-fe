@@ -73,3 +73,20 @@
   border-bottom: 1px solid var(--gray-color2);
   margin: 0;
 }
+
+.selectedPlaceBox {
+  height: 64px;
+  width: 100%;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  background-color: white;
+  border-radius: 8px;
+  padding: 0 25px;
+  box-sizing: border-box;
+  border: 1px solid var(--gray-color2);
+}
+
+.notSetted {
+  color: var(--gray-color3);
+}

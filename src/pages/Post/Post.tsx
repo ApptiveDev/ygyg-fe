@@ -52,8 +52,14 @@ export const PostPage = () => {
       category &&
       title.trim() &&
       price.trim() &&
+      amount.trim() &&
+      unit.trim() &&
       minPeople.trim() &&
       maxPeople.trim() &&
+      selectedDateInfo.date.trim() &&
+      selectedTime.trim() &&
+      selectedHour.trim() &&
+      selectedMinute.trim() &&
       content.trim() &&
       selectedPlace.trim() &&
       checked === true
@@ -231,7 +237,7 @@ export const PostPage = () => {
               <TextBody.Large style={{ fontWeight: '500' }}>원</TextBody.Large>
             </Container>
 
-            {errors.content && (
+            {errors.price && (
               <TextBody.XSmall style={{ color: 'red' }}>{errors.price}</TextBody.XSmall>
             )}
           </Container>
@@ -262,12 +268,12 @@ export const PostPage = () => {
             </Container>
             <Container style={{ width: '100%' }}>
               <div style={{ flexGrow: '1' }}>
-                {errors.content && (
+                {errors.amount && (
                   <TextBody.XSmall style={{ color: 'red' }}>{errors.amount}</TextBody.XSmall>
                 )}
               </div>
               <div style={{ width: '120px' }}>
-                {errors.content && (
+                {errors.unit && (
                   <TextBody.XSmall style={{ color: 'red' }}>{errors.unit}</TextBody.XSmall>
                 )}
               </div>
@@ -414,8 +420,12 @@ export const PostPage = () => {
             <TextBody.XSmall style={{ color: 'red' }}>{errors.selectedPlace}</TextBody.XSmall>
           )}
         </Container>
-        <Map selectedPlace={selectedPlace} setSelectedPlace={setSelectedPlace} />
-        <TextBody.Medium style={{ fontWeight: '500' }}>(선택) 상세 위치</TextBody.Medium>
+        <Map
+          setValue={(selectedValue) =>
+            handleDropDownSelect(setSelectedPlace, selectedValue, 'selectedPlace')
+          }
+        />
+        <TextBody.Medium style={{ fontWeight: '500' }}>상세 위치 (선택)</TextBody.Medium>
         <InputText placeholder="상세한 위치를 입력해주세요" width="100%" />
       </Container>
       <Container
