@@ -4,8 +4,11 @@ import logo from '@/assets/images/logo.svg'
 import { Heading, TextBody } from '@/components/atoms/Text/TextFactory'
 import InputText from '@/components/atoms/InputText/InputText'
 import Button from '@/components/common/Button/Button'
+import { useNavigate } from 'react-router-dom'
 
 export const LoginPage = () => {
+  const navigate = useNavigate()
+
   return (
     <Container size="full-width" align="center" direction="column">
       <Container
@@ -29,7 +32,7 @@ export const LoginPage = () => {
           theme="red"
           width="416px"
           shadow="0 0 10px rgba(0, 0, 0, 0.15)"
-          style={{ borderRadius: '8px' }}
+          style={{ borderRadius: '8px', backgroundColor: 'white' }}
         >
           로그인
         </Button>
@@ -42,6 +45,7 @@ export const LoginPage = () => {
             width="416px"
             shadow="0 0 10px rgba(0, 0, 0, 0.15)"
             style={{ borderRadius: '8px' }}
+            onClick={() => navigate('/join')}
           >
             회원가입 하기
           </Button>
