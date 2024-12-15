@@ -165,7 +165,6 @@ export const JoinPage = () => {
             width="100%"
             value={name}
             onChange={handleInputChange('name', setName)}
-            error={!!errors.name}
           />
           {errors.name && <TextBody.XSmall style={{ color: 'red' }}>{errors.name}</TextBody.XSmall>}
         </Container>
@@ -177,7 +176,6 @@ export const JoinPage = () => {
               width="100%"
               value={email}
               onChange={handleInputChange('email', setEmail)}
-              error={!!errors.email}
             />
             <Button
               theme="light-outlined"
@@ -231,7 +229,6 @@ export const JoinPage = () => {
             width="100%"
             value={id}
             onChange={handleInputChange('id', setId)}
-            error={!!errors.id}
           />
           {errors.id && <TextBody.XSmall style={{ color: 'red' }}>{errors.id}</TextBody.XSmall>}
         </Container>
@@ -242,7 +239,6 @@ export const JoinPage = () => {
             width="100%"
             value={password}
             onChange={handleInputChange('password', setPassword)}
-            error={!!errors.password}
           />
           {errors.password && (
             <TextBody.XSmall style={{ color: 'red' }}>{errors.password}</TextBody.XSmall>
@@ -255,7 +251,6 @@ export const JoinPage = () => {
             width="100%"
             value={rePassword}
             onChange={handleInputChange('rePassword', setRePassword)}
-            error={!!errors.rePassword}
           />
           {errors.rePassword && (
             <TextBody.XSmall style={{ color: 'red' }}>{errors.rePassword}</TextBody.XSmall>
@@ -269,7 +264,6 @@ export const JoinPage = () => {
               width="100%"
               value={nickname}
               onChange={handleInputChange('nickname', setNickname)}
-              error={!!errors.nickname}
             />
             <Button
               theme="light-outlined"
