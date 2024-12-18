@@ -1,6 +1,7 @@
 import Container from '@/components/atoms/Container/Container'
 import { MainSection } from './MainSection'
 import sampleImg from '@/assets/images/sample_image.png'
+import InformationSection from './InformationSection'
 
 const exampleValue = {
   thumbnail: sampleImg,
@@ -9,13 +10,13 @@ const exampleValue = {
   link: 'http://localhost:5173/detail',
   price: '20000',
   date: '2025-01-24',
-  min: 2,
+  min: 4,
   max: 7,
   amount: '1',
   unit: 'kg',
   description:
     '설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.',
-  current: 4,
+  current: 6,
   place: '스타벅스 부산대정문점',
   detailPlace: '1층 입구 앞',
   category: '가루류',
@@ -35,6 +36,14 @@ export const DetailPage = () => {
         unit={exampleValue.unit}
         description={exampleValue.description}
         isActivate={exampleValue.isActivate}
+      />
+      <InformationSection
+        min={exampleValue.min}
+        max={exampleValue.max}
+        current={exampleValue.current}
+        price={exampleValue.price}
+        amount={exampleValue.amount}
+        unit={exampleValue.unit}
       />
     </Container>
   )

@@ -1,5 +1,4 @@
 //MainSection
-
 .productImage {
   min-width: 450px;
   height: 450px;
@@ -27,4 +26,33 @@
 
 .infoText {
   color: var(--gray-color5);
+}
+
+//InformationSection
+.numberBlock {
+  width: 56px;
+  height: 56px;
+  color: var(--gray-color3);
+  border: 1px solid var(--gray-color2);
+  background-color: white;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.isIn {
+  color: var(--point-color);
+  border-color: var(--point-color);
+  cursor: pointer;
+  &:hover {
+    background-color: #e0e0e0; /* hover 상태에서도 변화 없음 */
+  }
+}
+
+.current {
+  color: white;
+  background-color: var(--point-color);
+  cursor: pointer;
+  border-color: var(--point-color);
 }
