@@ -10,9 +10,9 @@ import Button from '@/components/common/Button/Button'
 import { TextArea } from '@/components/atoms/TextArea/TextArea'
 import DropDown from '@/components/atoms/DropDown/DropDown'
 import { CalendarIcon } from '@/components/features/CalendarIcon/CalendarIcon'
-import Map from '@/components/features/Map/Map'
 import NewPicture from '../../components/features/NewPicture/NewPicture'
 import useSetAmount from '@/hooks/useSetAmount'
+import MapSearch from '@/components/features/MapSearch/MapSearch'
 
 export const PostPage = () => {
   const categories = ['액체류', '소스류', '가루류', '잼류', '기타']
@@ -420,7 +420,7 @@ export const PostPage = () => {
             <TextBody.XSmall style={{ color: 'red' }}>{errors.selectedPlace}</TextBody.XSmall>
           )}
         </Container>
-        <Map
+        <MapSearch
           setValue={(selectedValue) =>
             handleDropDownSelect(setSelectedPlace, selectedValue, 'selectedPlace')
           }
