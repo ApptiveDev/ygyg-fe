@@ -1,0 +1,67 @@
+.speechBubble {
+  border-radius: 8px;
+  padding: 20px 24px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 200px;
+  max-width: 400px;
+  min-height: 60px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+  gap: 15px;
+}
+
+.fromMe {
+  background-color: var(--sub-color2);
+}
+
+.fromMe::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 93%;
+  width: 0;
+  height: 0;
+  border: 20px solid transparent;
+  border-end-start-radius: 17px;
+  border-left-color: var(--sub-color2);
+  border-right: 0;
+  border-bottom: 0;
+  margin-top: -15px;
+  margin-right: -8px;
+}
+
+.fromThem {
+  // box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  background-color: white;
+}
+
+.fromThem::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 93%;
+  width: 0;
+  height: 0;
+  border: 20px solid transparent;
+  border-end-end-radius: 17px;
+  border-right-color: white;
+  border-left: 0;
+  border-bottom: 0;
+  margin-top: -15px;
+  margin-left: -8px;
+}
+
+.text {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.information {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gray-color5);
+}

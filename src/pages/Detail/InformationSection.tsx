@@ -15,19 +15,16 @@ interface InformationProps {
 }
 
 function InformationSection({ min, max, current, price, amount, unit }: InformationProps) {
-  const [hovered, setHovered] = useState<number | null>(null)
+  const [currentLocal, setCurrentLocal] = useState(current)
 
-  // 동적 예상 값 계산 함수
   const calculatePrice = (people: number) => Math.floor(Number(price) / people)
 
-  // 화면에 표시할 값 설정
-  const selectedPeople = hovered || current
-  const calculatedPrice = calculatePrice(selectedPeople)
+  const calculatedPrice = calculatePrice(currentLocal)
 
   const { calculatedAmount, displayUnit } = useSetAmount({
     amount,
     unit,
-    people: selectedPeople,
+    people: currentLocal,
   })
 
   return (
@@ -48,54 +45,36 @@ function InformationSection({ min, max, current, price, amount, unit }: Informat
               key={value}
               className={`${styles.numberBlock} ${
                 value >= min! && value <= max!
-                  ? value == current
+                  ? value == currentLocal
                     ? styles.current
                     : styles.isIn
                   : ''
               }`}
-              onMouseEnter={() => {
-                if (value >= min! && value <= max!) {
-                  setHovered(value)
-                }
-              }}
-              onMouseLeave={() => {
-                if (value >= min! && value <= max!) {
-                  setHovered(null)
-                }
-              }}
+              onClick={() => setCurrentLocal(value)}
             >
               <TextBody.Small weight={700}>{value}</TextBody.Small>
             </button>
           ))}
         </Container>
         <Container gap={16}>
-          {[7, 8, 9].map((value) => (
+          {[7, 8, 9, 10].map((value) => (
             <button
               key={value}
               className={`${styles.numberBlock} ${
                 value >= min! && value <= max!
-                  ? value == current
+                  ? value == currentLocal
                     ? styles.current
                     : styles.isIn
                   : ''
               }`}
-              onMouseEnter={() => {
-                if (value >= min! && value <= max!) {
-                  setHovered(value)
-                }
-              }}
-              onMouseLeave={() => {
-                if (value >= min! && value <= max!) {
-                  setHovered(null)
-                }
-              }}
+              onClick={() => setCurrentLocal(value)}
             >
               <TextBody.Small weight={700}>{value}</TextBody.Small>
             </button>
           ))}
         </Container>
-        <TextBody.XSmall weight={500} style={{ fontSize: '12px' }}>
-          마우스를 대면 인원에 따른 예상 가격과 예상 용량을 확인할 수 있어요!
+        <TextBody.XSmall weight={500} style={{ fontSize: '12.1px' }}>
+          인원을 클릭하면 인원에 따른 예상 가격과 예상 용량을 확인할 수 있어요!
         </TextBody.XSmall>
       </Container>
       <Container size="full-width" direction="column" gap={30}>

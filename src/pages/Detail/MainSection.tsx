@@ -15,6 +15,7 @@ interface MainProps {
   unit: string
   description: string
   isActivate: boolean
+  onGoToCommentSection: () => void
 }
 
 export const MainSection = ({
@@ -27,6 +28,7 @@ export const MainSection = ({
   unit,
   description,
   isActivate,
+  onGoToCommentSection,
 }: MainProps) => {
   return (
     <Container size="full-width" align="flex-end" gap={50}>
@@ -90,7 +92,13 @@ export const MainSection = ({
             justify="flex-start"
             style={{ height: '85px', marginBottom: '10px' }}
           >
-            <Button theme="red" width="100%" height="60px" style={{ borderRadius: '12px' }}>
+            <Button
+              theme="red"
+              width="100%"
+              height="60px"
+              style={{ borderRadius: '12px' }}
+              onClick={onGoToCommentSection}
+            >
               댓글 창 바로가기
             </Button>
           </Container>

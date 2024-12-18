@@ -42,6 +42,7 @@ export const PostPage = () => {
   const [maxPeople, setMaxPeople] = useState<string>('')
   const [content, setContent] = useState<string>('')
   const [selectedPlace, setSelectedPlace] = useState('')
+  const [detailPlace, setDetailPlace] = useState('')
 
   const [unit, setUnit] = useState<string>('')
 
@@ -426,7 +427,12 @@ export const PostPage = () => {
           }
         />
         <TextBody.Medium style={{ fontWeight: '500' }}>상세 위치 (선택)</TextBody.Medium>
-        <InputText placeholder="상세한 위치를 입력해주세요" width="100%" />
+        <InputText
+          placeholder="상세한 위치를 입력해주세요"
+          width="100%"
+          value={detailPlace}
+          onChange={() => setDetailPlace(detailPlace)}
+        />
       </Container>
       <Container
         gap="7px"
