@@ -10,9 +10,9 @@ import Button from '@/components/common/Button/Button'
 import { TextArea } from '@/components/atoms/TextArea/TextArea'
 import DropDown from '@/components/atoms/DropDown/DropDown'
 import { CalendarIcon } from '@/components/features/CalendarIcon/CalendarIcon'
-import Map from '@/components/features/Map/Map'
 import NewPicture from '../../components/features/NewPicture/NewPicture'
 import useSetAmount from '@/hooks/useSetAmount'
+import MapSearch from '@/components/features/MapSearch/MapSearch'
 
 export const PostPage = () => {
   const categories = ['액체류', '소스류', '가루류', '잼류', '기타']
@@ -42,6 +42,7 @@ export const PostPage = () => {
   const [maxPeople, setMaxPeople] = useState<string>('')
   const [content, setContent] = useState<string>('')
   const [selectedPlace, setSelectedPlace] = useState('')
+  const [detailPlace, setDetailPlace] = useState('')
 
   const [unit, setUnit] = useState<string>('')
 
@@ -420,13 +421,18 @@ export const PostPage = () => {
             <TextBody.XSmall style={{ color: 'red' }}>{errors.selectedPlace}</TextBody.XSmall>
           )}
         </Container>
-        <Map
+        <MapSearch
           setValue={(selectedValue) =>
             handleDropDownSelect(setSelectedPlace, selectedValue, 'selectedPlace')
           }
         />
         <TextBody.Medium style={{ fontWeight: '500' }}>상세 위치 (선택)</TextBody.Medium>
-        <InputText placeholder="상세한 위치를 입력해주세요" width="100%" />
+        <InputText
+          placeholder="상세한 위치를 입력해주세요"
+          width="100%"
+          value={detailPlace}
+          onChange={() => setDetailPlace(detailPlace)}
+        />
       </Container>
       <Container
         gap="7px"

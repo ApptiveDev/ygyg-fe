@@ -189,7 +189,7 @@ export const JoinPage = () => {
                 minWidth: '170px',
               }}
             >
-              중복 확인
+              인증번호 받기
             </Button>
           </Container>
           {errors.email && (
@@ -200,7 +200,7 @@ export const JoinPage = () => {
           <Heading.XSmall>인증번호 입력</Heading.XSmall>
           <Container size="full-width" gap={16}>
             <InputText
-              placeholder="우측 버튼을 누르고, 이메일 받은 인증번호를 입력해주세요."
+              placeholder="이메일로 받으신 인증번호를 입력해주세요."
               width="100%"
               timer={clicked ? `${formatTime(timeLeft)}` : ''}
             />
@@ -215,7 +215,7 @@ export const JoinPage = () => {
                 minWidth: '170px',
               }}
             >
-              인증번호 받기
+              인증번호 확인
             </Button>
           </Container>
           {errors.authorized && (
