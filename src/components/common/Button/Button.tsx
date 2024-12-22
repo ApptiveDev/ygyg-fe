@@ -85,12 +85,12 @@ function Button({
     margin-right: 8px;
     display: flex;
     align-items: center;
+    margin-left: 10px;
   `
 
   return (
     <button css={buttonStyle} onClick={onClick} {...rest}>
-      {icon && <span css={iconStyle}>{icon}</span>}
-      {children}
+      {children} {icon && <span css={iconStyle}>{icon}</span>}
     </button>
   )
 }

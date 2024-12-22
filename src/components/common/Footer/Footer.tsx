@@ -2,13 +2,22 @@ import Container from '@/components/atoms/Container/Container'
 import { TextBody } from '@/components/atoms/Text/TextFactory'
 import logo from '@/assets/images/logo.svg'
 
-export const Footer = () => {
+interface FooterProps {
+  isHome?: boolean
+}
+
+export const Footer = ({ isHome }: FooterProps) => {
   return (
     <Container
       size="full-width"
       justify="space-between"
       align="center"
-      style={{ padding: '50px 0', borderTop: '1px solid var(--gray-color2)' }}
+      style={{
+        borderTop: '1px solid var(--gray-color2)',
+        padding: isHome ? '50px 20px' : '50px 0',
+        width: isHome ? '1060px' : '',
+        boxSizing: 'border-box',
+      }}
     >
       <Container direction="column" gap={12}>
         <TextBody.Small weight={600}>야금야금 (YaGeumYaGeum)</TextBody.Small>
