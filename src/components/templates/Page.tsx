@@ -2,20 +2,29 @@ import { ReactNode } from 'react'
 import { Header } from '../common/Header/Header'
 import styled from '@emotion/styled'
 import { Outlet } from 'react-router-dom'
+import { Footer } from '../common/Footer/Footer'
+
 interface PageProps {
   // children?: ReactNode
   home?: boolean
 }
 
 function Page({ home = false }: PageProps) {
-  return (
+  return home ? (
     <PageWrapper>
-      {home ? <Header isHome={true} /> : <Header />}
+      <Header isHome={true} />
+      <HomeInnerWrapper>
+        <Outlet />
+        <Footer />
+      </HomeInnerWrapper>
+    </PageWrapper>
+  ) : (
+    <PageWrapper>
+      <Header />
       <InnerWrapper>
         <Outlet />
+        <Footer />
       </InnerWrapper>
-
-      {/* <Footer /> */}
     </PageWrapper>
   )
 }
@@ -32,12 +41,23 @@ const PageWrapper = styled.div`
   width: 100%;
   box-sizing: border-box;
 `
+const HomeInnerWrapper = styled.div`
+  margin-top: 120px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: start;
+  height: 100%;
+  width: 100vw;
+  box-sizing: border-box;
+`
 
 const InnerWrapper = styled.div`
   margin-top: 120px;
   padding: 0 20px;
   display: flex;
   justify-content: center;
+  flex-direction: column;
   align-items: start;
   height: 100%;
   width: 1060px;

@@ -64,7 +64,6 @@ function CommentSection({ userId, isActivate, onActivate, isMyPosting }: Comment
       direction="column"
       gap={45}
       style={{
-        borderBottom: '1px solid var(--gray-color2)',
         boxSizing: 'border-box',
         paddingBottom: '50px',
       }}
