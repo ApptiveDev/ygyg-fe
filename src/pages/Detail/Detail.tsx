@@ -7,6 +7,7 @@ import CommentSection from './CommentSection'
 import { useRef, useState } from 'react'
 
 const exampleValue = {
+  writerUuid: 5,
   thumbnail: sampleImg,
   title: '게시글 제목',
   author: '작성자',
@@ -31,6 +32,9 @@ const exampleValue = {
 export const DetailPage = () => {
   const [isActivate, setIsActivate] = useState(exampleValue.isActivate)
   const commentSectionRef = useRef<HTMLDivElement>(null)
+  const userId = 5
+  // const userId = Number(localStorage.getItem('userId'))
+  const isMyPosting = exampleValue.writerUuid === userId
 
   const handleActivate = () => {
     const confirmParticipation = window.confirm(
@@ -66,6 +70,7 @@ export const DetailPage = () => {
         unit={exampleValue.unit}
         description={exampleValue.description}
         isActivate={isActivate}
+        isMyPosting={isMyPosting}
         onGoToCommentSection={scrollToCommentSection}
       />
       <InformationSection
@@ -85,7 +90,12 @@ export const DetailPage = () => {
         longitude={exampleValue.longitude}
       />
       <div ref={commentSectionRef} />
-      <CommentSection isActivate={isActivate} onActivate={handleActivate} />
+      <CommentSection
+        userId={userId}
+        isActivate={isActivate}
+        onActivate={handleActivate}
+        isMyPosting={isMyPosting}
+      />
     </Container>
   )
 }

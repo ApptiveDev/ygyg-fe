@@ -48,12 +48,13 @@ const initialComments = [
 ]
 
 interface CommentProps {
+  userId: number
   isActivate: boolean
   onActivate: () => void
+  isMyPosting: boolean
 }
 
-function CommentSection({ isActivate, onActivate }: CommentProps) {
-  const userId = 5 // 현재 유저 ID
+function CommentSection({ userId, isActivate, onActivate, isMyPosting }: CommentProps) {
   const [comments, setComments] = useState(initialComments)
 
   return (
@@ -68,8 +69,13 @@ function CommentSection({ isActivate, onActivate }: CommentProps) {
         paddingBottom: '50px',
       }}
     >
-      {isActivate ? (
-        <CommentActivated comments={comments} setComments={setComments} userId={userId} />
+      {isActivate || isMyPosting ? (
+        <CommentActivated
+          comments={comments}
+          setComments={setComments}
+          userId={userId}
+          isMyPosting={isMyPosting}
+        />
       ) : (
         <CommentBlocked comments={comments} userId={userId} onActivate={onActivate} />
       )}
@@ -83,10 +89,12 @@ const CommentActivated = ({
   comments,
   setComments,
   userId,
+  isMyPosting,
 }: {
   comments: typeof initialComments
   setComments: React.Dispatch<React.SetStateAction<typeof initialComments>>
   userId: number
+  isMyPosting: boolean
 }) => {
   const [comment, setComment] = useState('')
   const [isSaving, setIsSaving] = useState(false)
@@ -129,9 +137,15 @@ const CommentActivated = ({
   return (
     <div style={{ width: '100%' }}>
       <Container size="full-width" direction="column" align="center" gap={12} ref={scrollRef}>
-        <Button theme="gray" width="50%" style={{ borderRadius: '12px', cursor: 'auto' }}>
-          소분 참여중
-        </Button>
+        {isMyPosting ? (
+          <Button theme="gray" width="50%" style={{ borderRadius: '12px', cursor: 'auto' }}>
+            소분 진행중
+          </Button>
+        ) : (
+          <Button theme="gray" width="50%" style={{ borderRadius: '12px', cursor: 'auto' }}>
+            소분 참여중
+          </Button>
+        )}
         <TextBody.XSmall weight={800} color="var(--point-color)" style={{ fontSize: '12px' }}>
           작성자가 지정한 시각으로부터 24시간 경과 시, 게시글이 비활성화됩니다.
         </TextBody.XSmall>
