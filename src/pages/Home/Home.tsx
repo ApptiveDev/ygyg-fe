@@ -20,7 +20,8 @@ export const HomePage = () => {
             borderBottom: '1px solid var(--gray-color2)',
             padding: '52px 20px',
             marginTop: '640px',
-            width: '90%',
+            width: '100%',
+            boxSizing: 'border-box',
           }}
         >
           <div className={styles.bannerWrapper}>
