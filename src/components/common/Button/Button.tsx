@@ -29,6 +29,16 @@ const themeStyles = {
     color: 'white',
     border: 'none',
   },
+  white: {
+    background: 'white',
+    color: `${colors.point}`,
+    border: 'none',
+  },
+  'light-gray': {
+    background: `${colors.gray1}`,
+    color: `${colors.gray3}`,
+    border: 'none',
+  },
 }
 
 function Button({
@@ -54,6 +64,10 @@ function Button({
     outline: none;
     padding: 16px 36px;
     box-shadow: ${shadow};
+    word-wrap: break-word;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+    white-space: normal;
     font-size: 20px;
     font-weight: 700;
     border-radius: 36px;
@@ -81,6 +95,6 @@ function Button({
   )
 }
 
-type ButtonTheme = 'red' | 'light-outlined' | 'gray'
+type ButtonTheme = 'red' | 'light-outlined' | 'gray' | 'white' | 'light-gray'
 
 export default Button

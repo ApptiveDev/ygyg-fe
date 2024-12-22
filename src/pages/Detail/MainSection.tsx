@@ -4,6 +4,7 @@ import sampleImg from '@/assets/images/sample_image.png'
 import { Heading, TextBody } from '@/components/atoms/Text/TextFactory'
 import useFormatPrice from '@/hooks/useFormatPrice'
 import Button from '@/components/common/Button/Button'
+import { useState } from 'react'
 
 interface MainProps {
   thumbnail: string
@@ -15,6 +16,7 @@ interface MainProps {
   unit: string
   description: string
   isActivate: boolean
+  isMyPosting: boolean
   onGoToCommentSection: () => void
 }
 
@@ -28,6 +30,7 @@ export const MainSection = ({
   unit,
   description,
   isActivate,
+  isMyPosting,
   onGoToCommentSection,
 }: MainProps) => {
   return (
@@ -73,18 +76,58 @@ export const MainSection = ({
           </Container>
           <TextBody.Medium
             style={{
-              margin: '5px 0',
               boxSizing: 'border-box',
               lineHeight: '1.5rem',
               flexGrow: '1',
-              maxHeight: '145px',
+              maxHeight: isMyPosting ? '85px' : '145px',
               overflowY: 'scroll',
             }}
           >
             {description}
           </TextBody.Medium>
         </Container>
-        {isActivate ? (
+        {isMyPosting ? (
+          <Container size="full-width" gap={20}>
+            <Button
+              width="100%"
+              theme="white"
+              height="45px"
+              shadow="0 0 10px rgba(0,0,0,0.1)"
+              style={{ fontSize: '16px', minWidth: '130px' }}
+            >
+              게시글 수정하기
+            </Button>
+            <Button
+              width="100%"
+              theme="light-gray"
+              height="45px"
+              shadow="0 0 10px rgba(0,0,0,0.1)"
+              style={{ fontSize: '16px', minWidth: '130px' }}
+            >
+              게시글 삭제하기
+            </Button>
+          </Container>
+        ) : null}
+
+        {isMyPosting ? (
+          <Container
+            size="full-width"
+            direction="column"
+            align="center"
+            justify="flex-start"
+            style={{ height: '85px', marginBottom: '10px' }}
+          >
+            <Button
+              theme="red"
+              width="100%"
+              height="60px"
+              style={{ borderRadius: '12px' }}
+              onClick={onGoToCommentSection}
+            >
+              댓글 창 바로가기
+            </Button>
+          </Container>
+        ) : isActivate ? (
           <Container
             size="full-width"
             direction="column"
