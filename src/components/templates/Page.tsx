@@ -5,22 +5,13 @@ import { Outlet } from 'react-router-dom'
 import { Footer } from '../common/Footer/Footer'
 
 interface PageProps {
-  // children?: ReactNode
   home?: boolean
 }
 
 function Page({ home = false }: PageProps) {
-  return home ? (
+  return (
     <PageWrapper>
-      <Header isHome={true} />
-      <HomeInnerWrapper>
-        <Outlet />
-        <Footer />
-      </HomeInnerWrapper>
-    </PageWrapper>
-  ) : (
-    <PageWrapper>
-      <Header />
+      {home ? <Header isHome={true} /> : <Header />}
       <InnerWrapper>
         <Outlet />
         <Footer />
