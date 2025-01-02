@@ -16,20 +16,23 @@
   flex-direction: column;
   flex: 0 0 auto; 
   width: 100%; 
-  padding: 16px; 
-  gap: 8px;
+  padding-top: 30px; 
+  gap: 12px;
+}
+.comment-nickname{
+  font-size: 40px;
+  font-weight: 800;
 }
 .comment-header {
-  font-size: 52px;
+  font-size: 40px;
   font-weight: 500;
 }
 .comment-userinfo {
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 400;
-  color: gray;
 }
 
-.mypost, .myposting, .postdone {
+.mypost, .myposting {
   display: flex;
   flex-direction: column; 
   align-items: flex-start; 
@@ -96,4 +99,30 @@
   justify-content: space-between; 
 
 }
+
+.postdone-comment{
+  display: flex;
+  flex-direction: row;
+  justify-content:space-between ;
+}
+.postdone-cardContainer{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between; 
+  margin-top: 16px; 
+  margin-bottom: 50px;
+  gap: 16px;
+}
+
+.delete{
+  font-size: 12px;
+  font-weight: 500;
+  color: #B0B0B0;
+  text-decoration: underline;
+
+  margin-bottom: 70px;
+
+  cursor: pointer;
+}
+
 

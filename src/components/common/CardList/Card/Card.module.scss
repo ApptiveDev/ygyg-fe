@@ -8,6 +8,15 @@
   cursor: pointer;
 }
 
+.card:hover .card-time-container {
+  background-color: #d6282c;
+  color: #ffffff;
+}
+
+.card:hover .card-content {
+  background-color: #f0f0f0;
+}
+
 .card-image-container {
   position: relative;
   width: 100%;

@@ -22,6 +22,7 @@ const router = createBrowserRouter([
       { path: RouterPath.LOGIN, element: <LoginPage /> },
       { path: RouterPath.JOIN, element: <JoinPage /> },
       { path: RouterPath.DETAIL, element: <DetailPage /> },
+      { path: RouterPath.MYPAGE, element: <MyPage />}
     ],
   },
 ]);
