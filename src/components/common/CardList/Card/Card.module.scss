@@ -45,7 +45,10 @@
   top: 320px;
   bottom: 16px;
   right: 16px;
+
+  transition: background-color 0.3s, color 0.3s;
 }
+
 .clock-icon {
   width: 14px;
   height: 14px;
@@ -61,6 +64,8 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+
+  transition: background-color 0.3s;
 }
 
 .card-header-container {
@@ -69,7 +74,7 @@
 
 .card-title {
   display: flex;
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 600;
   line-height: 36px;
 }
@@ -80,7 +85,7 @@
   gap: 4px;
 }
 .current-min-price {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
   color: #d6282c;
 }
@@ -91,7 +96,7 @@
 }
 
 .card-count-block {
-  margin: 24px 16px;
+  margin: 20px 8px;
   display: flex;
   gap: 4px;
 }

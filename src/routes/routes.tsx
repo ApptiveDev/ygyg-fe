@@ -2,6 +2,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import { RouterPath } from './path'
 import { HomePage } from '@/pages/Home/Home'
 import { PostPage } from '@/pages/Post/Post'
+import { MyPage } from '@/pages/MyPage/MyPage';
 import Page from '@/components/templates/Page'
 import { LoginPage } from '@/pages/Login/Login'
 import { JoinPage } from '@/pages/Join/Join'
@@ -23,7 +24,7 @@ const router = createBrowserRouter([
       { path: RouterPath.DETAIL, element: <DetailPage /> },
     ],
   },
-])
+]);
 export const Routes = () => {
   return <RouterProvider router={router} />
 }

@@ -1,5 +1,5 @@
-import ClockIcon from '@/assets/cardIcons/clock-icon.svg'
-import styles from './Card.module.scss'
+import ClockIcon from '@/assets/cardIcons/clock-icon.svg';
+import styles from '@/components/common/CardList/Card/Card.module.scss'; 
 
 interface CardProps {
   thumbnail: string
