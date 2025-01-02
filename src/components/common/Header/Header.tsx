@@ -26,8 +26,10 @@ export const Header = ({ isHome = false }: HeaderProps) => {
     <div className={styles.headerWrapper} css={scrollHeaderStyle}>
       <img src={logo} alt="logo" className={styles.logo} onClick={() => navigate('/')} />
       <SearchBar placeholder="검색하고 싶은 양념장을 입력하세요" />
-      <div className={styles.textButton}>로그아웃</div>
-      <div className={styles.myPage}>마이페이지</div>
+      <Container gap={24}>
+        <div className={styles.textButton}>로그아웃</div>
+        <div className={styles.myPage}>마이페이지</div>
+      </Container>
     </div>
   )
 }

@@ -79,6 +79,14 @@ export const Heading = {
     as: 'h5',
     weight: 'bold',
   }),
+  XXSmall: createTextComponent({
+    defaultSize: '14px',
+    responsiveSize: {
+      sm: '20px',
+    },
+    as: 'h5',
+    weight: 'bold',
+  }),
 }
 
 export const Paragraph = {

@@ -2,5 +2,8 @@ export const RouterPath = {
   ROOT: '/',
   HOME: '/',
   POST: '/post',
-  MYPAGE: '/mypage'
+  LOGIN: '/login',
+  JOIN: '/join',
+  DETAIL: '/detail',
+  MYPAGE: '/mypage',
 }

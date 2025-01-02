@@ -15,6 +15,8 @@
   --gray-color1: #f4f4f4;
   --gray-color2: #ededed;
   --gray-color3: #b0b0b0;
+  --gray-color4: #dadada;
+  --gray-color5: #767676;
   --place-holder-gray: #7c7c7c;
 
   ::placeholder {
@@ -22,13 +24,14 @@
   }
 
   ::-webkit-scrollbar {
-    display: block;
+    display: inline;
     width: 6px;
     height: 6px;
   }
 
   ::-webkit-scrollbar-thumb {
     background: var(--place-holder-gray);
+    border-radius: 8px;
   }
 
   ::-webkit-scrollbar-track,

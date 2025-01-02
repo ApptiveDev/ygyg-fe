@@ -1,0 +1,31 @@
+.logo {
+  width: 180px;
+  height: 180px;
+}
+
+.point {
+  color: var(--point-color);
+}
+
+.checkBox {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  border: 1px solid var(--gray-color);
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+.selected {
+  background-color: var(--point-color);
+}
+
+.link {
+  font-size: 12px;
+  text-decoration: underline;
+  color: var(--gray-color3);
+  cursor: pointer;
+}

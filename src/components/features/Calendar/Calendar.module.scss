@@ -1,0 +1,107 @@
+.placeholder {
+  padding: 20px 7px;
+  box-sizing: border-box;
+  text-align: center;
+  border-radius: 20px;
+  background: none;
+  cursor: default;
+}
+
+.calendarWrapper {
+  background-color: white;
+  width: 360px;
+  border-radius: 8px;
+  padding: 26px;
+  box-sizing: border-box;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.monthWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.title {
+  font-size: 1.3rem;
+}
+
+.monthButton {
+  background: none;
+  border: none;
+  color: var(--point-color);
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.days {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(7, 1fr);
+  margin-top: 20px;
+  box-sizing: border-box;
+}
+
+.daysGrid {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(7, 1fr);
+  margin-top: 10px;
+  box-sizing: border-box;
+}
+.day {
+  padding: 10px 7px;
+  box-sizing: border-box;
+  text-align: center;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 20px;
+  color: black;
+}
+
+.date {
+  padding: 10px 7px;
+  box-sizing: border-box;
+  text-align: center;
+  font-size: 20px;
+  color: black;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--sub-color1);
+    color: white;
+    border-radius: 2px;
+  }
+}
+
+.today {
+  border: 1px solid var(--point-color);
+  border-radius: 2px;
+}
+
+.selectedDate {
+  background-color: var(--point-color);
+  border-radius: 2px;
+  color: white;
+
+  &:hover {
+    background-color: var(--point-color);
+    color: white;
+    border-radius: 2px;
+  }
+}
+
+.todayWrapper {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  margin-top: 13px;
+}
+
+.square {
+  width: 1rem;
+  height: 1rem;
+  border: 1px solid var(--point-color);
+  border-radius: 2px;
+}
