@@ -7,6 +7,8 @@ import Container from '@/components/atoms/Container/Container'
 import Button from '@/components/common/Button/Button'
 import { GoArrowUpRight } from 'react-icons/go'
 
+import FloatingBtn from '@/components/common/FloatingBtn/FloatingBtn'
+
 interface CardData {
   id: number;
   title: string;
@@ -118,6 +120,7 @@ export const MyPage = () => {
         <div className={styles['postdone-comment']}>
           <Heading.Small>소분 종료된 게시글</Heading.Small>
           <Button
+            className = {styles['postdone-btn']}
             theme="white"
             shadow="0 0 10px rgba(0,0,0,0.1)"
             icon={<GoArrowUpRight />}
@@ -145,6 +148,7 @@ export const MyPage = () => {
         </div>
       </div>
       <div className = {styles.delete}>회원 탈퇴하기</div>
+        <FloatingBtn/>
     </div>
   );
 };
