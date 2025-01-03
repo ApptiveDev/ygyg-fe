@@ -37,7 +37,7 @@
   flex-direction: column; 
   align-items: flex-start; 
   width: 100%; 
-  gap: 16px; /* 텍스트와 카드 간의 간격 */
+  gap: 16px; 
   padding: 0 16px;
 }
 
@@ -64,7 +64,6 @@
   bottom: 0; 
   width: 10px;
   overflow-x: auto;
-
 }
 
 .cardScrollbar::-webkit-scrollbar {
@@ -112,6 +111,11 @@
   margin-top: 16px; 
   margin-bottom: 50px;
   gap: 16px;
+}
+.postdone-btn{
+  &:hover {
+    background-color: #F4F4F4;
+  }
 }
 
 .delete{
