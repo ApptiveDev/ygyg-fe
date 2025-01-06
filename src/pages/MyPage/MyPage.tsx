@@ -121,7 +121,7 @@ export const MyPage = () => {
               color: 'black',
               fontWeight: '500',
               fontSize: '16px',
-              padding: '10px',
+              padding: '15px 10px 15px 20px',
             }}
           >
             소분 종료된 게시글 전체 보기

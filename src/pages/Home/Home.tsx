@@ -35,6 +35,7 @@ export const HomePage = () => {
           <Heading.Medium>양념장 소분 게시글 목록</Heading.Medium>
           <CardList />
           <Button
+            className={styles.navigateButton}
             theme="white"
             shadow="0 0 10px rgba(0,0,0,0.1)"
             icon={<GoArrowUpRight />}
