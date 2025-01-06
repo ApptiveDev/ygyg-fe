@@ -56,3 +56,9 @@
 
   cursor: pointer;
 }
+
+.navigateButton {
+  &:hover {
+    background-color: #f4f4f4;
+  }
+}

@@ -1,24 +1,23 @@
-import React, { useRef } from 'react';
-import { Heading} from '@/components/atoms/Text/TextFactory'
-import styles from './MyPage.module.scss';
-import Card from '@/components/common/CardList/Card/Card';
-import MockImage from '@/assets/images/mock-image.png';
+import React, { useRef } from 'react'
+import { Heading } from '@/components/atoms/Text/TextFactory'
+import styles from './MyPage.module.scss'
+import Card from '@/components/common/CardList/Card/Card'
+import MockImage from '@/assets/images/mock-image.png'
 import Container from '@/components/atoms/Container/Container'
 import Button from '@/components/common/Button/Button'
 import { GoArrowUpRight } from 'react-icons/go'
-
-import FloatingBtn from '@/components/common/FloatingBtn/FloatingBtn'
+import FloatingButton from '@/components/common/FloatingButton/FloatingButton'
 
 interface CardData {
-  id: number;
-  title: string;
-  thumbnail: string;
-  minPrice: string;
-  maxPrice: string;
-  meetingDate: string;
-  min: number;
-  max: number;
-  current: number;
+  id: number
+  title: string
+  thumbnail: string
+  minPrice: string
+  maxPrice: string
+  meetingDate: string
+  min: number
+  max: number
+  current: number
 }
 
 const mockCards: CardData[] = Array.from({ length: 10 }, (_, index) => ({
@@ -31,39 +30,35 @@ const mockCards: CardData[] = Array.from({ length: 10 }, (_, index) => ({
   min: 4,
   max: 8,
   current: 5,
-}));
+}))
 
 const ScrollableCardList = ({ cards }: { cards: CardData[] }) => {
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null)
 
   const handleMouseDown = (event: React.MouseEvent) => {
-    const container = scrollRef.current;
-    if (!container) return;
+    const container = scrollRef.current
+    if (!container) return
 
-    const startX = event.pageX;
-    const initialScrollLeft = container.scrollLeft;
+    const startX = event.pageX
+    const initialScrollLeft = container.scrollLeft
 
     const handleMouseMove = (moveEvent: MouseEvent) => {
-      const deltaX = moveEvent.pageX - startX;
-      container.scrollLeft = initialScrollLeft - deltaX;
-    };
+      const deltaX = moveEvent.pageX - startX
+      container.scrollLeft = initialScrollLeft - deltaX
+    }
 
     const handleMouseUp = () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-    };
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', handleMouseUp)
+    }
 
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
-  };
+    document.addEventListener('mousemove', handleMouseMove)
+    document.addEventListener('mouseup', handleMouseUp)
+  }
 
   return (
     <div className={styles.cardListContainer}>
-      <div
-        className={styles.cardList}
-        ref={scrollRef}
-        onMouseDown={handleMouseDown}
-      >
+      <div className={styles.cardList} ref={scrollRef} onMouseDown={handleMouseDown}>
         {cards.map((card) => (
           <Card
             key={card.id}
@@ -80,9 +75,8 @@ const ScrollableCardList = ({ cards }: { cards: CardData[] }) => {
       </div>
       <div className={styles.cardScrollbar} />
     </div>
-  );
-};
-
+  )
+}
 
 export const MyPage = () => {
   return (
@@ -91,28 +85,26 @@ export const MyPage = () => {
         <div className={styles['comment-header']}>
           <span className={styles['comment-nickname']}>닉네임</span>님, 오늘도 야금야금 하세요!
         </div>
-        <div className={styles['comment-userinfo']}>
-          유저이름 | 이메일
-        </div>
+        <div className={styles['comment-userinfo']}>유저이름 | 이메일</div>
       </div>
       <Container
-          direction="column"
-          justify="center"
-          align="center"
-          style={{
-            borderBottom: '1px solid var(--gray-color2)',
-            width: '100%',
-            boxSizing: 'border-box',
-          }}
-        ></Container>
+        direction="column"
+        justify="center"
+        align="center"
+        style={{
+          borderBottom: '1px solid var(--gray-color2)',
+          width: '100%',
+          boxSizing: 'border-box',
+        }}
+      ></Container>
 
       <div className={styles.mypost}>
-      <Heading.Small>내가 작성한 양념장 소분 게시글</Heading.Small>
+        <Heading.Small>내가 작성한 양념장 소분 게시글</Heading.Small>
         <ScrollableCardList cards={mockCards} />
       </div>
 
       <div className={styles.myposting}>
-      <Heading.Small>현재 참여 중인 양념장 소분 게시글</Heading.Small>
+        <Heading.Small>현재 참여 중인 양념장 소분 게시글</Heading.Small>
         <ScrollableCardList cards={mockCards} />
       </div>
 
@@ -120,12 +112,16 @@ export const MyPage = () => {
         <div className={styles['postdone-comment']}>
           <Heading.Small>소분 종료된 게시글</Heading.Small>
           <Button
-            className = {styles['postdone-btn']}
+            className={styles['postdone-btn']}
             theme="white"
             shadow="0 0 10px rgba(0,0,0,0.1)"
             icon={<GoArrowUpRight />}
-            style={{ borderRadius: '4px', color: 'black',fontWeight: '500',
-              fontSize: '16px', padding: '10px'
+            style={{
+              borderRadius: '4px',
+              color: 'black',
+              fontWeight: '500',
+              fontSize: '16px',
+              padding: '15px 10px 15px 20px',
             }}
           >
             소분 종료된 게시글 전체 보기
@@ -147,8 +143,8 @@ export const MyPage = () => {
           ))}
         </div>
       </div>
-      <div className = {styles.delete}>회원 탈퇴하기</div>
-        <FloatingBtn/>
+      <div className={styles.delete}>회원 탈퇴하기</div>
+      <FloatingButton />
     </div>
-  );
-};
+  )
+}

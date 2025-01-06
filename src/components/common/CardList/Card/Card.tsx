@@ -1,6 +1,6 @@
-import ClockIcon from '@/assets/cardIcons/clock-icon.svg';
-import styles from '@/components/common/CardList/Card/Card.module.scss'; 
-
+import ClockIcon from '@/assets/cardIcons/clock-icon.svg'
+import styles from '@/components/common/CardList/Card/Card.module.scss'
+import { BsClock } from 'react-icons/bs'
 interface CardProps {
   thumbnail: string
   title: string
@@ -29,9 +29,7 @@ const Card = ({
       <div className={styles['card-image-container']}>
         <img src={thumbnail} alt={title} className={styles['card-image']} />
         <div className={styles['card-time-container']}>
-          <div className={styles['clock-icon']}>
-            <img src={ClockIcon} alt="Clock Icon" />
-          </div>
+          <BsClock className={styles['clock-icon']} />
           <div className="meeting-date">{meetingDate}</div>
         </div>
       </div>

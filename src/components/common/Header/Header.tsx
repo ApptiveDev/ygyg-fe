@@ -18,8 +18,12 @@ export const Header = ({ isHome = false }: HeaderProps) => {
     <div className={styles.homeHeaderWrapper} css={scrollHeaderStyle}>
       <img src={logo} alt="logo" className={styles.homeLogo} onClick={() => navigate('/')} />
       <Container gap={24}>
-        <div className={styles.textButton}>로그아웃</div>
-        <div className={styles.myPage}>마이페이지</div>
+        <div className={styles.textButton} onClick={() => navigate('/login')}>
+          로그인
+        </div>
+        <div className={styles.myPage} onClick={() => navigate('/mypage')}>
+          마이페이지
+        </div>
       </Container>
     </div>
   ) : (
@@ -27,8 +31,12 @@ export const Header = ({ isHome = false }: HeaderProps) => {
       <img src={logo} alt="logo" className={styles.logo} onClick={() => navigate('/')} />
       <SearchBar placeholder="검색하고 싶은 양념장을 입력하세요" />
       <Container gap={24}>
-        <div className={styles.textButton}>로그아웃</div>
-        <div className={styles.myPage}>마이페이지</div>
+        <div className={styles.textButton} onClick={() => navigate('/login')}>
+          로그인
+        </div>
+        <div className={styles.myPage} onClick={() => navigate('/mypage')}>
+          마이페이지
+        </div>
       </Container>
     </div>
   )

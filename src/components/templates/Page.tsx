@@ -3,17 +3,20 @@ import { Header } from '../common/Header/Header'
 import styled from '@emotion/styled'
 import { Outlet } from 'react-router-dom'
 import { Footer } from '../common/Footer/Footer'
+import FloatingButton from '../common/FloatingButton/FloatingButton'
 
 interface PageProps {
   home?: boolean
+  floatingButton?: boolean
 }
 
-function Page({ home = false }: PageProps) {
+function Page({ home = false, floatingButton = true }: PageProps) {
   return (
     <PageWrapper>
       {home ? <Header isHome={true} /> : <Header />}
       <InnerWrapper>
         <Outlet />
+        {floatingButton ? <FloatingButton /> : null}
         <Footer />
       </InnerWrapper>
     </PageWrapper>
