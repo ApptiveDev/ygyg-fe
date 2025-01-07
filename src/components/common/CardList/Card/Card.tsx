@@ -30,7 +30,7 @@ const Card = ({
         <img src={thumbnail} alt={title} className={styles['card-image']} />
         <div className={styles['card-time-container']}>
           <BsClock className={styles['clock-icon']} />
-          <div className="meeting-date">{meetingDate}</div>
+          <div className={styles.meetingDate}>{meetingDate}</div>
         </div>
       </div>
       <div className={styles['card-content']}>

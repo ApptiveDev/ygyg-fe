@@ -431,7 +431,7 @@ export const PostPage = () => {
           placeholder="상세한 위치를 입력해주세요"
           width="100%"
           value={detailPlace}
-          onChange={() => setDetailPlace(detailPlace)}
+          onChange={(e) => setDetailPlace(e.target.value)}
         />
       </Container>
       <Container
