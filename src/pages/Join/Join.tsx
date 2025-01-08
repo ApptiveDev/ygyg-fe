@@ -7,15 +7,16 @@ import DropDown from '@/components/atoms/DropDown/DropDown'
 import { useEffect, useState } from 'react'
 import { FaCheck } from 'react-icons/fa6'
 import Button from '@/components/common/Button/Button'
+import { checkNickname } from '@/api/hooks/user/userApi'
 
 export const JoinPage = () => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [authorized, setAuthorized] = useState(true)
-  const [id, setId] = useState('')
   const [password, setPassword] = useState('')
   const [rePassword, setRePassword] = useState('')
   const [nickname, setNickname] = useState('')
+  const [nicknameDuplicated, setNicknameDuplicated] = useState(true)
   const [selectedRoute, setSelectedRoute] = useState('')
   const [checked, setChecked] = useState(false)
 
@@ -57,10 +58,10 @@ export const JoinPage = () => {
       name.trim() &&
       email.trim() &&
       authorized &&
-      id.trim() &&
       password.trim() &&
       rePassword.trim() &&
       nickname.trim() &&
+      !nicknameDuplicated &&
       selectedRoute.trim() &&
       checked === true
     ) {
@@ -68,7 +69,17 @@ export const JoinPage = () => {
     } else {
       setIsDone(false)
     }
-  }, [name, email, authorized, id, password, rePassword, nickname, selectedRoute, checked])
+  }, [
+    name,
+    email,
+    authorized,
+    password,
+    rePassword,
+    nickname,
+    nicknameDuplicated,
+    selectedRoute,
+    checked,
+  ])
 
   useEffect(() => {
     if (rePassword.trim() && password !== rePassword) {
@@ -90,10 +101,10 @@ export const JoinPage = () => {
     if (!name.trim()) newErrors.name = '* 이름을 입력하세요.'
     if (!email.trim()) newErrors.email = '* 이메일을 입력하세요.'
     if (!authorized) newErrors.authorized = '* 인증번호를 입력하고 인증해주세요.'
-    if (!id.trim()) newErrors.id = '* 아이디를 입력하세요.'
     if (!password.trim()) newErrors.password = '* 비밀번호를 입력하세요.'
     if (!rePassword.trim()) newErrors.rePassword = '* 비밀번호가 일치하지 않습니다.'
     if (!nickname.trim()) newErrors.nickname = '* 닉네임을 입력하세요.'
+    if (nicknameDuplicated) newErrors.nicknameDuplicated = '* 닉네임 중복 확인을 해주세요.'
     if (!selectedRoute.trim()) newErrors.selectedRoute = '* 가입 경로를 선택하세요.'
     if (!checked) newErrors.checked = '* 이용약관 및 개인정보처리방침에 동의해주세요.'
 
@@ -105,7 +116,6 @@ export const JoinPage = () => {
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value
       setter(value)
-
       setErrors((prevErrors) => {
         const newErrors = { ...prevErrors }
         if (value.trim()) {
@@ -143,6 +153,28 @@ export const JoinPage = () => {
 
   const submit = () => {
     console.log('게시물을 등록합니다.')
+  }
+
+  const nicknameDuplicateCheck = async () => {
+    try {
+      const isDuplicated = await checkNickname(nickname)
+      setNicknameDuplicated(isDuplicated)
+      setErrors((prevErrors) => {
+        const newErrors = { ...prevErrors }
+        if (!isDuplicated) {
+          delete newErrors.nicknameDuplicated
+        }
+        return newErrors
+      })
+      if (isDuplicated) {
+        alert('이미 존재하는 닉네임입니다!')
+      } else {
+        alert('닉네임 확인이 완료되었습니다!')
+      }
+    } catch (error) {
+      console.error('닉네임 확인 실패:', error)
+      alert('닉네임 확인에 실패하였습니다. 다시 시도해 주세요.')
+    }
   }
 
   return (
@@ -222,16 +254,7 @@ export const JoinPage = () => {
             <TextBody.XSmall style={{ color: 'red' }}>{errors.authorized}</TextBody.XSmall>
           )}
         </Container>
-        <Container size="full-width" direction="column" gap={12}>
-          <Heading.XSmall>아이디</Heading.XSmall>
-          <InputText
-            placeholder="아이디를 입력해주세요."
-            width="100%"
-            value={id}
-            onChange={handleInputChange('id', setId)}
-          />
-          {errors.id && <TextBody.XSmall style={{ color: 'red' }}>{errors.id}</TextBody.XSmall>}
-        </Container>
+
         <Container size="full-width" direction="column" gap={12}>
           <Heading.XSmall>비밀번호</Heading.XSmall>
           <InputText
@@ -275,6 +298,7 @@ export const JoinPage = () => {
                 fontSize: '16px',
                 minWidth: '170px',
               }}
+              onClick={nicknameDuplicateCheck}
             >
               중복 확인
             </Button>
@@ -282,12 +306,15 @@ export const JoinPage = () => {
           {errors.nickname && (
             <TextBody.XSmall style={{ color: 'red' }}>{errors.nickname}</TextBody.XSmall>
           )}
+          {!errors.nickname && errors.nicknameDuplicated && (
+            <TextBody.XSmall style={{ color: 'red' }}>{errors.nicknameDuplicated}</TextBody.XSmall>
+          )}
         </Container>
         <Container size="full-width" direction="column" gap={12} style={{ width: '100%' }}>
           <Heading.XSmall>야금야금을 알게 된 경로</Heading.XSmall>
           <DropDown
             placeholder="경로를 선택해주세요."
-            children={['에브리타임', '제휴 광고제품', '지인 추천', '기타']}
+            children={['에브리타임', '제휴 광고제품', '지인 추천']}
             width="300px"
             setValue={(selectedValue) =>
               handleDropDownSelect(setSelectedRoute, selectedValue, 'selectedRoute')

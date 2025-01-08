@@ -6,9 +6,10 @@ import InputText from '@/components/atoms/InputText/InputText'
 import Button from '@/components/common/Button/Button'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useState } from 'react'
+import { AuthProvider } from '@/provider/Auth/authApi'
 
 export const LoginPage = () => {
-  const [id, setId] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
   const navigate = useNavigate()
@@ -19,6 +20,21 @@ export const LoginPage = () => {
       const value = e.target.value
       setter(value)
     }
+
+  const login = async (event: React.FormEvent) => {
+    event.preventDefault()
+    if (!email || !password) {
+      alert('아이디와 비밀번호를 입력해주세요.')
+    } else {
+      try {
+        await AuthProvider({ userEmail: email, userPassword: password })
+        navigate('/')
+      } catch (error) {
+        console.error('Login failed:', error)
+        alert('로그인에 실패하였습니다. 다시 시도해 주세요.')
+      }
+    }
+  }
 
   return (
     <Container size="full-width" align="center" direction="column">
@@ -33,46 +49,52 @@ export const LoginPage = () => {
           안녕하세요! 양념장 소분 서비스 <span className={styles.point}>야금야금</span>입니다.
         </Heading.XSmall>
       </Container>
-      <Container gap={24} align="center" direction="column" style={{ marginBottom: '100px' }}>
-        <Heading.Medium>로그인</Heading.Medium>
-        <Container gap={14} align="center" direction="column">
-          <InputText
-            width="416px"
-            placeholder="아이디"
-            value={id}
-            onChange={handleInputChange(setId)}
-          />
-          <InputText
-            width="416px"
-            placeholder="비밀번호"
-            isPassword={true}
-            value={password}
-            onChange={handleInputChange(setPassword)}
-          />
-        </Container>
-        <Button
-          theme={id && password ? 'red' : 'gray'}
-          width="416px"
-          shadow="0 0 10px rgba(0, 0, 0, 0.15)"
-          style={{ borderRadius: '8px' }}
-        >
-          로그인
-        </Button>
-        <Container gap={8} align="center" direction="column">
-          <TextBody.XSmall weight={600} color="var(--gray-color5)">
-            아직 야금야금 회원이 아니신가요?
-          </TextBody.XSmall>
+      <form onSubmit={login}>
+        <Container gap={24} align="center" direction="column" style={{ marginBottom: '100px' }}>
+          <Heading.Medium>로그인</Heading.Medium>
+          <Container gap={14} align="center" direction="column">
+            <InputText
+              width="416px"
+              placeholder="이메일"
+              value={email}
+              onChange={handleInputChange(setEmail)}
+            />
+            <InputText
+              width="416px"
+              placeholder="비밀번호"
+              isPassword={true}
+              value={password}
+              onChange={handleInputChange(setPassword)}
+            />
+          </Container>
           <Button
-            theme="light-outlined"
+            className={`${styles.loginButton} ${!email || !password ? styles.gray : ''}`}
+            theme={email && password ? 'red' : 'gray'}
             width="416px"
             shadow="0 0 10px rgba(0, 0, 0, 0.15)"
-            style={{ borderRadius: '8px', backgroundColor: 'white' }}
-            onClick={() => navigate('/join')}
+            style={{ borderRadius: '8px' }}
+            type="submit"
           >
-            회원가입 하기
+            로그인
           </Button>
+          <Container gap={8} align="center" direction="column">
+            <TextBody.XSmall weight={600} color="var(--gray-color5)">
+              아직 야금야금 회원이 아니신가요?
+            </TextBody.XSmall>
+            <Button
+              className={styles.signUpButton}
+              theme="light-outlined"
+              width="416px"
+              shadow="0 0 10px rgba(0, 0, 0, 0.15)"
+              style={{ borderRadius: '8px' }}
+              onClick={() => navigate('/join')}
+            >
+              회원가입 하기
+            </Button>
+          </Container>
         </Container>
-      </Container>
+      </form>
+
       <PictureArea />
     </Container>
   )

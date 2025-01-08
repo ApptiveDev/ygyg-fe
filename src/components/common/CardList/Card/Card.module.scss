@@ -40,7 +40,7 @@
   background-color: #ffffff;
   border: solid 1px #d6282c;
   border-radius: 32px;
-  gap: 4px;
+  gap: 5px;
 
   color: #d6282c;
   font-size: 20px;
@@ -62,26 +62,28 @@
 }
 
 .clock-icon {
-  width: 14px;
-  height: 14px;
-
+  width: 16px;
+  height: 16px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
+.meetingDate {
+  font-weight: 600;
+}
 .card-content {
-  padding: 16px;
+  padding: 17px;
 
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-
+  justify-content: center;
   transition: background-color 0.3s;
 }
 
 .card-header-container {
-  margin: 0 15px;
+  margin: 0 8px;
 }
 
 .card-title {
@@ -108,7 +110,7 @@
 }
 
 .card-count-block {
-  margin: 20px 8px;
+  margin: 20px 8px 12px 8px;
   display: flex;
   gap: 4px;
 }
