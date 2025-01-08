@@ -4,6 +4,7 @@ import styled from '@emotion/styled'
 import { Outlet } from 'react-router-dom'
 import { Footer } from '../common/Footer/Footer'
 import FloatingButton from '../common/FloatingButton/FloatingButton'
+import ScrollToTop from '@/hooks/useScrollToTop'
 
 interface PageProps {
   home?: boolean
@@ -13,6 +14,7 @@ interface PageProps {
 function Page({ home = false, floatingButton = true }: PageProps) {
   return (
     <PageWrapper>
+      <ScrollToTop />
       {home ? <Header isHome={true} /> : <Header />}
       <InnerWrapper>
         <Outlet />

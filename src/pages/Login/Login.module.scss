@@ -22,3 +22,21 @@
   background-color: var(--gray-color2);
   object-fit: cover;
 }
+
+.loginButton {
+  &:hover {
+    background-color: var(--dark-point-color);
+  }
+
+  &.gray {
+    &:hover {
+      background-color: var(--gray-color3);
+    }
+  }
+}
+
+.signUpButton {
+  &:hover {
+    background-color: var(--gray-color1);
+  }
+}

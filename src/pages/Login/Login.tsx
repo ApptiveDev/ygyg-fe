@@ -23,13 +23,16 @@ export const LoginPage = () => {
 
   const login = async (event: React.FormEvent) => {
     event.preventDefault()
-
-    try {
-      await AuthProvider({ userEmail: email, userPassword: password })
-      navigate('/')
-    } catch (error) {
-      console.error('Login failed:', error)
-      alert('로그인에 실패하였습니다. 다시 시도해 주세요.')
+    if (!email || !password) {
+      alert('아이디와 비밀번호를 입력해주세요.')
+    } else {
+      try {
+        await AuthProvider({ userEmail: email, userPassword: password })
+        navigate('/')
+      } catch (error) {
+        console.error('Login failed:', error)
+        alert('로그인에 실패하였습니다. 다시 시도해 주세요.')
+      }
     }
   }
 
@@ -65,6 +68,7 @@ export const LoginPage = () => {
             />
           </Container>
           <Button
+            className={`${styles.loginButton} ${!email || !password ? styles.gray : ''}`}
             theme={email && password ? 'red' : 'gray'}
             width="416px"
             shadow="0 0 10px rgba(0, 0, 0, 0.15)"
@@ -78,10 +82,11 @@ export const LoginPage = () => {
               아직 야금야금 회원이 아니신가요?
             </TextBody.XSmall>
             <Button
+              className={styles.signUpButton}
               theme="light-outlined"
               width="416px"
               shadow="0 0 10px rgba(0, 0, 0, 0.15)"
-              style={{ borderRadius: '8px', backgroundColor: 'white' }}
+              style={{ borderRadius: '8px' }}
               onClick={() => navigate('/join')}
             >
               회원가입 하기
