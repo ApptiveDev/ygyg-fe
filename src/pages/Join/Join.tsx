@@ -16,6 +16,7 @@ export const JoinPage = () => {
   const [password, setPassword] = useState('')
   const [rePassword, setRePassword] = useState('')
   const [nickname, setNickname] = useState('')
+  const [nicknameDuplicated, setNicknameDuplicated] = useState(true)
   const [selectedRoute, setSelectedRoute] = useState('')
   const [checked, setChecked] = useState(false)
 
@@ -60,6 +61,7 @@ export const JoinPage = () => {
       password.trim() &&
       rePassword.trim() &&
       nickname.trim() &&
+      !nicknameDuplicated &&
       selectedRoute.trim() &&
       checked === true
     ) {
@@ -67,7 +69,17 @@ export const JoinPage = () => {
     } else {
       setIsDone(false)
     }
-  }, [name, email, authorized, password, rePassword, nickname, selectedRoute, checked])
+  }, [
+    name,
+    email,
+    authorized,
+    password,
+    rePassword,
+    nickname,
+    nicknameDuplicated,
+    selectedRoute,
+    checked,
+  ])
 
   useEffect(() => {
     if (rePassword.trim() && password !== rePassword) {
@@ -92,6 +104,7 @@ export const JoinPage = () => {
     if (!password.trim()) newErrors.password = '* 비밀번호를 입력하세요.'
     if (!rePassword.trim()) newErrors.rePassword = '* 비밀번호가 일치하지 않습니다.'
     if (!nickname.trim()) newErrors.nickname = '* 닉네임을 입력하세요.'
+    if (nicknameDuplicated) newErrors.nicknameDuplicated = '* 닉네임 중복 확인을 해주세요.'
     if (!selectedRoute.trim()) newErrors.selectedRoute = '* 가입 경로를 선택하세요.'
     if (!checked) newErrors.checked = '* 이용약관 및 개인정보처리방침에 동의해주세요.'
 
@@ -103,7 +116,6 @@ export const JoinPage = () => {
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value
       setter(value)
-
       setErrors((prevErrors) => {
         const newErrors = { ...prevErrors }
         if (value.trim()) {
@@ -145,8 +157,20 @@ export const JoinPage = () => {
 
   const nicknameDuplicateCheck = async () => {
     try {
-      await checkNickname(nickname)
-      alert('닉네임 확인이 완료되었습니다!')
+      const isDuplicated = await checkNickname(nickname)
+      setNicknameDuplicated(isDuplicated)
+      setErrors((prevErrors) => {
+        const newErrors = { ...prevErrors }
+        if (!isDuplicated) {
+          delete newErrors.nicknameDuplicated
+        }
+        return newErrors
+      })
+      if (isDuplicated) {
+        alert('이미 존재하는 닉네임입니다!')
+      } else {
+        alert('닉네임 확인이 완료되었습니다!')
+      }
     } catch (error) {
       console.error('닉네임 확인 실패:', error)
       alert('닉네임 확인에 실패하였습니다. 다시 시도해 주세요.')
@@ -281,6 +305,9 @@ export const JoinPage = () => {
           </Container>
           {errors.nickname && (
             <TextBody.XSmall style={{ color: 'red' }}>{errors.nickname}</TextBody.XSmall>
+          )}
+          {!errors.nickname && errors.nicknameDuplicated && (
+            <TextBody.XSmall style={{ color: 'red' }}>{errors.nicknameDuplicated}</TextBody.XSmall>
           )}
         </Container>
         <Container size="full-width" direction="column" gap={12} style={{ width: '100%' }}>

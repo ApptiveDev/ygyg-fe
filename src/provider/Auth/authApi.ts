@@ -1,15 +1,20 @@
-import fetchInstance from '@/api/instance/instance'
 import { apiInstance } from './apiInstance'
 import type { UserResponseData } from './types'
 
 export const AuthProvider = async (userInfo: { userEmail: string; userPassword: string }) => {
-  const endpoint = `/v1/auth/signin`
+  const endpoint = `/api/v1/auth/signin`
   localStorage.removeItem('accessToken')
   try {
     const response = await apiInstance.post<UserResponseData>(endpoint, userInfo)
 
-    const { accessToken } = response.data
+    const userUuid = response.data.result.userUuid
+    const userNickname = response.data.result.userNickname
+    const accessToken = response.data.result.accessToken
+
+    localStorage.setItem('userUuid', userUuid)
+    localStorage.setItem('userNickname', userNickname)
     localStorage.setItem('accessToken', accessToken)
+
     return response.data
   } catch (error) {
     console.error('Error during login:', error)
