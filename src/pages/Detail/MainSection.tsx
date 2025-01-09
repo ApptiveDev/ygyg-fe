@@ -47,8 +47,8 @@ export const MainSection = ({
         }}
         justify="space-between"
       >
-        <Container align="flex-start" direction="column" size="full-width" gap={8}>
-          <Heading.Small style={{ marginBottom: '18px' }}>{title}</Heading.Small>
+        <Container align="flex-start" direction="column" size="full-width" gap={15}>
+          <Heading.Small>{title}</Heading.Small>
           <TextBody.Small className={styles.author}>{author}</TextBody.Small>
           <Container size="full-width" justify="space-between" gap={11}>
             <TextBody.Small className={styles.smallTitle} weight={700}>
@@ -115,7 +115,7 @@ export const MainSection = ({
             direction="column"
             align="center"
             justify="flex-start"
-            style={{ height: '85px', marginBottom: '10px' }}
+            style={{ height: '85px', marginBottom: '8px' }}
           >
             <Button
               theme="red"
@@ -133,7 +133,7 @@ export const MainSection = ({
             direction="column"
             align="center"
             justify="flex-start"
-            style={{ height: '85px', marginBottom: '10px' }}
+            style={{ height: '85px', marginBottom: '8px' }}
           >
             <Button
               theme="red"
@@ -152,7 +152,7 @@ export const MainSection = ({
             align="center"
             justify="flex-start"
             gap={10}
-            style={{ height: '85px', marginBottom: '10px' }}
+            style={{ height: '85px', marginBottom: '8px' }}
           >
             <Button
               theme="gray"
