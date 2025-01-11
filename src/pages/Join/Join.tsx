@@ -7,10 +7,14 @@ import DropDown from '@/components/atoms/DropDown/DropDown'
 import { useEffect, useState } from 'react'
 import { FaCheck } from 'react-icons/fa6'
 import Button from '@/components/common/Button/Button'
-import { checkNickname } from '@/api/hooks/user/userApi'
+import { checkNickname, signUp } from '@/api/hooks/user/userApi'
 import { checkEmail } from '@/api/hooks/user/userApi'
 import { sendAuthCode } from '@/api/hooks/user/userApi'
 import { verifyAuthCode } from '@/api/hooks/user/userApi'
+import { usePostUser } from '@/api/hooks/user/usePostUser'
+import { useNavigate } from 'react-router-dom'
+
+const JoinRoutes = ['에브리타임', '제휴 광고제품', '지인 추천']
 
 export const JoinPage = () => {
   const [name, setName] = useState('')
@@ -30,6 +34,8 @@ export const JoinPage = () => {
   const [clicked, setClicked] = useState(false)
   const [timer, setTimer] = useState<number | null>(null)
   const [timeLeft, setTimeLeft] = useState(0)
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (timeLeft > 0) {
@@ -148,8 +154,19 @@ export const JoinPage = () => {
       })
     }
 
-  const submit = () => {
-    console.log('게시물을 등록합니다.')
+  const submit = async () => {
+    try {
+      await signUp({
+        userEmail: email,
+        userPassword: password,
+        userNickname: nickname,
+        routeId: JoinRoutes.indexOf(selectedRoute) + 1,
+      })
+      alert('야금야금의 회원이 되신걸 환영합니다!')
+      navigate('/login')
+    } catch (error) {
+      alert('회원가입에 실패하였습니다.')
+    }
   }
 
   const nicknameDuplicateCheck = async () => {
@@ -166,7 +183,7 @@ export const JoinPage = () => {
       if (isDuplicated) {
         alert('이미 존재하는 닉네임입니다!')
       } else {
-        alert('닉네임 확인이 완료되었습니다!')
+        alert('닉네임 중복 확인이 완료되었습니다!')
       }
     } catch (error) {
       console.error('닉네임 확인 실패:', error)
@@ -354,7 +371,7 @@ export const JoinPage = () => {
           <Heading.XSmall>야금야금을 알게 된 경로</Heading.XSmall>
           <DropDown
             placeholder="경로를 선택해주세요."
-            children={['에브리타임', '제휴 광고제품', '지인 추천']}
+            children={JoinRoutes}
             width="300px"
             setValue={(selectedValue) =>
               handleDropDownSelect(setSelectedRoute, selectedValue, 'selectedRoute')

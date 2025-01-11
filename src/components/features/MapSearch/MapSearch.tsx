@@ -73,17 +73,18 @@ const MapSearch = ({ setValue }: MapSearchProps) => {
       sort: window.kakao.maps.services.SortBy.DISTANCE,
     }
 
+    // 사용자가 입력한 키워드를 바탕으로 장소를 검색
     ps.keywordSearch(
       keyword,
       (data: any, status: any) => {
         if (status === window.kakao.maps.services.Status.OK) {
           removeMarkers()
-          setPlaces(data)
-          setIsOpen(true)
+          setPlaces(data) //검색 결과 데이터를 상태로 저장
+          setIsOpen(true) //검색 결과 모달창 열기
           setIsActive(true)
-          const bounds = new window.kakao.maps.LatLngBounds()
+          const bounds = new window.kakao.maps.LatLngBounds() //지도에서 모든 결과를 보기 위해 경계 설정
           data.forEach((place: any) => {
-            const marker = displayMarker(place, infowindow)
+            const marker = displayMarker(place, infowindow) //장소 데이터를 기반으로 마커를 생성 및 표시
             bounds.extend(new window.kakao.maps.LatLng(place.y, place.x))
             markersRef.current.push(marker)
           })
