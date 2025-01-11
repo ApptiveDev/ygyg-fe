@@ -28,17 +28,24 @@ function MapSection({ place, detailPlace, meetAt, category, latitude, longitude 
           justify="center"
           style={{ height: '190px', flexGrow: '3' }}
         >
-          <Container direction="column" align="flex-start" gap={25}>
+          <Container direction="column" align="center" gap={25}>
             <Heading.XSmall>소분 희망 장소</Heading.XSmall>
-            <TextBody.Medium
-              weight={500}
-              color="var(--gray-color5)"
-              style={{ lineHeight: '1.3rem' }}
-            >
-              {place}
-              <br />
-              {detailPlace}
-            </TextBody.Medium>
+            <Container direction="column" align="center">
+              <TextBody.Medium
+                weight={500}
+                color="var(--gray-color5)"
+                style={{ lineHeight: '1.3rem' }}
+              >
+                {place}
+              </TextBody.Medium>
+              <TextBody.Medium
+                weight={500}
+                color="var(--gray-color5)"
+                style={{ lineHeight: '1.3rem' }}
+              >
+                {detailPlace}
+              </TextBody.Medium>
+            </Container>
           </Container>
         </Container>
         <Container
@@ -52,7 +59,7 @@ function MapSection({ place, detailPlace, meetAt, category, latitude, longitude 
             borderRight: '1px solid var(--gray-color2)',
           }}
         >
-          <Container direction="column" align="flex-start" gap={25}>
+          <Container direction="column" align="center" gap={25}>
             <Heading.XSmall>소분 일시</Heading.XSmall>
             <TextBody.Medium
               weight={500}
@@ -69,7 +76,7 @@ function MapSection({ place, detailPlace, meetAt, category, latitude, longitude 
           justify="center"
           style={{ height: '190px', flexGrow: '3' }}
         >
-          <Container direction="column" align="flex-start" gap={25}>
+          <Container direction="column" align="center" gap={25}>
             <Heading.XSmall>카테고리</Heading.XSmall>
             <TextBody.Medium
               weight={500}

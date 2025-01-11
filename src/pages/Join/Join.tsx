@@ -157,7 +157,7 @@ export const JoinPage = () => {
     try {
       await signUp({
         userName: name,
-        userEmail: email,
+        userEmail: email + '@pusan.ac.kr',
         userPassword: password,
         userNickname: nickname,
         routeId: JoinRoutes.indexOf(selectedRoute) + 1,
@@ -265,10 +265,11 @@ export const JoinPage = () => {
         </Container>
         <Container size="full-width" direction="column" gap={12}>
           <Heading.XSmall>부산대학교 이메일</Heading.XSmall>
-          <Container size="full-width" gap={16}>
+          <Container size="full-width" align="center" gap={16}>
             <InputText
-              placeholder="부산대학교 이메일을 입력하고 중복확인 버튼을 눌러주세요."
+              placeholder="부산대학교 이메일을 입력하고 인증번호 받기 버튼을 눌러주세요."
               width="100%"
+              icon={<div>@pusan.ac.kr</div>}
               value={email}
               onChange={handleInputChange('email', setEmail)}
             />
