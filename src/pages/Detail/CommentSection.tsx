@@ -168,7 +168,7 @@ const CommentActivated = ({
         </Container>
         <InputText
           width="100%"
-          placeholder="댓글을 입력해주세요."
+          placeholder="댓글을 입력해주세요. (200자 이내)"
           value={comment}
           onChange={(e) => setComment(e.target.value)}
           icon={
@@ -183,6 +183,7 @@ const CommentActivated = ({
             />
           }
           onKeyDown={handleKeyDown}
+          maxLength={200}
         />
       </Container>
       <div ref={scrollRef} />

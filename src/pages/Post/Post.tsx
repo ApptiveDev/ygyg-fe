@@ -393,18 +393,19 @@ export const PostPage = () => {
       </Container>
       <Container size="full-width" direction="column" style={{ gap: '23px', marginBottom: '46px' }}>
         <Heading.XSmall>
-          게시글 내용 <span style={{ color: 'var(--point-color)' }}>*</span>
+          게시글 내용(상세 설명) <span style={{ color: 'var(--point-color)' }}>*</span>
         </Heading.XSmall>
 
         <Container gap="7px" direction="column" style={{ width: '100%' }}>
           <TextArea
-            placeholder="자세한 소분 내용을 입력해주세요."
+            placeholder="500자 이내로 입력해주세요."
             width="100%"
             height="200px"
             value={content}
             customSize="large"
             onChange={handleTextAreaChange('content', setContent)}
             error={!!errors.content}
+            maxLength={500}
           />
           {errors.content && (
             <TextBody.XSmall style={{ color: 'red' }}>{errors.content}</TextBody.XSmall>
