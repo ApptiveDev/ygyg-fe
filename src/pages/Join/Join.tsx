@@ -11,7 +11,6 @@ import { checkNickname, signUp } from '@/api/hooks/user/userApi'
 import { checkEmail } from '@/api/hooks/user/userApi'
 import { sendAuthCode } from '@/api/hooks/user/userApi'
 import { verifyAuthCode } from '@/api/hooks/user/userApi'
-import { usePostUser } from '@/api/hooks/user/usePostUser'
 import { useNavigate } from 'react-router-dom'
 
 const JoinRoutes = ['에브리타임', '제휴 광고제품', '지인 추천']
@@ -19,7 +18,7 @@ const JoinRoutes = ['에브리타임', '제휴 광고제품', '지인 추천']
 export const JoinPage = () => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
-  const [authorized, setAuthorized] = useState(true)
+  const [authorized, setAuthorized] = useState(false)
   const [password, setPassword] = useState('')
   const [rePassword, setRePassword] = useState('')
   const [nickname, setNickname] = useState('')
@@ -221,6 +220,13 @@ export const JoinPage = () => {
     try {
       const isVerified = await verifyAuthCode(email, authCode)
       if (isVerified) {
+        setAuthorized(true)
+        setErrors((prevErrors) => {
+          const newErrors = { ...prevErrors }
+          delete newErrors.authorized
+          return newErrors
+        })
+        setClicked(false)
         alert('인증번호가 확인되었습니다.')
       } else {
         alert('인증번호가 일치하지 않습니다.')
