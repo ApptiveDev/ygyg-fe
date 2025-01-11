@@ -205,7 +205,9 @@ export const JoinPage = () => {
       setTimeLeft(300)
       setTimer(Date.now())
       setClicked(true)
-      alert('인증번호가 발송되었습니다. 5분 내에 입력해주세요.')
+      alert(
+        '인증번호가 발송되었습니다. 5분 내에 입력해주세요.\n* 인증메일이 오지 않을 시, 스팸메일함을 확인해주세요.',
+      )
       await sendAuthCode(email)
     } catch (error) {
       console.error('인증번호 전송 실패:', error)
