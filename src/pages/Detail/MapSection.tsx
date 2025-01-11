@@ -29,23 +29,14 @@ function MapSection({ place, detailPlace, meetAt, category, latitude, longitude 
           style={{ height: '190px', flexGrow: '3' }}
         >
           <Container direction="column" align="center" gap={25}>
-            <Heading.XSmall>소분 희망 장소</Heading.XSmall>
-            <Container direction="column" align="center">
-              <TextBody.Medium
-                weight={500}
-                color="var(--gray-color5)"
-                style={{ lineHeight: '1.3rem' }}
-              >
-                {place}
-              </TextBody.Medium>
-              <TextBody.Medium
-                weight={500}
-                color="var(--gray-color5)"
-                style={{ lineHeight: '1.3rem' }}
-              >
-                {detailPlace}
-              </TextBody.Medium>
-            </Container>
+            <Heading.XSmall>소분 일시</Heading.XSmall>
+            <TextBody.Medium
+              weight={500}
+              color="var(--gray-color5)"
+              style={{ lineHeight: '1.3rem' }}
+            >
+              {year}년 {month}월 {date}일 {hour}시 {minute}분
+            </TextBody.Medium>
           </Container>
         </Container>
         <Container
@@ -60,14 +51,16 @@ function MapSection({ place, detailPlace, meetAt, category, latitude, longitude 
           }}
         >
           <Container direction="column" align="center" gap={25}>
-            <Heading.XSmall>소분 일시</Heading.XSmall>
-            <TextBody.Medium
-              weight={500}
-              color="var(--gray-color5)"
-              style={{ lineHeight: '1.3rem' }}
-            >
-              {year}년 {month}월 {date}일 {hour}시 {minute}분
-            </TextBody.Medium>
+            <Heading.XSmall>소분 희망 장소</Heading.XSmall>
+            <Container direction="column" align="center">
+              <TextBody.Medium
+                weight={500}
+                color="var(--gray-color5)"
+                style={{ lineHeight: '1.3rem' }}
+              >
+                {place} {detailPlace}
+              </TextBody.Medium>
+            </Container>
           </Container>
         </Container>
         <Container

@@ -433,6 +433,7 @@ export const PostPage = () => {
           width="100%"
           value={detailPlace}
           onChange={(e) => setDetailPlace(e.target.value)}
+          maxLength={15}
         />
       </Container>
       <Container
