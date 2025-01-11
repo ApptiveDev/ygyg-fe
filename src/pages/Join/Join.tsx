@@ -8,6 +8,9 @@ import { useEffect, useState } from 'react'
 import { FaCheck } from 'react-icons/fa6'
 import Button from '@/components/common/Button/Button'
 import { checkNickname } from '@/api/hooks/user/userApi'
+import { checkEmail } from '@/api/hooks/user/userApi'
+import { sendAuthCode } from '@/api/hooks/user/userApi'
+import { verifyAuthCode } from '@/api/hooks/user/userApi'
 
 export const JoinPage = () => {
   const [name, setName] = useState('')
@@ -19,6 +22,7 @@ export const JoinPage = () => {
   const [nicknameDuplicated, setNicknameDuplicated] = useState(true)
   const [selectedRoute, setSelectedRoute] = useState('')
   const [checked, setChecked] = useState(false)
+  const [authCode, setAuthCode] = useState('')
 
   const [isDone, setIsDone] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -44,13 +48,6 @@ export const JoinPage = () => {
       .padStart(2, '0')
     const seconds = (time % 60).toString().padStart(2, '0')
     return `${minutes}:${seconds}`
-  }
-
-  const handleRequestAuth = () => {
-    setTimeLeft(300) // 5분
-    setTimer(Date.now())
-    setClicked(true)
-    alert('인증번호가 발송되었습니다. 5분 내에 입력해주세요.')
   }
 
   useEffect(() => {
@@ -177,6 +174,46 @@ export const JoinPage = () => {
     }
   }
 
+  const handleRequestAuthCode = async () => {
+    if (!email) {
+      alert('이메일을 입력해주세요.')
+      return
+    }
+    try {
+      const isDuplicated = await checkEmail({ email })
+      if (isDuplicated) {
+        alert('이미 존재하는 이메일입니다!')
+        return
+      }
+      setTimeLeft(300)
+      setTimer(Date.now())
+      setClicked(true)
+      alert('인증번호가 발송되었습니다. 5분 내에 입력해주세요.')
+      await sendAuthCode(email)
+    } catch (error) {
+      console.error('인증번호 전송 실패:', error)
+      alert('인증번호 전송에 실패하였습니다. 다시 시도해 주세요.')
+    }
+  }
+
+  const handleVerifyAuthCode = async () => {
+    if (!authCode) {
+      alert('인증번호를 입력해주세요.')
+      return
+    }
+    try {
+      const isVerified = await verifyAuthCode(email, authCode)
+      if (isVerified) {
+        alert('인증번호가 확인되었습니다.')
+      } else {
+        alert('인증번호가 일치하지 않습니다.')
+      }
+    } catch (error) {
+      console.error('인증번호 확인 실패:', error)
+      alert('인증번호 확인에 실패하였습니다. 다시 시도해 주세요.')
+    }
+  }
+
   return (
     <Container
       size="full-width"
@@ -213,13 +250,13 @@ export const JoinPage = () => {
               theme="light-outlined"
               width="190px"
               height="64px"
-              onClick={handleRequestAuth}
               style={{
                 borderRadius: '8px',
                 backgroundColor: 'white',
                 fontSize: '16px',
                 minWidth: '170px',
               }}
+              onClick={handleRequestAuthCode}
             >
               인증번호 받기
             </Button>
@@ -235,6 +272,8 @@ export const JoinPage = () => {
               placeholder="이메일로 받으신 인증번호를 입력해주세요."
               width="100%"
               timer={clicked ? `${formatTime(timeLeft)}` : ''}
+              value={authCode}
+              onChange={(e) => setAuthCode(e.target.value)}
             />
             <Button
               theme="light-outlined"
@@ -246,6 +285,7 @@ export const JoinPage = () => {
                 fontSize: '16px',
                 minWidth: '170px',
               }}
+              onClick={handleVerifyAuthCode}
             >
               인증번호 확인
             </Button>
