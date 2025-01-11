@@ -156,6 +156,7 @@ export const JoinPage = () => {
   const submit = async () => {
     try {
       await signUp({
+        userName: name,
         userEmail: email,
         userPassword: password,
         userNickname: nickname,

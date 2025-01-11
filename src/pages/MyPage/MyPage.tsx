@@ -79,13 +79,15 @@ const ScrollableCardList = ({ cards }: { cards: CardData[] }) => {
 }
 
 export const MyPage = () => {
+  const nickname = localStorage.getItem('userNickname')
+  const email = localStorage.getItem('userEmail')
   return (
     <div className={styles.container}>
       <div className={styles.comment}>
         <div className={styles['comment-header']}>
-          <span className={styles['comment-nickname']}>닉네임</span>님, 오늘도 야금야금 하세요!
+          <span className={styles['comment-nickname']}>{nickname}</span>님, 오늘도 야금야금 하세요!
         </div>
-        <div className={styles['comment-userinfo']}>유저이름 | 이메일</div>
+        <div className={styles['comment-userinfo']}>유저이름 | {email}</div>
       </div>
       <Container
         direction="column"

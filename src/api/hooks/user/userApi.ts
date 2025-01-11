@@ -1,4 +1,4 @@
-import { DuplicateCheckResponseData } from './types'
+import { DuplicateCheckResponseData, UserInfo } from './types'
 import { apiInstance } from '@/provider/Auth/apiInstance'
 
 const signUpPath = `/api/v1/auth/signup`
@@ -8,18 +8,15 @@ const sendAuthcodePath = `/api/v1/email/auth`
 const verifyAuthcodePath = `/api/v1/email/verify/auth-code`
 
 export const signUp = async ({
+  userName,
   userEmail,
   userPassword,
   userNickname,
   routeId,
-}: {
-  userEmail: string
-  userPassword: string
-  userNickname: string
-  routeId: number
-}): Promise<void> => {
+}: UserInfo): Promise<void> => {
   try {
     const response = await apiInstance.post(signUpPath, {
+      userName: userName,
       userEmail: userEmail,
       userPassword: userPassword,
       userNickname: userNickname,
