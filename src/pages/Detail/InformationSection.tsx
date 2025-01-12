@@ -73,9 +73,9 @@ function InformationSection({ min, max, current, price, amount, unit }: Informat
             </button>
           ))}
         </Container>
-        <TextBody.XSmall weight={500} style={{ fontSize: '12.1px' }}>
-          인원을 클릭하면 인원에 따른 예상 가격과 예상 용량을 확인할 수 있어요!
-        </TextBody.XSmall>
+        <TextBody.Small weight={500} style={{ fontSize: '12.1px' }}>
+          인원수 버튼으로 예상 가격과 용량을 확인해 보세요!
+        </TextBody.Small>
       </Container>
       <Container size="full-width" direction="column" gap={30}>
         <Container size="full-width" justify="space-between">

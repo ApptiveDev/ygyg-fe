@@ -1,11 +1,35 @@
-import { DuplicateCheck, DuplicateCheckResponseData } from './types'
+import { DuplicateCheckResponseData, UserInfo } from './types'
 import { apiInstance } from '@/provider/Auth/apiInstance'
 
-const joinPath = `/api/v1/auth/signup`
+const signUpPath = `/api/v1/auth/signup`
 const nicknamePath = `/api/v1/user/duplicate-check/nickname/`
 const emailPath = `/api/v1/email/duplicate-check`
 const sendAuthcodePath = `/api/v1/email/auth`
 const verifyAuthcodePath = `/api/v1/email/verify/auth-code`
+
+export const signUp = async ({
+  userName,
+  userEmail,
+  userPassword,
+  userNickname,
+  routeId,
+}: UserInfo): Promise<void> => {
+  try {
+    const response = await apiInstance.post(signUpPath, {
+      userName: userName,
+      userEmail: userEmail,
+      userPassword: userPassword,
+      userNickname: userNickname,
+      routeId: routeId,
+    })
+    if (!response.data.isSuccess) {
+      throw new Error(response.data.message || '회원가입 실패')
+    }
+  } catch (error) {
+    console.error('회원가입 실패:', error)
+    throw error
+  }
+}
 
 export const checkNickname = async (nickname: string): Promise<boolean> => {
   const path = `${nicknamePath}${nickname}`
@@ -19,14 +43,14 @@ export const checkEmail = async ({ email }: { email: string }): Promise<boolean>
   const path = `${emailPath}`
   try {
     const response = await apiInstance.get<DuplicateCheckResponseData>(path, {
-      params: { email }, 
+      params: { email },
     })
     const isDuplicated = response.data.result.isDuplicated
 
     return isDuplicated
   } catch (error) {
     console.error('이메일 중복 확인 오류:', error)
-    throw error 
+    throw error
   }
 }
 

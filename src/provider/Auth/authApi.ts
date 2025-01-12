@@ -10,10 +10,14 @@ export const AuthProvider = async (userInfo: { userEmail: string; userPassword: 
     const userUuid = response.data.result.userUuid
     const userNickname = response.data.result.userNickname
     const accessToken = response.data.result.accessToken
+    const userName = response.data.result.userName
+    const userEmail = response.data.result.userEmail
 
     localStorage.setItem('userUuid', userUuid)
     localStorage.setItem('userNickname', userNickname)
     localStorage.setItem('accessToken', accessToken)
+    localStorage.setItem('userName', userName)
+    localStorage.setItem('userEmail', userEmail)
 
     return response.data
   } catch (error) {

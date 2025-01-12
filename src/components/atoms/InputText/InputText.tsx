@@ -1,4 +1,4 @@
-import { ReactNode } from 'react'
+import { ReactNode, useState } from 'react'
 import { TextBody } from '../Text/TextFactory'
 import styles from './InputText.module.scss'
 
@@ -10,9 +10,11 @@ interface InputTextProps {
   icon?: ReactNode
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
   onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void
+  onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void
   error?: boolean
   isPassword?: boolean
   timer?: string
+  maxLength?: number
 }
 
 function InputText({
@@ -23,9 +25,11 @@ function InputText({
   icon,
   onChange,
   onKeyDown,
+  onBlur,
   error = false,
   isPassword,
   timer,
+  maxLength,
 }: InputTextProps) {
   return (
     <div
@@ -39,6 +43,8 @@ function InputText({
         value={value}
         onChange={onChange}
         onKeyDown={onKeyDown}
+        onBlur={onBlur}
+        maxLength={maxLength}
       />
       {timer ? (
         <TextBody.XSmall style={{ width: '30px', color: 'var(--point-color)' }}>

@@ -28,31 +28,7 @@ function MapSection({ place, detailPlace, meetAt, category, latitude, longitude 
           justify="center"
           style={{ height: '190px', flexGrow: '3' }}
         >
-          <Container direction="column" align="flex-start" gap={25}>
-            <Heading.XSmall>소분 희망 장소</Heading.XSmall>
-            <TextBody.Medium
-              weight={500}
-              color="var(--gray-color5)"
-              style={{ lineHeight: '1.3rem' }}
-            >
-              {place}
-              <br />
-              {detailPlace}
-            </TextBody.Medium>
-          </Container>
-        </Container>
-        <Container
-          direction="column"
-          align="center"
-          justify="center"
-          style={{
-            height: '190px',
-            flexGrow: '4',
-            borderLeft: '1px solid var(--gray-color2)',
-            borderRight: '1px solid var(--gray-color2)',
-          }}
-        >
-          <Container direction="column" align="flex-start" gap={25}>
+          <Container direction="column" align="center" gap={25}>
             <Heading.XSmall>소분 일시</Heading.XSmall>
             <TextBody.Medium
               weight={500}
@@ -67,9 +43,33 @@ function MapSection({ place, detailPlace, meetAt, category, latitude, longitude 
           direction="column"
           align="center"
           justify="center"
+          style={{
+            height: '190px',
+            flexGrow: '4',
+            borderLeft: '1px solid var(--gray-color2)',
+            borderRight: '1px solid var(--gray-color2)',
+          }}
+        >
+          <Container direction="column" align="center" gap={25}>
+            <Heading.XSmall>소분 희망 장소</Heading.XSmall>
+            <Container direction="column" align="center">
+              <TextBody.Medium
+                weight={500}
+                color="var(--gray-color5)"
+                style={{ lineHeight: '1.3rem' }}
+              >
+                {place} {detailPlace}
+              </TextBody.Medium>
+            </Container>
+          </Container>
+        </Container>
+        <Container
+          direction="column"
+          align="center"
+          justify="center"
           style={{ height: '190px', flexGrow: '3' }}
         >
-          <Container direction="column" align="flex-start" gap={25}>
+          <Container direction="column" align="center" gap={25}>
             <Heading.XSmall>카테고리</Heading.XSmall>
             <TextBody.Medium
               weight={500}

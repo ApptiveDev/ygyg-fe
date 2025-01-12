@@ -4,5 +4,11 @@ export interface userInfo {
 }
 
 export type UserResponseData = {
-  result: { userUuid: string; userNickname: string; accessToken: string }
+  result: {
+    userUuid: string
+    userNickname: string
+    accessToken: string
+    userName: string
+    userEmail: string
+  }
 }

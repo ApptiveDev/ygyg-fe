@@ -7,15 +7,19 @@ import DropDown from '@/components/atoms/DropDown/DropDown'
 import { useEffect, useState } from 'react'
 import { FaCheck } from 'react-icons/fa6'
 import Button from '@/components/common/Button/Button'
-import { checkNickname } from '@/api/hooks/user/userApi'
+import { checkNickname, signUp } from '@/api/hooks/user/userApi'
 import { checkEmail } from '@/api/hooks/user/userApi'
 import { sendAuthCode } from '@/api/hooks/user/userApi'
 import { verifyAuthCode } from '@/api/hooks/user/userApi'
+import { useNavigate } from 'react-router-dom'
+
+const JoinRoutes = ['에브리타임', '제휴 광고제품', '지인 추천']
 
 export const JoinPage = () => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
-  const [authorized, setAuthorized] = useState(true)
+  const [fullEmail, setFullEmail] = useState('')
+  const [authorized, setAuthorized] = useState(false)
   const [password, setPassword] = useState('')
   const [rePassword, setRePassword] = useState('')
   const [nickname, setNickname] = useState('')
@@ -30,6 +34,8 @@ export const JoinPage = () => {
   const [clicked, setClicked] = useState(false)
   const [timer, setTimer] = useState<number | null>(null)
   const [timeLeft, setTimeLeft] = useState(0)
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (timeLeft > 0) {
@@ -49,6 +55,10 @@ export const JoinPage = () => {
     const seconds = (time % 60).toString().padStart(2, '0')
     return `${minutes}:${seconds}`
   }
+
+  useEffect(() => {
+    setFullEmail(email + '@pusan.ac.kr')
+  }, [email])
 
   useEffect(() => {
     if (
@@ -147,9 +157,31 @@ export const JoinPage = () => {
         return newErrors
       })
     }
+  const handleBlur = () => {
+    const trimmedNickname = nickname.replace(/\s+/g, '')
+    const limitedNickname = trimmedNickname.slice(0, 10)
 
-  const submit = () => {
-    console.log('게시물을 등록합니다.')
+    if (trimmedNickname.length > 10) {
+      alert('닉네임은 최대 10자까지 가능합니다.')
+    }
+
+    setNickname(limitedNickname)
+  }
+
+  const submit = async () => {
+    try {
+      await signUp({
+        userName: name,
+        userEmail: fullEmail,
+        userPassword: password,
+        userNickname: nickname,
+        routeId: JoinRoutes.indexOf(selectedRoute) + 1,
+      })
+      alert('야금야금의 회원이 되신걸 환영합니다!')
+      navigate('/login')
+    } catch (error) {
+      alert('회원가입에 실패하였습니다.')
+    }
   }
 
   const nicknameDuplicateCheck = async () => {
@@ -166,7 +198,7 @@ export const JoinPage = () => {
       if (isDuplicated) {
         alert('이미 존재하는 닉네임입니다!')
       } else {
-        alert('닉네임 확인이 완료되었습니다!')
+        alert('닉네임 중복 확인이 완료되었습니다!')
       }
     } catch (error) {
       console.error('닉네임 확인 실패:', error)
@@ -180,7 +212,7 @@ export const JoinPage = () => {
       return
     }
     try {
-      const isDuplicated = await checkEmail({ email })
+      const isDuplicated = await checkEmail({ email: fullEmail })
       if (isDuplicated) {
         alert('이미 존재하는 이메일입니다!')
         return
@@ -188,8 +220,10 @@ export const JoinPage = () => {
       setTimeLeft(300)
       setTimer(Date.now())
       setClicked(true)
-      alert('인증번호가 발송되었습니다. 5분 내에 입력해주세요.')
-      await sendAuthCode(email)
+      alert(
+        '인증번호가 발송되었습니다. 5분 내에 입력해주세요.\n* 인증메일이 오지 않을 시, 스팸메일함을 확인해주세요.',
+      )
+      await sendAuthCode(fullEmail)
     } catch (error) {
       console.error('인증번호 전송 실패:', error)
       alert('인증번호 전송에 실패하였습니다. 다시 시도해 주세요.')
@@ -202,8 +236,15 @@ export const JoinPage = () => {
       return
     }
     try {
-      const isVerified = await verifyAuthCode(email, authCode)
+      const isVerified = await verifyAuthCode(fullEmail, authCode)
       if (isVerified) {
+        setAuthorized(true)
+        setErrors((prevErrors) => {
+          const newErrors = { ...prevErrors }
+          delete newErrors.authorized
+          return newErrors
+        })
+        setClicked(false)
         alert('인증번호가 확인되었습니다.')
       } else {
         alert('인증번호가 일치하지 않습니다.')
@@ -239,10 +280,11 @@ export const JoinPage = () => {
         </Container>
         <Container size="full-width" direction="column" gap={12}>
           <Heading.XSmall>부산대학교 이메일</Heading.XSmall>
-          <Container size="full-width" gap={16}>
+          <Container size="full-width" align="center" gap={16}>
             <InputText
-              placeholder="부산대학교 이메일을 입력하고 중복확인 버튼을 눌러주세요."
+              placeholder="부산대학교 이메일을 입력하고 인증번호 받기 버튼을 눌러주세요."
               width="100%"
+              icon={<div>@pusan.ac.kr</div>}
               value={email}
               onChange={handleInputChange('email', setEmail)}
             />
@@ -327,6 +369,7 @@ export const JoinPage = () => {
               width="100%"
               value={nickname}
               onChange={handleInputChange('nickname', setNickname)}
+              onBlur={handleBlur}
             />
             <Button
               theme="light-outlined"
@@ -354,7 +397,7 @@ export const JoinPage = () => {
           <Heading.XSmall>야금야금을 알게 된 경로</Heading.XSmall>
           <DropDown
             placeholder="경로를 선택해주세요."
-            children={['에브리타임', '제휴 광고제품', '지인 추천']}
+            children={JoinRoutes}
             width="300px"
             setValue={(selectedValue) =>
               handleDropDownSelect(setSelectedRoute, selectedValue, 'selectedRoute')

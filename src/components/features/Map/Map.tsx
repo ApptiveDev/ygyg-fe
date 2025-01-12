@@ -24,7 +24,7 @@ export const Map = ({ latitude, longitude }: MapProps) => {
         // 지도 컨테이너
         const container = document.querySelector(`.${styles.map}`)
 
-        // 지도 옵션
+        // 저장된 위도 및 경도를 옵션에 추가 함으로서 지도에 표시
         const options = {
           center: new window.kakao.maps.LatLng(Number(latitude), Number(longitude)),
           level: 3,
