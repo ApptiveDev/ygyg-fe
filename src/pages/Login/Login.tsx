@@ -5,14 +5,19 @@ import { Heading, TextBody } from '@/components/atoms/Text/TextFactory'
 import InputText from '@/components/atoms/InputText/InputText'
 import Button from '@/components/common/Button/Button'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AuthProvider } from '@/provider/Auth/authApi'
 
 export const LoginPage = () => {
   const [email, setEmail] = useState('')
+  const [fullEmail, setFullEmail] = useState('')
   const [password, setPassword] = useState('')
 
   const navigate = useNavigate()
+
+  useEffect(() => {
+    setFullEmail(email + '@pusan.ac.kr')
+  }, [email])
 
   const handleInputChange =
     (setter: React.Dispatch<React.SetStateAction<string>>) =>
@@ -27,7 +32,7 @@ export const LoginPage = () => {
       alert('아이디와 비밀번호를 입력해주세요.')
     } else {
       try {
-        await AuthProvider({ userEmail: email, userPassword: password })
+        await AuthProvider({ userEmail: fullEmail, userPassword: password })
         navigate('/')
       } catch (error) {
         console.error('Login failed:', error)
@@ -57,6 +62,7 @@ export const LoginPage = () => {
               width="416px"
               placeholder="이메일"
               value={email}
+              icon={<div>@pusan.ac.kr</div>}
               onChange={handleInputChange(setEmail)}
             />
             <InputText

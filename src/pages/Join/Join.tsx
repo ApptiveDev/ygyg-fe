@@ -18,6 +18,7 @@ const JoinRoutes = ['에브리타임', '제휴 광고제품', '지인 추천']
 export const JoinPage = () => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
+  const [fullEmail, setFullEmail] = useState('')
   const [authorized, setAuthorized] = useState(false)
   const [password, setPassword] = useState('')
   const [rePassword, setRePassword] = useState('')
@@ -54,6 +55,10 @@ export const JoinPage = () => {
     const seconds = (time % 60).toString().padStart(2, '0')
     return `${minutes}:${seconds}`
   }
+
+  useEffect(() => {
+    setFullEmail(email + '@pusan.ac.kr')
+  }, [email])
 
   useEffect(() => {
     if (
@@ -167,7 +172,7 @@ export const JoinPage = () => {
     try {
       await signUp({
         userName: name,
-        userEmail: email + '@pusan.ac.kr',
+        userEmail: fullEmail,
         userPassword: password,
         userNickname: nickname,
         routeId: JoinRoutes.indexOf(selectedRoute) + 1,
@@ -207,7 +212,7 @@ export const JoinPage = () => {
       return
     }
     try {
-      const isDuplicated = await checkEmail({ email })
+      const isDuplicated = await checkEmail({ email: fullEmail })
       if (isDuplicated) {
         alert('이미 존재하는 이메일입니다!')
         return
@@ -218,7 +223,7 @@ export const JoinPage = () => {
       alert(
         '인증번호가 발송되었습니다. 5분 내에 입력해주세요.\n* 인증메일이 오지 않을 시, 스팸메일함을 확인해주세요.',
       )
-      await sendAuthCode(email)
+      await sendAuthCode(fullEmail)
     } catch (error) {
       console.error('인증번호 전송 실패:', error)
       alert('인증번호 전송에 실패하였습니다. 다시 시도해 주세요.')
@@ -231,7 +236,7 @@ export const JoinPage = () => {
       return
     }
     try {
-      const isVerified = await verifyAuthCode(email, authCode)
+      const isVerified = await verifyAuthCode(fullEmail, authCode)
       if (isVerified) {
         setAuthorized(true)
         setErrors((prevErrors) => {
