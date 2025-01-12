@@ -10,6 +10,7 @@ interface InputTextProps {
   icon?: ReactNode
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
   onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void
+  onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void
   error?: boolean
   isPassword?: boolean
   timer?: string
@@ -24,6 +25,7 @@ function InputText({
   icon,
   onChange,
   onKeyDown,
+  onBlur,
   error = false,
   isPassword,
   timer,
@@ -41,6 +43,7 @@ function InputText({
         value={value}
         onChange={onChange}
         onKeyDown={onKeyDown}
+        onBlur={onBlur}
         maxLength={maxLength}
       />
       {timer ? (

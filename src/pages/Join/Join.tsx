@@ -152,6 +152,16 @@ export const JoinPage = () => {
         return newErrors
       })
     }
+  const handleBlur = () => {
+    const trimmedNickname = nickname.replace(/\s+/g, '')
+    const limitedNickname = trimmedNickname.slice(0, 10)
+
+    if (trimmedNickname.length > 10) {
+      alert('닉네임은 최대 10자까지 가능합니다.')
+    }
+
+    setNickname(limitedNickname)
+  }
 
   const submit = async () => {
     try {
@@ -354,6 +364,7 @@ export const JoinPage = () => {
               width="100%"
               value={nickname}
               onChange={handleInputChange('nickname', setNickname)}
+              onBlur={handleBlur}
             />
             <Button
               theme="light-outlined"
