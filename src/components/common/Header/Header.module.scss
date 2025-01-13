@@ -1,0 +1,67 @@
+.logo {
+  cursor: pointer;
+}
+
+.homeLogo {
+  cursor: pointer;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.homeHeaderWrapper {
+  display: flex;
+  position: fixed;
+  flex-direction: row;
+  justify-content: end;
+  align-items: center;
+  background-color: var(--background-color);
+  min-width: 580px;
+  width: 100vw;
+  height: 120px;
+  box-sizing: border-box;
+  gap: 4%;
+  z-index: 5000;
+  padding: 0 10%;
+  transition: all 0.05s ease-in;
+}
+
+.headerWrapper {
+  display: flex;
+  position: fixed;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--background-color);
+  width: 100vw;
+  height: 120px;
+  box-sizing: border-box;
+  gap: 4%;
+  z-index: 5000;
+  padding: 0 10%;
+  transition: all 0.02s ease-in;
+}
+
+.textButton {
+  height: 40px;
+  min-width: max-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.myPage {
+  height: 40px;
+  min-width: 98px;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--point-color);
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}

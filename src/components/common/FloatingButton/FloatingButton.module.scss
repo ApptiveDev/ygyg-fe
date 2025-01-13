@@ -1,0 +1,63 @@
+.floatingBtn {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 70px;
+  height: 70px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+
+  position: fixed;
+  bottom: 130px;
+  right: 100px;
+
+  &:hover {
+    background-color: #ed8481;
+
+    .floatingIcon {
+      opacity: 0;
+      transform: scale(0.8);
+      transition:
+        opacity 0.3s ease,
+        transform 0.3s ease;
+    }
+
+    .floatingText {
+      font-size: 10px;
+      font-weight: 800;
+      opacity: 1;
+      color: #ffffff;
+      transition:
+        opacity 0.3s ease,
+        transform 0.3s ease,
+        color 0.3s ease;
+    }
+
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.floatingIcon {
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  margin-left: 10px;
+  margin-top: 8px;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+.floatingText {
+  position: absolute;
+  opacity: 0;
+}

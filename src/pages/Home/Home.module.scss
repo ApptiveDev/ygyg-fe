@@ -1,0 +1,64 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.banner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 640px;
+  margin-top: 120px;
+  background-color: #d9d9d9;
+}
+
+.wrapper {
+  box-sizing: border-box;
+  width: 100%;
+}
+.bannerWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 52px;
+  width: 100%;
+}
+.categorytabsContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.listContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 56px 0;
+  text-align: center;
+  margin: 0 auto;
+
+  position: relative;
+}
+.fullListButton {
+  width: 200px;
+  height: 40px;
+  border: 0px;
+  border-radius: 4px;
+  background-color: #ffffff;
+  box-shadow: 0px 0px 10px 0px #00000026;
+
+  position: absolute;
+  top: 1800px;
+  bottom: 56px;
+
+  cursor: pointer;
+}
+
+.navigateButton {
+  &:hover {
+    background-color: #f4f4f4;
+  }
+}

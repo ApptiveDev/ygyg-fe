@@ -24,6 +24,7 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "resolveJsonModule": true,
     "types": ["jest", "vite-plugin-svgr/client"],
+
     "outDir": "dist"
   },
   "include": ["src/**/*", "svg.d.ts", "setupTests.ts", "babel.config.js", "jest.config.js"],
