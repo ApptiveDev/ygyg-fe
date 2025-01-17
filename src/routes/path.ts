@@ -6,4 +6,5 @@ export const RouterPath = {
   JOIN: '/join',
   DETAIL: '/detail',
   MYPAGE: '/mypage',
+  POLICY: '/policy',
 }

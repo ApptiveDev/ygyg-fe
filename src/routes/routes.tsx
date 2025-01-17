@@ -7,6 +7,7 @@ import Page from '@/components/templates/Page'
 import { LoginPage } from '@/pages/Login/Login'
 import { JoinPage } from '@/pages/Join/Join'
 import { DetailPage } from '@/pages/Detail/Detail'
+import { PolicyPage } from '@/pages/Policy/Policy'
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,7 @@ const router = createBrowserRouter([
       { path: RouterPath.POST, element: <PostPage /> },
       { path: RouterPath.LOGIN, element: <LoginPage /> },
       { path: RouterPath.JOIN, element: <JoinPage /> },
+      { path: RouterPath.POLICY, element: <PolicyPage /> },
     ],
   },
 ])
