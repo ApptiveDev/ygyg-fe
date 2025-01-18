@@ -1,12 +1,14 @@
 import Container from '@/components/atoms/Container/Container'
 import { TextBody } from '@/components/atoms/Text/TextFactory'
 import logo from '@/assets/images/logo.svg'
+import { useNavigate } from "react-router-dom";
 
 interface FooterProps {
   isHome?: boolean
 }
 
 export const Footer = ({ isHome }: FooterProps) => {
+  const navigate = useNavigate();
   return (
     <Container
       size="full-width"
@@ -32,8 +34,8 @@ export const Footer = ({ isHome }: FooterProps) => {
           책임을 부담합니다.
         </TextBody.XSmall>
         <Container gap={12}>
-          <TextBody.XSmall style={{ cursor: 'pointer' }}>이용약관</TextBody.XSmall>
-          <TextBody.XSmall weight={600} style={{ cursor: 'pointer' }}>
+          <TextBody.XSmall style={{ cursor: 'pointer' }} onClick={() => navigate("/policy/terms")}>이용약관</TextBody.XSmall>
+          <TextBody.XSmall weight={600} style={{ cursor: 'pointer' }} onClick={() => navigate("/policy/privacy")}>
             개인정보처리방침
           </TextBody.XSmall>
           <TextBody.XSmall>©Copyright 2024. YaGeumYaGeum. All Rights Reserved.</TextBody.XSmall>

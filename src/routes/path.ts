@@ -7,4 +7,6 @@ export const RouterPath = {
   DETAIL: '/detail',
   MYPAGE: '/mypage',
   POLICY: '/policy',
+  PRIVACY_POLICY:'/policy/privacy',
+  TERMS_OF_SERVICE: '/policy/terms',
 }

@@ -37,6 +37,10 @@ export const JoinPage = () => {
 
   const navigate = useNavigate()
 
+  const handleOpenInNewTab = (url: string) => {
+    window.open(url, '_blank');
+  };
+
   useEffect(() => {
     if (timeLeft > 0) {
       const countdown = setInterval(() => {
@@ -429,10 +433,10 @@ export const JoinPage = () => {
           </Container>
 
           <Container gap={8}>
-            <div className={styles.link} onClick={() => {}}>
+            <div className={styles.link} onClick={() => handleOpenInNewTab('/policy/terms')}>
               <TextBody.XSmall>이용약관 보기</TextBody.XSmall>
             </div>
-            <div className={styles.link} onClick={() => {}}>
+            <div className={styles.link} onClick={() => handleOpenInNewTab('/policy/privacy')}>
               <TextBody.XSmall>개인정보처리방침 보기</TextBody.XSmall>
             </div>
           </Container>

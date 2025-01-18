@@ -30,7 +30,14 @@ const router = createBrowserRouter([
       { path: RouterPath.POST, element: <PostPage /> },
       { path: RouterPath.LOGIN, element: <LoginPage /> },
       { path: RouterPath.JOIN, element: <JoinPage /> },
-      { path: RouterPath.POLICY, element: <PolicyPage /> },
+      { 
+        path: RouterPath.POLICY, 
+        element: <PolicyPage />,
+        children: [
+          { path: RouterPath.PRIVACY_POLICY, element: <PolicyPage /> },
+          { path: RouterPath.TERMS_OF_SERVICE, element: <PolicyPage /> },
+        ],
+      },
     ],
   },
 ])
