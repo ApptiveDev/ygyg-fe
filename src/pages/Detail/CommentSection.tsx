@@ -30,7 +30,7 @@ const initialComments = [
   {
     userId: 3,
     nickname: '깍두기',
-    createdAt: '2024-12-14 19:1:02',
+    createdAt: '2024-12-14 19:01:02',
     commentContent: '넹 확인했습니다 !',
   },
   {

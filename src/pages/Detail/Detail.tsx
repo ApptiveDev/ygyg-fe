@@ -4,7 +4,7 @@ import sampleImg from '@/assets/images/sample_image.png'
 import InformationSection from './InformationSection'
 import MapSection from './MapSection'
 import CommentSection from './CommentSection'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 const exampleValue = {
   writerUuid: 5,
@@ -35,6 +35,8 @@ export const DetailPage = () => {
   const userId = 5
   // const userId = Number(localStorage.getItem('userId'))
   const isMyPosting = exampleValue.writerUuid === userId
+
+  useEffect(() => {})
 
   const handleActivate = () => {
     const confirmParticipation = window.confirm(
