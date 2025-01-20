@@ -5,6 +5,7 @@ export interface PostResponseData {
   writerActiveState: boolean
   userPostDataOutDto: UserPostDataOutDto
   postDataOutDto: PostDataOutDto
+  // [key: string]: unknown
 }
 
 export interface PostRequestData {

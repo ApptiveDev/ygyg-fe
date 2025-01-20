@@ -7,9 +7,9 @@ import Button from '@/components/common/Button/Button'
 import { useState } from 'react'
 
 interface MainProps {
-  thumbnail: string
+  imageUrl: string
   title: string
-  author: string
+  writerNickname: string
   link: string
   price: string
   amount: string
@@ -21,9 +21,9 @@ interface MainProps {
 }
 
 export const MainSection = ({
-  thumbnail,
+  imageUrl,
   title,
-  author,
+  writerNickname,
   link,
   price,
   amount,
@@ -35,7 +35,7 @@ export const MainSection = ({
 }: MainProps) => {
   return (
     <Container size="full-width" align="flex-end" gap={50}>
-      <img src={thumbnail} alt="product-image" className={styles.productImage} />
+      <img src={imageUrl} alt="product-image" className={styles.productImage} />
       <Container
         align="flex-start"
         direction="column"
@@ -49,7 +49,7 @@ export const MainSection = ({
       >
         <Container align="flex-start" direction="column" size="full-width" gap={15}>
           <Heading.Small>{title}</Heading.Small>
-          <TextBody.Small className={styles.author}>{author}</TextBody.Small>
+          <TextBody.Small className={styles.author}>{writerNickname}</TextBody.Small>
           <Container size="full-width" justify="space-between" gap={11}>
             <TextBody.Small className={styles.smallTitle} weight={700}>
               구매 링크
@@ -79,7 +79,8 @@ export const MainSection = ({
               boxSizing: 'border-box',
               lineHeight: '1.5rem',
               flexGrow: '1',
-              maxHeight: isMyPosting ? '85px' : '145px',
+              minHeight: isMyPosting ? '80px' : '145px',
+              maxHeight: isMyPosting ? '80px' : '145px',
               overflowY: 'scroll',
             }}
           >

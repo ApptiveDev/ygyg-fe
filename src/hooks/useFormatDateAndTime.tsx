@@ -1,6 +1,11 @@
 //YYYY-MM-DD 형식
-export function DateFromDotToDash(date: string) {
+export function DateFromData(date: string) {
   return date.split('T')[0]
+}
+
+//YYYY-MM-DD 형식
+export function TimeFromData(date: string) {
+  return date.split('T')[1]
 }
 
 export function DateForUse(fullDate: string) {

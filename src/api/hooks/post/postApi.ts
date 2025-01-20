@@ -35,7 +35,7 @@ export const postPostData = async ({
   }
 }
 
-export const getPostData = async ({ userPostId }: { userPostId: number }) => {
-  // :Promise<PostResponseData>
-  return
+export const getPostData = async (userPostId: number): Promise<PostResponseData> => {
+  const response = await fetchInstance.get(`${postPath}/${userPostId}`)
+  return response.data.result
 }

@@ -4,9 +4,9 @@ export const RouterPath = {
   POST: '/post',
   LOGIN: '/login',
   JOIN: '/join',
-  DETAIL: '/detail',
+  DETAIL: '/detail/:userPostId',
   MYPAGE: '/mypage',
   POLICY: '/policy',
-  PRIVACY_POLICY:'/policy/privacy',
+  PRIVACY_POLICY: '/policy/privacy',
   TERMS_OF_SERVICE: '/policy/terms',
 }
