@@ -5,8 +5,8 @@ import InformationSection from './InformationSection'
 import MapSection from './MapSection'
 import CommentSection from './CommentSection'
 import { useEffect, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { getPostData } from '@/api/hooks/post/postApi'
+import { useNavigate, useParams } from 'react-router-dom'
+import { getPostData, postJoinPost } from '@/api/hooks/post/postApi'
 import { PostResponseData } from '@/api/hooks/post/types'
 
 const exampleValue = {
@@ -16,7 +16,7 @@ const exampleValue = {
   author: '작성자',
   link: 'http://localhost:5173/detail',
   price: '20000',
-  meetAt: '2025-01-24 18:30',
+  meetAt: '2025-01-24T18:30',
   min: 4,
   max: 8,
   amount: '1',
@@ -56,17 +56,23 @@ export const DetailPage = () => {
 
   useEffect(() => {
     if (postDetail) {
-      setIsMyPosting(postDetail.userPostDataOutDto.writerUuid === userUuid)
+      setIsMyPosting(postDetail.userPostDataOutDto.writerUuid != userUuid)
       console.log(postDetail)
     }
   }, [postDetail, userUuid])
 
-  const handleActivate = () => {
+  const handleActivate = async () => {
     const confirmParticipation = window.confirm(
       '정말 소분에 참여하시겠습니까? 참여 시 철회할 수 없습니다.',
     )
     if (confirmParticipation) {
-      setIsActivate(true)
+      try {
+        await postJoinPost(Number(userPostId))
+        alert('성공적으로 소분에 참여되었습니다!')
+        setIsActivate(true)
+      } catch (error) {
+        alert('소분 참여에 실패하였습니다.')
+      }
     }
   }
 
