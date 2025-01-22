@@ -2,7 +2,6 @@ import { tokenIsExpired } from '@/provider/Auth/authApi'
 import { QueryClient } from '@tanstack/react-query'
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 
-let isRefreshing = false
 let pendingRequests: ((token: string) => void)[] = []
 
 const initInstance = (config: AxiosRequestConfig): AxiosInstance => {

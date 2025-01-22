@@ -4,43 +4,43 @@ import styles from './Detail.module.scss'
 import { TextBody } from '@/components/atoms/Text/TextFactory'
 import Button from '@/components/common/Button/Button'
 import SpeechBubble from '@/components/features/SpeechBubble/SpeechBubble'
-import { DateFromDotToDash, TimeForUse } from '@/hooks/useFormatDateAndTime'
+import { DateFromData, TimeForUse } from '@/hooks/useFormatDateAndTime'
 import { BsFillArrowRightCircleFill } from 'react-icons/bs'
 import { useEffect, useRef, useState } from 'react'
 
 const initialComments = [
   {
-    userId: 3,
+    userUuid: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
     nickname: '깍두기',
     createdAt: '2024-12-14 18:11:02',
     commentContent: '안녕하세요! 소분 참여하고 싶습니다.',
   },
   {
-    userId: 5,
+    userUuid: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
     nickname: '제인구스',
     createdAt: '2024-12-14 18:12:02',
     commentContent: '네 좋습니다 !! 다들 시간이랑 장소 다 확인하셨죠?',
   },
   {
-    userId: 2,
+    userUuid: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
     nickname: '정윤구스',
     createdAt: '2024-12-14 18:21:02',
     commentContent: '넵 확인했습니다.',
   },
   {
-    userId: 3,
+    userUuid: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
     nickname: '깍두기',
-    createdAt: '2024-12-14 19:1:02',
+    createdAt: '2024-12-14 19:01:02',
     commentContent: '넹 확인했습니다 !',
   },
   {
-    userId: 1,
+    userUuid: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
     nickname: '시웅구스',
     createdAt: '2024-12-14 19:41:02',
     commentContent: '확인했어요 ! 그런데 우리 한 분만 더 올 때까지 기다려볼까요?',
   },
   {
-    userId: 5,
+    userUuid: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
     nickname: '제인구스',
     createdAt: '2024-12-14 19:51',
     commentContent: '넵 저도 동의하는 바입니다. 그게 금액도 딱 잘 나눠지고 편할 것 같아요 !',
@@ -48,13 +48,13 @@ const initialComments = [
 ]
 
 interface CommentProps {
-  userId: number
+  userUuid: string
   isActivate: boolean
   onActivate: () => void
   isMyPosting: boolean
 }
 
-function CommentSection({ userId, isActivate, onActivate, isMyPosting }: CommentProps) {
+function CommentSection({ userUuid, isActivate, onActivate, isMyPosting }: CommentProps) {
   const [comments, setComments] = useState(initialComments)
 
   return (
@@ -72,11 +72,11 @@ function CommentSection({ userId, isActivate, onActivate, isMyPosting }: Comment
         <CommentActivated
           comments={comments}
           setComments={setComments}
-          userId={userId}
+          userUuid={userUuid}
           isMyPosting={isMyPosting}
         />
       ) : (
-        <CommentBlocked comments={comments} userId={userId} onActivate={onActivate} />
+        <CommentBlocked comments={comments} userUuid={userUuid} onActivate={onActivate} />
       )}
     </Container>
   )
@@ -87,12 +87,12 @@ export default CommentSection
 const CommentActivated = ({
   comments,
   setComments,
-  userId,
+  userUuid,
   isMyPosting,
 }: {
   comments: typeof initialComments
   setComments: React.Dispatch<React.SetStateAction<typeof initialComments>>
-  userId: number
+  userUuid: string
   isMyPosting: boolean
 }) => {
   const [comment, setComment] = useState('')
@@ -110,10 +110,10 @@ const CommentActivated = ({
     if (!comment.trim()) return
     setIsFirst(false)
     const now = new Date()
-    const date = DateFromDotToDash(now.toISOString())
+    const date = DateFromData(now.toISOString())
     const time = now.toTimeString().split(' ')[0]
     const newComment = {
-      userId: userId,
+      userUuid: userUuid,
       nickname: '제인구스',
       createdAt: date + ' ' + time,
       commentContent: comment,
@@ -154,11 +154,11 @@ const CommentActivated = ({
               key={index}
               size="full-width"
               padding="0 10px"
-              justify={comment.userId === userId ? 'flex-end' : 'flex-start'}
+              justify={comment.userUuid === userUuid ? 'flex-end' : 'flex-start'}
               style={{ boxSizing: 'border-box' }}
             >
               <SpeechBubble
-                fromMe={comment.userId === userId}
+                fromMe={comment.userUuid === userUuid}
                 text={comment.commentContent}
                 nickname={comment.nickname}
                 createdAt={comment.createdAt}
@@ -193,11 +193,11 @@ const CommentActivated = ({
 
 const CommentBlocked = ({
   comments,
-  userId,
+  userUuid,
   onActivate,
 }: {
   comments: typeof initialComments
-  userId: number
+  userUuid: string
   onActivate: () => void
 }) => {
   return (
@@ -223,11 +223,11 @@ const CommentBlocked = ({
               key={index}
               size="full-width"
               padding="0 10px"
-              justify={comment.userId === userId ? 'flex-end' : 'flex-start'}
+              justify={comment.userUuid === userUuid ? 'flex-end' : 'flex-start'}
               style={{ boxSizing: 'border-box' }}
             >
               <SpeechBubble
-                fromMe={comment.userId === userId}
+                fromMe={comment.userUuid === userUuid}
                 text={comment.commentContent}
                 nickname={comment.nickname}
                 createdAt={comment.createdAt}

@@ -4,25 +4,32 @@ import plusIcon from '@/assets/icons/plus_icon.svg'
 import styles from './NewPicture.module.scss'
 import Container from '@/components/atoms/Container/Container'
 
-function NewPicture() {
-  const [selectedImage, setSelectedImage] = useState<string | null>(null)
-
+function NewPicture({
+  selectedImage,
+  setSelectedImage,
+}: {
+  selectedImage: string
+  setSelectedImage: (image: string) => void
+}) {
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (file) {
       const reader = new FileReader()
-      reader.onload = () => {
-        if (reader.result) {
-          setSelectedImage(reader.result as string)
-        }
-      }
+
       reader.readAsDataURL(file)
+      return new Promise<void>((resolve) => {
+        reader.onload = () => {
+          setSelectedImage(reader.result as string)
+          // setImageFile(file);
+          resolve()
+        }
+      })
     }
   }
 
   const handleRemoveImage = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
-    setSelectedImage(null)
+    setSelectedImage('')
   }
 
   return (
@@ -47,7 +54,7 @@ function NewPicture() {
         <input
           type="file"
           accept="image/*"
-          onChange={handleImageUpload}
+          onChange={(e) => handleImageUpload(e)}
           className={styles.uploadInput}
         />
       </label>
