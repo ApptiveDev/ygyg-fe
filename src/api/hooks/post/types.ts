@@ -36,7 +36,7 @@ export interface PostDataInDto {
 
 export interface UserPostDataOutDto {
   id: number
-  writerUuid: string
+  writerUuid: string | null
   postTitle: string
   portioningDate: string
   expectedMinimumPrice: number
