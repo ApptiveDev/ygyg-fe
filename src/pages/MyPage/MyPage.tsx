@@ -7,6 +7,8 @@ import Container from '@/components/atoms/Container/Container'
 import Button from '@/components/common/Button/Button'
 import { GoArrowUpRight } from 'react-icons/go'
 import FloatingButton from '@/components/common/FloatingButton/FloatingButton'
+import { deleteAccount } from '@/api/hooks/user/userApi'
+import { useNavigate } from 'react-router-dom'
 
 interface CardData {
   id: number
@@ -82,6 +84,22 @@ export const MyPage = () => {
   const nickname = localStorage.getItem('userNickname')
   const name = localStorage.getItem('userName')
   const email = localStorage.getItem('userEmail')
+
+  const navigate = useNavigate()
+
+  const submitDelete = async () => {
+    if (window.confirm('탈퇴하시겠습니까?')) {
+      if (window.confirm(`정말로 탈퇴하시겠어요?`)) {
+        try {
+          await deleteAccount()
+          alert('회원탈퇴 되었습니다.')
+          navigate('/')
+        } catch (error) {
+          alert('회원탈퇴에 실패하였습니다.')
+        }
+      }
+    }
+  }
   return (
     <div className={styles.container}>
       <div className={styles.comment}>
@@ -148,7 +166,9 @@ export const MyPage = () => {
           ))}
         </div>
       </div>
-      <div className={styles.delete}>회원 탈퇴하기</div>
+      <div className={styles.delete} onClick={submitDelete}>
+        회원 탈퇴하기
+      </div>
       <FloatingButton />
     </div>
   )
