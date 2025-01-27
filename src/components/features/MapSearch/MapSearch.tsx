@@ -2,13 +2,14 @@ import { useEffect, useRef, useState } from 'react'
 import styles from './MapSearch.module.scss'
 import SearchBar from '@/components/common/SearchBar/SearchBar'
 import Container from '@/components/atoms/Container/Container'
+import { MapProps } from '@/pages/Post/Post'
 
 declare const window: typeof globalThis & {
   kakao: any
 }
 
 interface MapSearchProps {
-  setValue: (selectedValue: string) => void
+  setValue: (selectedValue: any) => void
 }
 
 const MapSearch = ({ setValue }: MapSearchProps) => {
@@ -128,8 +129,14 @@ const MapSearch = ({ setValue }: MapSearchProps) => {
   }
 
   const onPlaceClick = (place: any) => {
+    const newSelectedPlace = {
+      name: place.place_name,
+      latitude: parseFloat(place.y),
+      longitude: parseFloat(place.x),
+    }
+
     setSelectedPlace(place.place_name)
-    setValue(place.place_name)
+    setValue(newSelectedPlace)
     const moveLatLon = new window.kakao.maps.LatLng(place.y, place.x)
     mapRef.current.panTo(moveLatLon)
   }

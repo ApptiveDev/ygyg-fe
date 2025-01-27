@@ -1,11 +1,10 @@
-import { Heading, Paragraph, TextBody } from '@/components/atoms/Text/TextFactory'
+import { Heading, TextBody } from '@/components/atoms/Text/TextFactory'
 import styles from './Post.module.scss'
 import { FaCheck } from 'react-icons/fa6'
-import { PiUploadSimpleBold } from 'react-icons/pi'
 import Container from '@/components/atoms/Container/Container'
 import Category from '@/components/common/Category/Category'
 import InputText from '@/components/atoms/InputText/InputText'
-import { useState, useEffect, useRef, Dispatch, SetStateAction } from 'react'
+import { useState, useEffect } from 'react'
 import Button from '@/components/common/Button/Button'
 import { TextArea } from '@/components/atoms/TextArea/TextArea'
 import DropDown from '@/components/atoms/DropDown/DropDown'
@@ -13,6 +12,18 @@ import { CalendarIcon } from '@/components/features/CalendarIcon/CalendarIcon'
 import NewPicture from '../../components/features/NewPicture/NewPicture'
 import useSetAmount from '@/hooks/useSetAmount'
 import MapSearch from '@/components/features/MapSearch/MapSearch'
+import { postPostData } from '@/api/hooks/post/postApi'
+import { useFormatTimeToSave } from '@/hooks/useFormatTime'
+import { useFormatSeasoningCategoryId, useFormatUnitToId } from '@/hooks/useFormatId'
+import { DateForPost } from '@/hooks/useFormatDateAndTime'
+import { useSetTwoDigits } from '@/hooks/useSetTwoDigits'
+import { useNavigate } from 'react-router-dom'
+
+export interface MapProps {
+  name: string
+  latitude: string
+  longitude: string
+}
 
 export const PostPage = () => {
   const categories = ['액체류', '소스류', '가루류', '잼류', '기타']
@@ -32,21 +43,26 @@ export const PostPage = () => {
     month: new Date().getMonth() + 1,
     date: '',
   })
+  const [portioningDate, setPortioningDate] = useState('')
 
   const [category, setCategory] = useState<string | null>(null)
   const [title, setTitle] = useState<string>('')
   const [link, setLink] = useState<string>('')
   const [price, setPrice] = useState<string>('')
+  const [selectedImage, setSelectedImage] = useState<string>('')
   const [amount, setAmount] = useState<string>('')
   const [minPeople, setMinPeople] = useState<string>('')
   const [maxPeople, setMaxPeople] = useState<string>('')
   const [content, setContent] = useState<string>('')
+  const [latitude, setLatitude] = useState<string>('')
+  const [longitude, setLongitude] = useState<string>('')
   const [selectedPlace, setSelectedPlace] = useState('')
   const [detailPlace, setDetailPlace] = useState('')
 
   const [unit, setUnit] = useState<string>('')
 
   const [errors, setErrors] = useState<Record<string, string>>({})
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (
@@ -70,6 +86,19 @@ export const PostPage = () => {
       setIsDone(false)
     }
   }, [category, title, price, minPeople, maxPeople, content, selectedPlace, checked])
+
+  useEffect(() => {
+    const hourToSave = useFormatTimeToSave(selectedTime, selectedHour)
+    setPortioningDate(
+      DateForPost(
+        String(selectedDateInfo.year),
+        useSetTwoDigits(selectedDateInfo.month),
+        useSetTwoDigits(Number(selectedDateInfo.date)),
+        hourToSave,
+        selectedMinute,
+      ),
+    )
+  }, [selectedDateInfo, selectedTime, selectedHour, selectedMinute])
 
   const clickCheckBox =
     (field: string, setter: React.Dispatch<React.SetStateAction<boolean>>) =>
@@ -158,8 +187,75 @@ export const PostPage = () => {
     })
   }
 
-  const submit = () => {
-    console.log('게시물을 등록합니다.')
+  const handleMapSelect = <T extends MapProps>(
+    setFunction: React.Dispatch<React.SetStateAction<string>>,
+    setLatitude: React.Dispatch<React.SetStateAction<string>>,
+    setLongitude: React.Dispatch<React.SetStateAction<string>>,
+    selectedValue: T,
+    errorField: string,
+  ) => {
+    setFunction(selectedValue.name)
+    setLatitude(selectedValue.latitude)
+    setLongitude(selectedValue.longitude)
+    setErrors((prevErrors) => {
+      const newErrors = { ...prevErrors }
+      delete newErrors[errorField]
+      return newErrors
+    })
+  }
+
+  const uploadS3 = (formData: any) => {
+    const REGION = import.meta.env.REACT_APP_REGION
+    const ACESS_KEY_ID = import.meta.env.REACT_APP_ACCESS_KEY_ID
+    const SECRET_ACESS_KEY_ID = import.meta.env.REACT_APP_SECRET_ACCESS_KEY_ID
+
+      // AWS.config.update({
+      //     region: REGION,
+      //     accessKeyId: ACESS_KEY_ID,
+      //     secretAccessKey: SECRET_ACESS_KEY_ID,
+      // });
+
+      // const upload = new AWS.S3.ManagedUpload({
+      //     params: {
+      //         ACL: 'public-read',
+      //         Bucket: '버킷명',
+      //         Key: `upload/${imageFile.name}`,
+      //         Body: imageFile,
+      //     }
+      // })
+
+      // upload.promise()
+      .then(console.log('업로드'))
+  }
+
+  const submit = async () => {
+    try {
+      await postPostData({
+        userPostDataInDto: {
+          postTitle: title,
+          portioningDate: portioningDate,
+        },
+        postDataInDto: {
+          onlinePurchaseUrl: link,
+          originalPrice: Number(price),
+          amount: Number(amount),
+          minEngageCount: Number(minPeople),
+          maxEngageCount: Number(maxPeople),
+          portioningPlaceLatitude: Number(latitude),
+          portioningPlaceLongitude: Number(longitude),
+          description: content,
+          portioningPlaceAddress: selectedPlace,
+          portioningPlaceDetailAddress: detailPlace,
+        },
+        imageUrl: selectedImage,
+        unitId: useFormatUnitToId(unit),
+        seasoningCategoryId: useFormatSeasoningCategoryId(category!),
+      })
+      alert('소분글이 등록되었습니다!')
+      navigate('/')
+    } catch (error) {
+      alert('소분글 등록에 실패하였습니다.')
+    }
   }
 
   return (
@@ -204,7 +300,7 @@ export const PostPage = () => {
           align="center"
           style={{ width: '100%' }}
         >
-          <NewPicture />
+          <NewPicture selectedImage={selectedImage} setSelectedImage={setSelectedImage} />
         </Container>
       </Container>
       <Container size="full-width" direction="column" style={{ gap: '23px', marginBottom: '46px' }}>
@@ -424,7 +520,13 @@ export const PostPage = () => {
         </Container>
         <MapSearch
           setValue={(selectedValue) =>
-            handleDropDownSelect(setSelectedPlace, selectedValue, 'selectedPlace')
+            handleMapSelect(
+              setSelectedPlace,
+              setLatitude,
+              setLongitude,
+              selectedValue,
+              'selectedPlace',
+            )
           }
         />
         <TextBody.Medium style={{ fontWeight: '500' }}>상세 위치 (선택)</TextBody.Medium>
