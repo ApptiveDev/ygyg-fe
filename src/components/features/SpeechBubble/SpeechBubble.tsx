@@ -11,10 +11,10 @@ interface SpeechBubbleProps {
 }
 
 function SpeechBubble({ fromMe = false, text, nickname, createdAt }: SpeechBubbleProps) {
-  const month = DateForUse(createdAt?.split(' ')[0]!)[1]
-  const date = DateForUse(createdAt?.split(' ')[0]!)[2]
-  const hour = TimeForUse(createdAt?.split(' ')[1]!)[0]
-  const minute = TimeForUse(createdAt?.split(' ')[1]!)[1]
+  const month = DateForUse(createdAt?.split('T')[0]!)[1]
+  const date = DateForUse(createdAt?.split('T')[0]!)[2]
+  const hour = TimeForUse(createdAt?.split('T')[1]!)[0]
+  const minute = TimeForUse(createdAt?.split('T')[1]!)[1]
 
   return fromMe ? (
     <div className={`${styles.speechBubble} ${styles.fromMe}`}>
