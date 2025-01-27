@@ -56,7 +56,7 @@ export const DetailPage = () => {
 
   useEffect(() => {
     if (postDetail) {
-      setIsMyPosting(postDetail.userPostDataOutDto.writerUuid != userUuid)
+      setIsMyPosting(postDetail.userPostDataOutDto.writerUuid === userUuid)
       console.log(postDetail)
     }
   }, [postDetail, userUuid])
@@ -124,6 +124,7 @@ export const DetailPage = () => {
           />
           <div ref={commentSectionRef} />
           <CommentSection
+            userPostId={userPostId!}
             userUuid={userUuid!}
             isActivate={isActivate}
             onActivate={handleActivate}

@@ -7,6 +7,8 @@ import SpeechBubble from '@/components/features/SpeechBubble/SpeechBubble'
 import { DateFromData, TimeForUse } from '@/hooks/useFormatDateAndTime'
 import { BsFillArrowRightCircleFill } from 'react-icons/bs'
 import { useEffect, useRef, useState } from 'react'
+import { CommentsResponseData } from '@/api/hooks/comment/types'
+import { getComments, postComment } from '@/api/hooks/comment/commentsApi'
 
 const initialComments = [
   {
@@ -48,14 +50,35 @@ const initialComments = [
 ]
 
 interface CommentProps {
+  userPostId: string
   userUuid: string
   isActivate: boolean
   onActivate: () => void
   isMyPosting: boolean
 }
 
-function CommentSection({ userUuid, isActivate, onActivate, isMyPosting }: CommentProps) {
-  const [comments, setComments] = useState(initialComments)
+function CommentSection({
+  userPostId,
+  userUuid,
+  isActivate,
+  onActivate,
+  isMyPosting,
+}: CommentProps) {
+  const [comments, setComments] = useState<CommentsResponseData>()
+
+  useEffect(() => {
+    if (userPostId) {
+      const fetchDetailData = async () => {
+        try {
+          const data = await getComments(Number(userPostId))
+          setComments(data)
+        } catch (error) {
+          console.error('Failed to fetch:', error)
+        }
+      }
+      fetchDetailData()
+    }
+  }, [userPostId])
 
   return (
     <Container
@@ -68,15 +91,20 @@ function CommentSection({ userUuid, isActivate, onActivate, isMyPosting }: Comme
         paddingBottom: '50px',
       }}
     >
-      {isActivate || isMyPosting ? (
-        <CommentActivated
-          comments={comments}
-          setComments={setComments}
-          userUuid={userUuid}
-          isMyPosting={isMyPosting}
-        />
+      {comments ? (
+        isActivate || isMyPosting ? (
+          <CommentActivated
+            comments={comments!}
+            setComments={setComments}
+            userPostId={userPostId}
+            userUuid={userUuid}
+            isMyPosting={isMyPosting}
+          />
+        ) : (
+          <CommentBlocked comments={comments!} userUuid={userUuid} onActivate={onActivate} />
+        )
       ) : (
-        <CommentBlocked comments={comments} userUuid={userUuid} onActivate={onActivate} />
+        <p>Loading...</p>
       )}
     </Container>
   )
@@ -87,11 +115,13 @@ export default CommentSection
 const CommentActivated = ({
   comments,
   setComments,
+  userPostId,
   userUuid,
   isMyPosting,
 }: {
-  comments: typeof initialComments
-  setComments: React.Dispatch<React.SetStateAction<typeof initialComments>>
+  comments: CommentsResponseData
+  setComments: React.Dispatch<React.SetStateAction<CommentsResponseData | undefined>>
+  userPostId: string
   userUuid: string
   isMyPosting: boolean
 }) => {
@@ -106,22 +136,22 @@ const CommentActivated = ({
     }
   }, [comments])
 
-  const saveComment = () => {
+  const saveComment = async () => {
     if (!comment.trim()) return
     setIsFirst(false)
-    const now = new Date()
-    const date = DateFromData(now.toISOString())
-    const time = now.toTimeString().split(' ')[0]
-    const newComment = {
-      userUuid: userUuid,
-      nickname: '제인구스',
-      createdAt: date + ' ' + time,
-      commentContent: comment,
-    }
+    setIsSaving(true)
 
-    setComments((prevComments) => [...prevComments, newComment])
-    setComment('')
-    setIsSaving(false)
+    try {
+      await postComment(Number(userPostId), comment)
+
+      const updatedComments = await getComments(Number(userPostId))
+      setComments(updatedComments)
+    } catch (error) {
+      console.error('Failed to save comment:', error)
+    } finally {
+      setComment('')
+      setIsSaving(false)
+    }
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -149,18 +179,18 @@ const CommentActivated = ({
           작성자가 지정한 시각으로부터 24시간 경과 시, 게시글이 비활성화됩니다.
         </TextBody.XSmall>
         <Container direction="column" size="full-width" gap={20} style={{ marginBottom: '15px' }}>
-          {comments.map((comment, index) => (
+          {comments.comments.map((comment, index) => (
             <Container
               key={index}
               size="full-width"
               padding="0 10px"
-              justify={comment.userUuid === userUuid ? 'flex-end' : 'flex-start'}
+              justify={comment.writerUuid === userUuid ? 'flex-end' : 'flex-start'}
               style={{ boxSizing: 'border-box' }}
             >
               <SpeechBubble
-                fromMe={comment.userUuid === userUuid}
-                text={comment.commentContent}
-                nickname={comment.nickname}
+                fromMe={comment.writerUuid === userUuid}
+                text={comment.commentContents}
+                nickname={comment.userNickname}
                 createdAt={comment.createdAt}
               />
             </Container>
@@ -196,7 +226,7 @@ const CommentBlocked = ({
   userUuid,
   onActivate,
 }: {
-  comments: typeof initialComments
+  comments: CommentsResponseData
   userUuid: string
   onActivate: () => void
 }) => {
@@ -218,18 +248,18 @@ const CommentBlocked = ({
         }}
       >
         <Container direction="column" size="full-width" gap={20} style={{ filter: 'blur(6px)' }}>
-          {comments.map((comment, index) => (
+          {comments.comments.map((comment, index) => (
             <Container
               key={index}
               size="full-width"
               padding="0 10px"
-              justify={comment.userUuid === userUuid ? 'flex-end' : 'flex-start'}
+              justify={comment.writerUuid === userUuid ? 'flex-end' : 'flex-start'}
               style={{ boxSizing: 'border-box' }}
             >
               <SpeechBubble
-                fromMe={comment.userUuid === userUuid}
-                text={comment.commentContent}
-                nickname={comment.nickname}
+                fromMe={comment.writerUuid === userUuid}
+                text={comment.commentContents}
+                nickname={comment.userNickname}
                 createdAt={comment.createdAt}
               />
             </Container>
