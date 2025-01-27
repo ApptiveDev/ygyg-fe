@@ -4,50 +4,10 @@ import styles from './Detail.module.scss'
 import { TextBody } from '@/components/atoms/Text/TextFactory'
 import Button from '@/components/common/Button/Button'
 import SpeechBubble from '@/components/features/SpeechBubble/SpeechBubble'
-import { DateFromData, TimeForUse } from '@/hooks/useFormatDateAndTime'
 import { BsFillArrowRightCircleFill } from 'react-icons/bs'
 import { useEffect, useRef, useState } from 'react'
 import { CommentsResponseData } from '@/api/hooks/comment/types'
 import { getComments, postComment } from '@/api/hooks/comment/commentsApi'
-
-const initialComments = [
-  {
-    userUuid: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-    nickname: '깍두기',
-    createdAt: '2024-12-14 18:11:02',
-    commentContent: '안녕하세요! 소분 참여하고 싶습니다.',
-  },
-  {
-    userUuid: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-    nickname: '제인구스',
-    createdAt: '2024-12-14 18:12:02',
-    commentContent: '네 좋습니다 !! 다들 시간이랑 장소 다 확인하셨죠?',
-  },
-  {
-    userUuid: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-    nickname: '정윤구스',
-    createdAt: '2024-12-14 18:21:02',
-    commentContent: '넵 확인했습니다.',
-  },
-  {
-    userUuid: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-    nickname: '깍두기',
-    createdAt: '2024-12-14 19:01:02',
-    commentContent: '넹 확인했습니다 !',
-  },
-  {
-    userUuid: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-    nickname: '시웅구스',
-    createdAt: '2024-12-14 19:41:02',
-    commentContent: '확인했어요 ! 그런데 우리 한 분만 더 올 때까지 기다려볼까요?',
-  },
-  {
-    userUuid: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-    nickname: '제인구스',
-    createdAt: '2024-12-14 19:51',
-    commentContent: '넵 저도 동의하는 바입니다. 그게 금액도 딱 잘 나눠지고 편할 것 같아요 !',
-  },
-]
 
 interface CommentProps {
   userPostId: string
