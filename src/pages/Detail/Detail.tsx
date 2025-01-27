@@ -9,33 +9,9 @@ import { useParams } from 'react-router-dom'
 import { getPostData } from '@/api/hooks/post/postApi'
 import { PostResponseData } from '@/api/hooks/post/types'
 
-const exampleValue = {
-  writerUuid: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-  thumbnail: sampleImg,
-  title: '게시글 제목',
-  author: '작성자',
-  link: 'http://localhost:5173/detail',
-  price: '20000',
-  meetAt: '2025-01-24 18:30',
-  min: 4,
-  max: 8,
-  amount: '1',
-  unit: 'kg',
-  description:
-    '설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.',
-  current: 6,
-  place: '스타벅스 부산대정문점',
-  detailPlace: '1층 입구 앞',
-  latitude: '35.2314079',
-  longitude: '129.0843855',
-  category: '소스류',
-  isActivate: false,
-}
-
 export const DetailPage = () => {
   const { userPostId } = useParams<{ userPostId: string }>()
   const [postDetail, setPostDetail] = useState<PostResponseData>()
-  const [isActivate, setIsActivate] = useState(exampleValue.isActivate)
   const commentSectionRef = useRef<HTMLDivElement>(null)
   const userUuid = localStorage.getItem('userUuid')
   const [isMyPosting, setIsMyPosting] = useState(false)
@@ -66,7 +42,7 @@ export const DetailPage = () => {
       '정말 소분에 참여하시겠습니까? 참여 시 철회할 수 없습니다.',
     )
     if (confirmParticipation) {
-      setIsActivate(true)
+      window.location.reload()
     }
   }
 
@@ -96,7 +72,7 @@ export const DetailPage = () => {
             amount={String(postDetail.postDataOutDto.amount)}
             unit={postDetail.unitName}
             description={postDetail.postDataOutDto.description}
-            isActivate={true}
+            isActivate={postDetail.userParticipatingIn}
             isMyPosting={isMyPosting}
             onGoToCommentSection={scrollToCommentSection}
           />
@@ -119,7 +95,7 @@ export const DetailPage = () => {
           <div ref={commentSectionRef} />
           <CommentSection
             userUuid={userUuid!}
-            isActivate={isActivate}
+            isActivate={postDetail.userParticipatingIn}
             onActivate={handleActivate}
             isMyPosting={isMyPosting}
           />

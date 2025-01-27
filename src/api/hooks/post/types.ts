@@ -2,7 +2,7 @@ export interface PostResponseData {
   imageUrl: string
   unitName: string
   categoryName: string
-  writerActiveState: boolean
+  userParticipatingIn: boolean
   userPostDataOutDto: UserPostDataOutDto
   postDataOutDto: PostDataOutDto
   // [key: string]: unknown
