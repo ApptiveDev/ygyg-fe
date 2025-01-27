@@ -45,7 +45,7 @@ export const DetailPage = () => {
       try {
         await postJoinPost(Number(userPostId))
         alert('성공적으로 소분에 참여되었습니다!')
-            window.location.reload()
+        window.location.reload()
       } catch (error) {
         alert('소분 참여에 실패하였습니다.')
       }
@@ -70,6 +70,7 @@ export const DetailPage = () => {
       {postDetail ? (
         <>
           <MainSection
+            userPostId={userPostId!}
             imageUrl={postDetail.imageUrl}
             title={postDetail.userPostDataOutDto.postTitle}
             writerNickname={'정윤구스'}
@@ -108,7 +109,7 @@ export const DetailPage = () => {
           />
         </>
       ) : (
-        <p>Loading...</p>
+        <Container style={{ height: '100px' }}>Loading...</Container>
       )}
     </Container>
   )
