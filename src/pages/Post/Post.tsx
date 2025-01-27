@@ -770,7 +770,7 @@ function SetPeople({
       onChangeMinPeople(minPeopleLocal!.toString())
     }
     if (isMaxSet) onChangeMaxPeople(maxPeopleLocal!.toString())
-  }, [isMinSet, isMaxSet])
+  }, [isMinSet, isMaxSet, minPeopleLocal, maxPeopleLocal])
 
   const setMinMaxPeople = (num: number) => {
     if (num === 10) {
