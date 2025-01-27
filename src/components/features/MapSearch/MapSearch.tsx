@@ -9,10 +9,18 @@ declare const window: typeof globalThis & {
 }
 
 interface MapSearchProps {
+  initialLatitude?: number
+  initialLongitude?: number
+  initialValue?: string
   setValue: (selectedValue: any) => void
 }
 
-const MapSearch = ({ setValue }: MapSearchProps) => {
+const MapSearch = ({
+  initialLatitude,
+  initialLongitude,
+  initialValue,
+  setValue,
+}: MapSearchProps) => {
   const markersRef = useRef<any[]>([])
   const mapRef = useRef<any>(null)
   const menuRef = useRef<HTMLDivElement>(null) // menuDiv에 대한 참조
@@ -30,15 +38,43 @@ const MapSearch = ({ setValue }: MapSearchProps) => {
     script.onload = () => {
       window.kakao.maps.load(() => {
         const container = document.querySelector(`.${styles.map}`)
-        const options = {
-          center: new window.kakao.maps.LatLng(35.2314079, 129.0843855),
-          level: 3,
-        }
 
-        mapRef.current = new window.kakao.maps.Map(container, options)
+        if (initialLatitude && initialLongitude) {
+          const options = {
+            center: new window.kakao.maps.LatLng(Number(initialLatitude), Number(initialLongitude)),
+            level: 3,
+            scrollwheel: false, //스크롤줌 비활성화
+          }
+
+          // 지도 객체 생성
+          const map = new window.kakao.maps.Map(container, options)
+          mapRef.current = map // 지도 객체를 ref에 저장
+
+          // 마커 생성 및 지도에 추가
+          const markerPosition = new window.kakao.maps.LatLng(
+            Number(initialLatitude),
+            Number(initialLongitude),
+          )
+          const marker = new window.kakao.maps.Marker({
+            position: markerPosition,
+          })
+          marker.setMap(map) // 마커를 지도에 표시
+        } else {
+          const options = {
+            center: new window.kakao.maps.LatLng(35.2314079, 129.0843855),
+            level: 3,
+          }
+          mapRef.current = new window.kakao.maps.Map(container, options)
+        }
       })
     }
-  }, [])
+  }, [initialLatitude, initialLongitude])
+
+  useEffect(() => {
+    if (initialValue) {
+      setSelectedPlace(initialValue)
+    }
+  }, [initialValue])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -73,7 +109,7 @@ const MapSearch = ({ setValue }: MapSearchProps) => {
       radius: 3000,
       sort: window.kakao.maps.services.SortBy.DISTANCE,
     }
-
+    removeMarkers()
     // 사용자가 입력한 키워드를 바탕으로 장소를 검색
     ps.keywordSearch(
       keyword,
@@ -88,6 +124,8 @@ const MapSearch = ({ setValue }: MapSearchProps) => {
             const marker = displayMarker(place, infowindow) //장소 데이터를 기반으로 마커를 생성 및 표시
             bounds.extend(new window.kakao.maps.LatLng(place.y, place.x))
             markersRef.current.push(marker)
+            initialLatitude = undefined
+            initialLongitude = undefined
           })
           mapRef.current.setBounds(bounds)
         } else if (status === window.kakao.maps.services.Status.ZERO_RESULT) {
@@ -112,8 +150,6 @@ const MapSearch = ({ setValue }: MapSearchProps) => {
     window.kakao.maps.event.addListener(marker, 'click', () => {
       infowindow.setContent(`<div>${place.place_name}</div>`)
       infowindow.open(mapRef.current, marker)
-      setSelectedPlace(place.place_name)
-      setValue(place.place_name)
     })
 
     return marker

@@ -1,6 +1,5 @@
 import Container from '@/components/atoms/Container/Container'
 import { MainSection } from './MainSection'
-import sampleImg from '@/assets/images/sample_image.png'
 import InformationSection from './InformationSection'
 import MapSection from './MapSection'
 import CommentSection from './CommentSection'
@@ -15,6 +14,8 @@ export const DetailPage = () => {
   const commentSectionRef = useRef<HTMLDivElement>(null)
   const userUuid = localStorage.getItem('userUuid')
   const [isMyPosting, setIsMyPosting] = useState(false)
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (userPostId) {
@@ -65,6 +66,12 @@ export const DetailPage = () => {
     }
   }
 
+  const clickEdit = async () => {
+    if (window.confirm('소분글을 수정하시겠습니까?')) {
+      navigate(`/edit/${userPostId}`)
+    }
+  }
+
   return (
     <Container size="full-width" align="center" direction="column" style={{ marginTop: '60px' }}>
       {postDetail ? (
@@ -82,6 +89,7 @@ export const DetailPage = () => {
             isActivate={postDetail.userParticipatingIn}
             isMyPosting={isMyPosting}
             onGoToCommentSection={scrollToCommentSection}
+            onClickEdit={clickEdit}
           />
           <InformationSection
             min={postDetail.postDataOutDto.minEngageCount}

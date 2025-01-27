@@ -21,6 +21,7 @@ interface MainProps {
   isActivate: boolean
   isMyPosting: boolean
   onGoToCommentSection: () => void
+  onClickEdit: () => void
 }
 
 export const MainSection = ({
@@ -36,11 +37,12 @@ export const MainSection = ({
   isActivate,
   isMyPosting,
   onGoToCommentSection,
+  onClickEdit,
 }: MainProps) => {
   const navigate = useNavigate()
 
   const clickDelete = async () => {
-    if (window.confirm(`소분글을 삭제하시겠습니까?`)) {
+    if (window.confirm('소분글을 삭제하시겠습니까?')) {
       try {
         await deletePost(Number(userPostId))
         alert('소분글 삭제가 완료되었습니다!')
@@ -113,6 +115,7 @@ export const MainSection = ({
               height="45px"
               shadow="0 0 10px rgba(0,0,0,0.1)"
               style={{ fontSize: '16px', minWidth: '130px' }}
+              onClick={onClickEdit}
             >
               게시글 수정하기
             </Button>

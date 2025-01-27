@@ -12,12 +12,19 @@ import { CalendarIcon } from '@/components/features/CalendarIcon/CalendarIcon'
 import NewPicture from '../../components/features/NewPicture/NewPicture'
 import useSetAmount from '@/hooks/useSetAmount'
 import MapSearch from '@/components/features/MapSearch/MapSearch'
-import { postPostData } from '@/api/hooks/post/postApi'
-import { useFormatTimeToSave } from '@/hooks/useFormatTime'
+import { getPostData, postPostData, putPostData } from '@/api/hooks/post/postApi'
+import { useFormatTimeToSave, useFormatTimeToShow } from '@/hooks/useFormatTime'
 import { useFormatSeasoningCategoryId, useFormatUnitToId } from '@/hooks/useFormatId'
-import { DateForPost } from '@/hooks/useFormatDateAndTime'
+import {
+  DateForPost,
+  DateForUse,
+  DateFromData,
+  TimeForUse,
+  TimeFromData,
+} from '@/hooks/useFormatDateAndTime'
 import { useSetTwoDigits } from '@/hooks/useSetTwoDigits'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
+import { PostResponseData } from '@/api/hooks/post/types'
 
 export interface MapProps {
   name: string
@@ -26,9 +33,9 @@ export interface MapProps {
 }
 
 export const PostPage = () => {
+  const { userPostId } = useParams<{ userPostId: string }>()
   const categories = ['액체류', '소스류', '가루류', '잼류', '기타']
   const units = ['ml', 'L', 'g', 'kg']
-  const thisYear = new Date().getFullYear()
   const time = ['오전', '오후']
   const hour = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
   const minute = ['00', '15', '30', '45']
@@ -62,7 +69,82 @@ export const PostPage = () => {
   const [unit, setUnit] = useState<string>('')
 
   const [errors, setErrors] = useState<Record<string, string>>({})
+  const [isEditing, setIsEditing] = useState(false)
   const navigate = useNavigate()
+
+  interface ExtendedPostResponseData extends PostResponseData {
+    time: string
+    hour: string
+    minute: string
+  }
+
+  const [initialData, setInitialData] = useState<ExtendedPostResponseData>()
+
+  useEffect(() => {
+    if (userPostId) {
+      setIsEditing(true)
+
+      const fetchPostData = async () => {
+        try {
+          const postData: PostResponseData = await getPostData(Number(userPostId))
+
+          const { postTitle } = postData.userPostDataOutDto
+          const {
+            originalPrice,
+            amount,
+            minEngageCount,
+            maxEngageCount,
+            description,
+            portioningPlaceLatitude,
+            portioningPlaceLongitude,
+            portioningPlaceAddress,
+            portioningPlaceDetailAddress,
+          } = postData.postDataOutDto
+          const { categoryName, imageUrl, unitName } = postData
+          const { year, month, date } = DateForUse(
+            DateFromData(postData.userPostDataOutDto.portioningDate),
+          )
+          const { hour, minute } = TimeForUse(
+            TimeFromData(postData.userPostDataOutDto.portioningDate),
+          )
+
+          handleCategorySelect(categoryName)
+          setTitle(postTitle)
+          setLink(postData.postDataOutDto.onlinePurchaseUrl || '')
+          setPrice(originalPrice.toString())
+          setAmount(amount.toString())
+          setMinPeople(minEngageCount.toString())
+          setMaxPeople(maxEngageCount.toString())
+          setSelectedDateInfo({
+            year: Number(year),
+            month: Number(month),
+            date,
+          })
+          setSelectedTime(useFormatTimeToShow(Number(hour)).split(' ')[0])
+          setSelectedHour(useFormatTimeToShow(Number(hour)).split(' ')[1])
+          setSelectedMinute(minute)
+          setContent(description)
+          setLatitude(portioningPlaceLatitude.toString())
+          setLongitude(portioningPlaceLongitude.toString())
+          setSelectedPlace(portioningPlaceAddress)
+          setDetailPlace(portioningPlaceDetailAddress || '')
+          setSelectedImage(imageUrl || '')
+          setUnit(unitName)
+
+          setInitialData({
+            ...postData,
+            time: useFormatTimeToShow(Number(hour)).split(' ')[0],
+            hour: useSetTwoDigits(Number(useFormatTimeToShow(Number(hour)).split(' ')[1])),
+            minute: minute,
+          })
+        } catch (error) {
+          console.error('Failed to fetch post details:', error)
+        }
+      }
+
+      fetchPostData()
+    }
+  }, [userPostId])
 
   useEffect(() => {
     if (
@@ -230,28 +312,53 @@ export const PostPage = () => {
 
   const submit = async () => {
     try {
-      await postPostData({
-        userPostDataInDto: {
-          postTitle: title,
-          portioningDate: portioningDate,
-        },
-        postDataInDto: {
-          onlinePurchaseUrl: link,
-          originalPrice: Number(price),
-          amount: Number(amount),
-          minEngageCount: Number(minPeople),
-          maxEngageCount: Number(maxPeople),
-          portioningPlaceLatitude: Number(latitude),
-          portioningPlaceLongitude: Number(longitude),
-          description: content,
-          portioningPlaceAddress: selectedPlace,
-          portioningPlaceDetailAddress: detailPlace,
-        },
-        imageUrl: selectedImage,
-        unitId: useFormatUnitToId(unit),
-        seasoningCategoryId: useFormatSeasoningCategoryId(category!),
-      })
-      alert('소분글이 등록되었습니다!')
+      if (isEditing) {
+        await putPostData(Number(userPostId!), {
+          userPostDataInDto: {
+            postTitle: title,
+            portioningDate: portioningDate,
+          },
+          postDataInDto: {
+            onlinePurchaseUrl: link,
+            originalPrice: Number(price),
+            amount: Number(amount),
+            minEngageCount: Number(minPeople),
+            maxEngageCount: Number(maxPeople),
+            portioningPlaceLatitude: Number(latitude),
+            portioningPlaceLongitude: Number(longitude),
+            description: content,
+            portioningPlaceAddress: selectedPlace,
+            portioningPlaceDetailAddress: detailPlace,
+          },
+          imageUrl: selectedImage,
+          unitId: useFormatUnitToId(unit),
+          seasoningCategoryId: useFormatSeasoningCategoryId(category!),
+        })
+        alert('소분글이 수정되었습니다!')
+      } else {
+        await postPostData({
+          userPostDataInDto: {
+            postTitle: title,
+            portioningDate: portioningDate,
+          },
+          postDataInDto: {
+            onlinePurchaseUrl: link,
+            originalPrice: Number(price),
+            amount: Number(amount),
+            minEngageCount: Number(minPeople),
+            maxEngageCount: Number(maxPeople),
+            portioningPlaceLatitude: Number(latitude),
+            portioningPlaceLongitude: Number(longitude),
+            description: content,
+            portioningPlaceAddress: selectedPlace,
+            portioningPlaceDetailAddress: detailPlace,
+          },
+          imageUrl: selectedImage,
+          unitId: useFormatUnitToId(unit),
+          seasoningCategoryId: useFormatSeasoningCategoryId(category!),
+        })
+        alert('소분글이 등록되었습니다!')
+      }
       navigate('/')
     } catch (error) {
       alert('소분글 등록에 실패하였습니다.')
@@ -272,7 +379,11 @@ export const PostPage = () => {
           )}
         </Container>
 
-        <Category text={categories} onSelect={handleCategorySelect} />
+        <Category
+          text={categories}
+          initialSelected={initialData?.categoryName || undefined}
+          onSelect={handleCategorySelect}
+        />
       </Container>
       <Container size="full-width" direction="column" style={{ gap: '23px', marginBottom: '46px' }}>
         <Heading.XSmall>
@@ -360,6 +471,7 @@ export const PostPage = () => {
                 placeholder={'단위'}
                 children={units}
                 width="120px"
+                initialValue={initialData?.unitName || undefined}
                 setValue={(selectedValue) => handleDropDownSelect(setUnit, selectedValue, 'unit')}
               />
             </Container>
@@ -399,6 +511,8 @@ export const PostPage = () => {
           price={price}
           amount={amount}
           unit={unit}
+          initialMinPeople={initialData?.postDataOutDto.minEngageCount || undefined}
+          initialMaxPeople={initialData?.postDataOutDto.maxEngageCount || undefined}
           onChangeMinPeople={(selectedValue) =>
             handleDropDownSelect(setMinPeople, selectedValue, 'minPeople')
           }
@@ -443,6 +557,7 @@ export const PostPage = () => {
                 placeholder={'오전/오후'}
                 children={time}
                 width="135px"
+                initialValue={initialData?.time || undefined}
                 setValue={(selectedValue) =>
                   handleDropDownSelect(setSelectedTime, selectedValue, 'selectedTime')
                 }
@@ -457,6 +572,7 @@ export const PostPage = () => {
                   placeholder={'HH'}
                   children={hour}
                   width="110px"
+                  initialValue={initialData?.hour || undefined}
                   setValue={(selectedValue) =>
                     handleDropDownSelect(setSelectedHour, selectedValue, 'selectedHour')
                   }
@@ -474,6 +590,7 @@ export const PostPage = () => {
                   placeholder={'MM'}
                   children={minute}
                   width="110px"
+                  initialValue={initialData?.minute || undefined}
                   setValue={(selectedValue) =>
                     handleDropDownSelect(setSelectedMinute, selectedValue, 'selectedMinute')
                   }
@@ -519,6 +636,9 @@ export const PostPage = () => {
           )}
         </Container>
         <MapSearch
+          initialLatitude={initialData?.postDataOutDto.portioningPlaceLatitude}
+          initialLongitude={initialData?.postDataOutDto.portioningPlaceLongitude}
+          initialValue={initialData?.postDataOutDto.portioningPlaceAddress}
           setValue={(selectedValue) =>
             handleMapSelect(
               setSelectedPlace,
@@ -578,7 +698,7 @@ export const PostPage = () => {
           shadow="0 0 10px rgba(0,0,0,0.2)"
           onClick={isDone ? submit : notDone}
         >
-          소분 게시물 등록하기
+          {isEditing ? '소분 게시물 수정하기' : '소분 게시물 등록하기'}
         </Button>
       </Container>
     </Container>
@@ -589,11 +709,21 @@ interface setPeopleProps {
   price: string
   amount: string
   unit: string
+  initialMinPeople?: number
+  initialMaxPeople?: number
   onChangeMinPeople: (selectedValue: string) => void
   onChangeMaxPeople: (selectedValue: string) => void
 }
 
-function SetPeople({ price, amount, unit, onChangeMinPeople, onChangeMaxPeople }: setPeopleProps) {
+function SetPeople({
+  price,
+  amount,
+  unit,
+  initialMinPeople,
+  initialMaxPeople,
+  onChangeMinPeople,
+  onChangeMaxPeople,
+}: setPeopleProps) {
   const [minPeopleLocal, setMinPeopleLocal] = useState<number | null>(null)
   const [maxPeopleLocal, setMaxPeopleLocal] = useState<number | null>(null)
   const [isMinSet, setIsMinSet] = useState(false)
@@ -615,6 +745,17 @@ function SetPeople({ price, amount, unit, onChangeMinPeople, onChangeMaxPeople }
   const [maxPrice, setMaxPrice] = useState(0)
 
   useEffect(() => {
+    if (initialMinPeople !== undefined) {
+      setMinPeopleLocal(initialMinPeople)
+      setIsMinSet(true)
+    }
+    if (initialMaxPeople !== undefined) {
+      setMaxPeopleLocal(initialMaxPeople)
+      setIsMaxSet(true)
+    }
+  }, [initialMinPeople, initialMaxPeople])
+
+  useEffect(() => {
     if (price && minPeopleLocal !== null && maxPeopleLocal !== null) {
       const numericPrice = Number(price)
       if (!isNaN(numericPrice) && numericPrice > 0) {
@@ -625,7 +766,9 @@ function SetPeople({ price, amount, unit, onChangeMinPeople, onChangeMaxPeople }
   }, [price, minPeopleLocal, maxPeopleLocal])
 
   useEffect(() => {
-    if (isMinSet) onChangeMinPeople(minPeopleLocal!.toString())
+    if (isMinSet) {
+      onChangeMinPeople(minPeopleLocal!.toString())
+    }
     if (isMaxSet) onChangeMaxPeople(maxPeopleLocal!.toString())
   }, [isMinSet, isMaxSet])
 
