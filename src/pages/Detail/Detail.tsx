@@ -5,8 +5,8 @@ import InformationSection from './InformationSection'
 import MapSection from './MapSection'
 import CommentSection from './CommentSection'
 import { useEffect, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { getPostData } from '@/api/hooks/post/postApi'
+import { useNavigate, useParams } from 'react-router-dom'
+import { getPostData, postJoinPost } from '@/api/hooks/post/postApi'
 import { PostResponseData } from '@/api/hooks/post/types'
 
 export const DetailPage = () => {
@@ -37,12 +37,18 @@ export const DetailPage = () => {
     }
   }, [postDetail, userUuid])
 
-  const handleActivate = () => {
+  const handleActivate = async () => {
     const confirmParticipation = window.confirm(
       '정말 소분에 참여하시겠습니까? 참여 시 철회할 수 없습니다.',
     )
     if (confirmParticipation) {
-      window.location.reload()
+      try {
+        await postJoinPost(Number(userPostId))
+        alert('성공적으로 소분에 참여되었습니다!')
+            window.location.reload()
+      } catch (error) {
+        alert('소분 참여에 실패하였습니다.')
+      }
     }
   }
 
@@ -94,6 +100,7 @@ export const DetailPage = () => {
           />
           <div ref={commentSectionRef} />
           <CommentSection
+            userPostId={userPostId!}
             userUuid={userUuid!}
             isActivate={postDetail.userParticipatingIn}
             onActivate={handleActivate}
