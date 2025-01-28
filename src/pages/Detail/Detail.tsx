@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getPostData, postJoinPost } from '@/api/hooks/post/postApi'
 import { PostResponseData } from '@/api/hooks/post/types'
+import { useSetDeletedUser } from '@/hooks/useSetDeletedUser'
 
 export const DetailPage = () => {
   const { userPostId } = useParams<{ userPostId: string }>()
@@ -14,6 +15,8 @@ export const DetailPage = () => {
   const commentSectionRef = useRef<HTMLDivElement>(null)
   const userUuid = localStorage.getItem('userUuid')
   const [isMyPosting, setIsMyPosting] = useState(false)
+  const [writerNickname, setWriterNickname] = useState('')
+  const [deletedUser, setDeletedUser] = useState(false)
 
   const navigate = useNavigate()
 
@@ -23,6 +26,14 @@ export const DetailPage = () => {
         try {
           const data = await getPostData(Number(userPostId))
           setPostDetail(data)
+          if (data.userPostDataOutDto.writerUuid) {
+            setWriterNickname(data.userNickname)
+            setIsMyPosting(data.userPostDataOutDto.writerUuid === userUuid)
+          } else {
+            setWriterNickname(useSetDeletedUser())
+            setDeletedUser(true)
+            alert('탈퇴한 회원이 게시한 소분글입니다.')
+          }
         } catch (error) {
           console.error('Failed to fetch:', error)
         }
@@ -30,13 +41,6 @@ export const DetailPage = () => {
       fetchDetailData()
     }
   }, [userPostId])
-
-  useEffect(() => {
-    if (postDetail) {
-      setIsMyPosting(postDetail.userPostDataOutDto.writerUuid === userUuid)
-      console.log(postDetail)
-    }
-  }, [postDetail, userUuid])
 
   const handleActivate = async () => {
     const confirmParticipation = window.confirm(
@@ -80,7 +84,7 @@ export const DetailPage = () => {
             userPostId={userPostId!}
             imageUrl={postDetail.imageUrl}
             title={postDetail.userPostDataOutDto.postTitle}
-            writerNickname={postDetail.userNickname}
+            writerNickname={writerNickname}
             link={postDetail.postDataOutDto.onlinePurchaseUrl}
             price={String(postDetail.postDataOutDto.originalPrice)}
             amount={String(postDetail.postDataOutDto.amount)}
@@ -90,6 +94,7 @@ export const DetailPage = () => {
             isMyPosting={isMyPosting}
             onGoToCommentSection={scrollToCommentSection}
             onClickEdit={clickEdit}
+            deletedUser={deletedUser}
           />
           <InformationSection
             min={postDetail.postDataOutDto.minEngageCount}

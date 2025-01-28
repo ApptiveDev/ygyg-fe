@@ -1,5 +1,5 @@
 export interface PostResponseData {
-  imageUrl: string
+  imageUrl: string | null
   unitName: string
   categoryName: string
   userParticipatingIn: boolean

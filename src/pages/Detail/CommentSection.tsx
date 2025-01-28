@@ -8,6 +8,7 @@ import { BsFillArrowRightCircleFill } from 'react-icons/bs'
 import { useEffect, useRef, useState } from 'react'
 import { CommentsResponseData } from '@/api/hooks/comment/types'
 import { getComments, postComment } from '@/api/hooks/comment/commentsApi'
+import { useSetDeletedUser } from '@/hooks/useSetDeletedUser'
 
 interface CommentProps {
   userPostId: string
@@ -147,12 +148,22 @@ const CommentActivated = ({
               justify={comment.writerUuid === userUuid ? 'flex-end' : 'flex-start'}
               style={{ boxSizing: 'border-box' }}
             >
-              <SpeechBubble
-                fromMe={comment.writerUuid === userUuid}
-                text={comment.commentContents}
-                nickname={comment.userNickname}
-                createdAt={comment.createdAt}
-              />
+              {comment.writerUuid ? (
+                <SpeechBubble
+                  fromMe={comment.writerUuid === userUuid}
+                  text={comment.commentContents}
+                  nickname={comment.userNickname}
+                  createdAt={comment.createdAt}
+                />
+              ) : (
+                <SpeechBubble
+                  fromMe={false}
+                  text={comment.commentContents}
+                  nickname={useSetDeletedUser()}
+                  createdAt={comment.createdAt}
+                  deletedUser={true}
+                />
+              )}
             </Container>
           ))}
         </Container>
