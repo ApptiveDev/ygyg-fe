@@ -8,6 +8,7 @@ import CardList from '@/components/common/CardList/CardList/CardList'
 import Container from '@/components/atoms/Container/Container'
 import Button from '@/components/common/Button/Button'
 import { GoArrowUpRight } from 'react-icons/go'
+import Banner from '@/components/features/Banner/Banner';
 
 export const HomePage = () => {
   const navigate = useNavigate()
@@ -25,7 +26,9 @@ export const HomePage = () => {
 
   return (
     <Container size="full-width" direction="column" align="center">
-      <div className={styles.banner} />
+      <div className = {styles.bannerContainer}>
+        <Banner />
+      </div>
       <div className={styles.wrapper}>
         <Container
           direction="column"
@@ -34,7 +37,6 @@ export const HomePage = () => {
           style={{
             borderBottom: '1px solid var(--gray-color2)',
             padding: '52px 20px',
-            marginTop: '640px',
             width: '100%',
             boxSizing: 'border-box',
           }}
