@@ -16,7 +16,7 @@ export const HomePage = () => {
     navigate(`/list/category/${categoryName}`)
   }
   const search = () => {
-    navigate(`/list/search/${searchKeyword}`)
+    if (searchKeyword) navigate(`/list/search/${searchKeyword}`)
   }
 
   const handleNavigation = () => {
