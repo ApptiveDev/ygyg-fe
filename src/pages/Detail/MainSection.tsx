@@ -4,13 +4,13 @@ import sampleImg from '@/assets/images/sample_image.png'
 import { Heading, TextBody } from '@/components/atoms/Text/TextFactory'
 import useFormatPrice from '@/hooks/useFormatPrice'
 import Button from '@/components/common/Button/Button'
-import { useState } from 'react'
+import defaultImg from '@/assets/images/default_image.png'
 import { deletePost } from '@/api/hooks/post/postApi'
 import { useNavigate } from 'react-router-dom'
 
 interface MainProps {
   userPostId: string
-  imageUrl: string
+  imageUrl: string | null
   title: string
   writerNickname: string
   link: string
@@ -57,7 +57,11 @@ export const MainSection = ({
 
   return (
     <Container size="full-width" align="flex-end" gap={50}>
-      <img src={imageUrl} alt="product-image" className={styles.productImage} />
+      <img
+        src={imageUrl ? imageUrl : defaultImg}
+        alt="product-image"
+        className={styles.productImage}
+      />
       <Container
         align="flex-start"
         direction="column"
