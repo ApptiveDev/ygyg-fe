@@ -19,7 +19,7 @@ export const Header = ({ isHome = false }: HeaderProps) => {
   const [searchKeyword, setSearchKeyword] = useState('')
 
   const search = () => {
-    navigate(`/list/search/${searchKeyword}`)
+    if (searchKeyword) navigate(`/list/search/${searchKeyword}`)
   }
   return isHome ? (
     <div className={styles.homeHeaderWrapper} css={scrollHeaderStyle}>
