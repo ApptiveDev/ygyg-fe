@@ -14,10 +14,18 @@ const mockData = Array(9).fill(
     current: 5,
   });
 
-const CardList = () => {
+  type CardListProps = {
+    selectedCategory: string;
+  };
+
+  const CardList: React.FC<CardListProps> = ({ selectedCategory }) => {
+    const filteredData = selectedCategory
+      ? mockData.filter((item) => item.category === selectedCategory)
+      : mockData;
+
   return (
     <div className={styles['card-list']}>
-      {mockData.map((item, index) => (
+      {filteredData.map((item, index) => (
         <Card key={index} {...item} />
       ))}
     </div>
