@@ -4,23 +4,38 @@ import CardList from '@/components/common/CardList/CardList/CardList'
 import Toggle from '@/components/atoms/Toggle/Toggle'
 import ListPageDropdown from '@/components/atoms/ListPageDropdown/ListPageDropdown'
 import Pagination from '@/components/atoms/Pagination/Pagination'
-import React, { useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 
 const ListPageCategory: React.FC = () => {
   const { category } = useParams<{ category: string }>()
+  const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
-  const [isChecked, setIsChecked] = useState(false)
-  const [activePage, setActivePage] = useState<number>(1)
+  const [isChecked, setIsChecked] = useState<boolean>(searchParams.get('filter') === 'true')
+  const [activePage, setActivePage] = useState<number>(Number(searchParams.get('page')) || 1)
+  const [selected, setSelected] = useState<string>(searchParams.get('sort') || '최신 순')
   const [selectedCategory, setSelectedCategory] = useState<string>(category || '')
   const totalPages = 8
   const [isOpen, setIsOpen] = useState(false)
-  const [selected, setSelected] = useState('소분 게시물 전체 보기')
 
   const options = ['최신 순', '약속 시간 임박 순', '낮은 가격 순', '남은 인원 적은 순']
 
+  useEffect(() => {
+    setSearchParams({
+      sort: selected,
+      filter: String(isChecked),
+      page: String(activePage),
+    })
+  }, [])
+
   const handleToggle = () => {
-    setIsChecked((prev) => !prev)
+    const newFilterState = !isChecked
+    setIsChecked(newFilterState)
+    setSearchParams({
+      sort: selected,
+      filter: String(newFilterState),
+      page: String(activePage),
+    })
   }
 
   const toggleDropdown = () => {
@@ -30,18 +45,43 @@ const ListPageCategory: React.FC = () => {
   const handleOptionClick = (option: string) => {
     setSelected(option)
     setIsOpen(false)
+    setSearchParams({
+      sort: option,
+      filter: String(isChecked),
+      page: String(activePage),
+    })
   }
 
   const handlePageClick = (page: number) => {
     setActivePage(page)
     console.log(`선택된 페이지: ${page}`)
+    setSearchParams({
+      sort: selected,
+      filter: String(isChecked),
+      page: String(page),
+    })
   }
 
   const handleCategorySelect = (categoryName: string) => {
     setSelectedCategory(categoryName)
     console.log(`선택된 카테고리: ${categoryName}`)
-    navigate(`/list/category/${categoryName}`)
+    navigate(
+      `/list/category/${categoryName}?sort=${selected}&filter=${isChecked}&page=${activePage}`,
+    )
   }
+
+  useEffect(() => {
+    if (category) {
+      setSelectedCategory(category)
+    }
+    const sort = searchParams.get('sort') || '최신 순'
+    const filter = searchParams.get('filter') === 'true'
+    const page = Number(searchParams.get('page')) || 1
+
+    setSelected(sort)
+    setIsChecked(filter)
+    setActivePage(page)
+  }, [category, searchParams])
 
   return (
     <div className={styles.wrapper}>
