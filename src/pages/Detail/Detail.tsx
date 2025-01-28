@@ -1,6 +1,5 @@
 import Container from '@/components/atoms/Container/Container'
 import { MainSection } from './MainSection'
-import sampleImg from '@/assets/images/sample_image.png'
 import InformationSection from './InformationSection'
 import MapSection from './MapSection'
 import CommentSection from './CommentSection'
@@ -9,36 +8,14 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { getPostData, postJoinPost } from '@/api/hooks/post/postApi'
 import { PostResponseData } from '@/api/hooks/post/types'
 
-const exampleValue = {
-  writerUuid: '3fa85f64-5717-4562-b3fc-2c963f66afa6',
-  thumbnail: sampleImg,
-  title: '게시글 제목',
-  author: '작성자',
-  link: 'http://localhost:5173/detail',
-  price: '20000',
-  meetAt: '2025-01-24T18:30',
-  min: 4,
-  max: 8,
-  amount: '1',
-  unit: 'kg',
-  description:
-    '설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.',
-  current: 6,
-  place: '스타벅스 부산대정문점',
-  detailPlace: '1층 입구 앞',
-  latitude: '35.2314079',
-  longitude: '129.0843855',
-  category: '소스류',
-  isActivate: false,
-}
-
 export const DetailPage = () => {
   const { userPostId } = useParams<{ userPostId: string }>()
   const [postDetail, setPostDetail] = useState<PostResponseData>()
-  const [isActivate, setIsActivate] = useState(exampleValue.isActivate)
   const commentSectionRef = useRef<HTMLDivElement>(null)
   const userUuid = localStorage.getItem('userUuid')
   const [isMyPosting, setIsMyPosting] = useState(false)
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (userPostId) {
@@ -69,7 +46,7 @@ export const DetailPage = () => {
       try {
         await postJoinPost(Number(userPostId))
         alert('성공적으로 소분에 참여되었습니다!')
-        setIsActivate(true)
+        window.location.reload()
       } catch (error) {
         alert('소분 참여에 실패하였습니다.')
       }
@@ -89,22 +66,30 @@ export const DetailPage = () => {
     }
   }
 
+  const clickEdit = async () => {
+    if (window.confirm('소분글을 수정하시겠습니까?')) {
+      navigate(`/edit/${userPostId}`)
+    }
+  }
+
   return (
     <Container size="full-width" align="center" direction="column" style={{ marginTop: '60px' }}>
       {postDetail ? (
         <>
           <MainSection
+            userPostId={userPostId!}
             imageUrl={postDetail.imageUrl}
             title={postDetail.userPostDataOutDto.postTitle}
-            writerNickname={'정윤구스'}
+            writerNickname={postDetail.userNickname}
             link={postDetail.postDataOutDto.onlinePurchaseUrl}
             price={String(postDetail.postDataOutDto.originalPrice)}
             amount={String(postDetail.postDataOutDto.amount)}
             unit={postDetail.unitName}
             description={postDetail.postDataOutDto.description}
-            isActivate={true}
+            isActivate={postDetail.userParticipatingIn}
             isMyPosting={isMyPosting}
             onGoToCommentSection={scrollToCommentSection}
+            onClickEdit={clickEdit}
           />
           <InformationSection
             min={postDetail.postDataOutDto.minEngageCount}
@@ -126,13 +111,13 @@ export const DetailPage = () => {
           <CommentSection
             userPostId={userPostId!}
             userUuid={userUuid!}
-            isActivate={isActivate}
+            isActivate={postDetail.userParticipatingIn}
             onActivate={handleActivate}
             isMyPosting={isMyPosting}
           />
         </>
       ) : (
-        <p>Loading...</p>
+        <Container style={{ height: '100px' }}>Loading...</Container>
       )}
     </Container>
   )

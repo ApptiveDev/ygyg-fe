@@ -5,8 +5,11 @@ import { Heading, TextBody } from '@/components/atoms/Text/TextFactory'
 import useFormatPrice from '@/hooks/useFormatPrice'
 import Button from '@/components/common/Button/Button'
 import { useState } from 'react'
+import { deletePost } from '@/api/hooks/post/postApi'
+import { useNavigate } from 'react-router-dom'
 
 interface MainProps {
+  userPostId: string
   imageUrl: string
   title: string
   writerNickname: string
@@ -18,9 +21,11 @@ interface MainProps {
   isActivate: boolean
   isMyPosting: boolean
   onGoToCommentSection: () => void
+  onClickEdit: () => void
 }
 
 export const MainSection = ({
+  userPostId,
   imageUrl,
   title,
   writerNickname,
@@ -32,7 +37,22 @@ export const MainSection = ({
   isActivate,
   isMyPosting,
   onGoToCommentSection,
+  onClickEdit,
 }: MainProps) => {
+  const navigate = useNavigate()
+
+  const clickDelete = async () => {
+    if (window.confirm('소분글을 삭제하시겠습니까?')) {
+      try {
+        await deletePost(Number(userPostId))
+        alert('소분글 삭제가 완료되었습니다!')
+        navigate('/')
+      } catch (error) {
+        alert('소분글 삭제에 실패하였습니다.')
+      }
+    }
+  }
+
   return (
     <Container size="full-width" align="flex-end" gap={50}>
       <img src={imageUrl} alt="product-image" className={styles.productImage} />
@@ -55,7 +75,7 @@ export const MainSection = ({
               구매 링크
             </TextBody.Small>
             <a href={link} className={styles.link} target="_blank">
-              {link}
+              바로가기
             </a>
           </Container>
           <Container size="full-width" justify="space-between" gap={11}>
@@ -95,6 +115,7 @@ export const MainSection = ({
               height="45px"
               shadow="0 0 10px rgba(0,0,0,0.1)"
               style={{ fontSize: '16px', minWidth: '130px' }}
+              onClick={onClickEdit}
             >
               게시글 수정하기
             </Button>
@@ -104,6 +125,7 @@ export const MainSection = ({
               height="45px"
               shadow="0 0 10px rgba(0,0,0,0.1)"
               style={{ fontSize: '16px', minWidth: '130px' }}
+              onClick={clickDelete}
             >
               게시글 삭제하기
             </Button>

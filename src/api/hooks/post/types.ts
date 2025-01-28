@@ -2,7 +2,8 @@ export interface PostResponseData {
   imageUrl: string
   unitName: string
   categoryName: string
-  writerActiveState: boolean
+  userParticipatingIn: boolean
+  userNickname: string
   userPostDataOutDto: UserPostDataOutDto
   postDataOutDto: PostDataOutDto
   // [key: string]: unknown
@@ -36,7 +37,7 @@ export interface PostDataInDto {
 
 export interface UserPostDataOutDto {
   id: number
-  writerUuid: string
+  writerUuid: string | null
   postTitle: string
   portioningDate: string
   expectedMinimumPrice: number
