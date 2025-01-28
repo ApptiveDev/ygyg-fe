@@ -14,7 +14,7 @@ const mockData = Array(9).fill({
 })
 
 type CardListProps = {
-  selectedCategory: string
+  selectedCategory?: string
 }
 
 const CardList: React.FC<CardListProps> = ({ selectedCategory }) => {

@@ -5,6 +5,7 @@ import logo from '@/assets/images/logo.svg'
 import Container from '@/components/atoms/Container/Container'
 import useHeaderScrollEffect from '@/hooks/useHeaderScrollEffect'
 import useSignOut from '@/hooks/useSignOut'
+import { useState } from 'react'
 
 interface HeaderProps {
   isHome?: boolean
@@ -15,6 +16,11 @@ export const Header = ({ isHome = false }: HeaderProps) => {
   const { headerStyle: scrollHeaderStyle } = useHeaderScrollEffect()
   const accessToken = localStorage.getItem('accessToken')
   const signOut = useSignOut()
+  const [searchKeyword, setSearchKeyword] = useState('')
+
+  const search = () => {
+    navigate(`/list/search/${searchKeyword}`)
+  }
   return isHome ? (
     <div className={styles.homeHeaderWrapper} css={scrollHeaderStyle}>
       <img src={logo} alt="logo" className={styles.homeLogo} onClick={() => navigate('/')} />
@@ -41,7 +47,11 @@ export const Header = ({ isHome = false }: HeaderProps) => {
   ) : (
     <div className={styles.headerWrapper} css={scrollHeaderStyle}>
       <img src={logo} alt="logo" className={styles.logo} onClick={() => navigate('/')} />
-      <SearchBar placeholder="검색하고 싶은 양념장을 입력하세요" />
+      <SearchBar
+        placeholder="검색하고 싶은 양념장을 입력하세요"
+        onChange={(value) => setSearchKeyword(value)}
+        onSubmit={search}
+      />
       {accessToken ? (
         <Container gap={24}>
           <div className={styles.textButton} onClick={signOut}>
