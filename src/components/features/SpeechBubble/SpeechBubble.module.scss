@@ -65,3 +65,9 @@
   font-weight: 600;
   color: var(--gray-color5);
 }
+
+.deletedUser {
+  font-style: normal;
+  transform: skew(-10deg);
+  text-decoration: line-through;
+}

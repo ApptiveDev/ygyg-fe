@@ -22,6 +22,7 @@ interface MainProps {
   isMyPosting: boolean
   onGoToCommentSection: () => void
   onClickEdit: () => void
+  deletedUser: boolean
 }
 
 export const MainSection = ({
@@ -38,6 +39,7 @@ export const MainSection = ({
   isMyPosting,
   onGoToCommentSection,
   onClickEdit,
+  deletedUser,
 }: MainProps) => {
   const navigate = useNavigate()
 
@@ -69,7 +71,9 @@ export const MainSection = ({
       >
         <Container align="flex-start" direction="column" size="full-width" gap={15}>
           <Heading.Small>{title}</Heading.Small>
-          <TextBody.Small className={styles.author}>{writerNickname}</TextBody.Small>
+          <TextBody.Small className={`${styles.author} ${deletedUser ? styles.deletedUser : ''}`}>
+            {writerNickname}
+          </TextBody.Small>
           <Container size="full-width" justify="space-between" gap={11}>
             <TextBody.Small className={styles.smallTitle} weight={700}>
               구매 링크
