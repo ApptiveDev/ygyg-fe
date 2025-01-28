@@ -75,7 +75,7 @@ export const MainSection = ({
               구매 링크
             </TextBody.Small>
             <a href={link} className={styles.link} target="_blank">
-              link
+              바로가기
             </a>
           </Container>
           <Container size="full-width" justify="space-between" gap={11}>

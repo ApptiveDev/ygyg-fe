@@ -80,7 +80,7 @@ export const DetailPage = () => {
             userPostId={userPostId!}
             imageUrl={postDetail.imageUrl}
             title={postDetail.userPostDataOutDto.postTitle}
-            writerNickname={'정윤구스'}
+            writerNickname={postDetail.userNickname}
             link={postDetail.postDataOutDto.onlinePurchaseUrl}
             price={String(postDetail.postDataOutDto.originalPrice)}
             amount={String(postDetail.postDataOutDto.amount)}
