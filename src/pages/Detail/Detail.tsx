@@ -28,11 +28,11 @@ export const DetailPage = () => {
           setPostDetail(data)
           if (data.userPostDataOutDto.writerUuid) {
             setWriterNickname(data.userNickname)
-
             setIsMyPosting(data.userPostDataOutDto.writerUuid === userUuid)
           } else {
             setWriterNickname(useSetDeletedUser())
             setDeletedUser(true)
+            alert('탈퇴한 회원이 게시한 소분글입니다.')
           }
         } catch (error) {
           console.error('Failed to fetch:', error)
