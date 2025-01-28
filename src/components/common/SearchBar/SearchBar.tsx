@@ -1,3 +1,4 @@
+import { Dispatch } from 'react'
 import styles from './SearchBar.module.scss'
 import { IoIosSearch, IoMdArrowDropup, IoMdArrowDropdown } from 'react-icons/io'
 
@@ -7,7 +8,7 @@ interface SearchBarProps {
   radius?: number
   value?: string
   placeholder?: string
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
+  onChange: React.Dispatch<React.SetStateAction<string>>
   onSubmit?: (event: React.MouseEvent<HTMLOrSVGElement>) => void
   onToggle?: () => void
   isOpen?: boolean
@@ -41,7 +42,7 @@ function SearchBar({
         className={styles.InputWrapper}
         placeholder={placeholder}
         value={value}
-        onChange={onChange}
+        onChange={(e) => onChange(e.target.value)}
       />
       <div className={styles.arrowWrapper} onClick={onToggle}>
         {isOpen == null ? null : toggleActive ? (

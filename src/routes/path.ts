@@ -11,6 +11,6 @@ export const RouterPath = {
   PRIVACY_POLICY: '/policy/privacy',
   TERMS_OF_SERVICE: '/policy/terms',
   LISTPAGE: '/list',
-  LISTPAGE_CATEGORY: '/list/category',
-  LISTPAGE_SEARCH: '/list/search',
+  LISTPAGE_CATEGORY: '/list/category/:category',
+  LISTPAGE_SEARCH: '/list/search/:search',
 }
