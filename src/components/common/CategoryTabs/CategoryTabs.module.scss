@@ -71,12 +71,21 @@
   color: #ffffff;
   opacity: 1;
 }
-
 .category-item:hover span {
   color: #ffffff;
   opacity: 1;
 }
-
 .category-item:hover img {
   opacity: 0;
 }
+
+.category-item.active {
+  background-color: #d6282c;
+  color: #ffffff;
+
+}
+.category-item.active span {
+  color: #ffffff;
+  opacity: 1;
+}
+
