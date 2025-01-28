@@ -28,10 +28,11 @@ const router = createBrowserRouter([
     element: <Page floatingButton={false} />,
     children: [
       { path: RouterPath.POST, element: <PostPage /> },
+      { path: RouterPath.EDIT, element: <PostPage /> },
       { path: RouterPath.LOGIN, element: <LoginPage /> },
       { path: RouterPath.JOIN, element: <JoinPage /> },
-      { 
-        path: RouterPath.POLICY, 
+      {
+        path: RouterPath.POLICY,
         element: <PolicyPage />,
         children: [
           { path: RouterPath.PRIVACY_POLICY, element: <PolicyPage /> },

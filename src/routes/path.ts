@@ -2,6 +2,7 @@ export const RouterPath = {
   ROOT: '/',
   HOME: '/',
   POST: '/post',
+  EDIT: '/edit/:userPostId',
   LOGIN: '/login',
   JOIN: '/join',
   DETAIL: '/detail/:userPostId',

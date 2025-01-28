@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import styles from './DropDown.module.scss'
 import useDetectClick from '@/hooks/useDetectClick'
 import { IoIosArrowDown } from 'react-icons/io'
@@ -7,13 +7,20 @@ interface DropdownProps {
   placeholder: string
   children: string[]
   width?: string
+  initialValue?: string
   setValue: (selectedValue: string) => void
 }
 
-function DropDown({ placeholder, children, width, setValue }: DropdownProps) {
+function DropDown({ placeholder, children, width, initialValue, setValue }: DropdownProps) {
   const dropDownRef = useRef<HTMLUListElement>(null)
   const [isOpen, setIsOpen] = useDetectClick({ elem: dropDownRef, initialState: false })
   const [value, setValueLocal] = useState<string>(placeholder)
+
+  useEffect(() => {
+    if (initialValue) {
+      handleUnitChange(initialValue)
+    }
+  }, [initialValue])
 
   const handleUnitChange = (selectedValue: string) => {
     setValueLocal(selectedValue)

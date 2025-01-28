@@ -1,15 +1,22 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { TextBody } from '@/components/atoms/Text/TextFactory'
 import styles from './Category.module.scss'
 
 interface CategoryProps {
   icons?: string[]
   text?: string[]
-  onSelect?: (selected: string | null) => void // onSelect 타입 추가
+  initialSelected?: string
+  onSelect?: (selected: string | null) => void
 }
 
-function Category({ icons, text, onSelect }: CategoryProps) {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+function Category({ icons, text, initialSelected, onSelect }: CategoryProps) {
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(initialSelected || null)
+
+  useEffect(() => {
+    if (initialSelected) {
+      setSelectedCategory(initialSelected)
+    }
+  }, [initialSelected])
 
   const categoryClick = (label: string) => {
     const newSelection = selectedCategory === label ? null : label

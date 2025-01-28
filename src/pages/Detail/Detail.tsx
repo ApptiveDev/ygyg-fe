@@ -1,6 +1,5 @@
 import Container from '@/components/atoms/Container/Container'
 import { MainSection } from './MainSection'
-import sampleImg from '@/assets/images/sample_image.png'
 import InformationSection from './InformationSection'
 import MapSection from './MapSection'
 import CommentSection from './CommentSection'
@@ -15,6 +14,8 @@ export const DetailPage = () => {
   const commentSectionRef = useRef<HTMLDivElement>(null)
   const userUuid = localStorage.getItem('userUuid')
   const [isMyPosting, setIsMyPosting] = useState(false)
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (userPostId) {
@@ -45,7 +46,7 @@ export const DetailPage = () => {
       try {
         await postJoinPost(Number(userPostId))
         alert('성공적으로 소분에 참여되었습니다!')
-            window.location.reload()
+        window.location.reload()
       } catch (error) {
         alert('소분 참여에 실패하였습니다.')
       }
@@ -65,14 +66,21 @@ export const DetailPage = () => {
     }
   }
 
+  const clickEdit = async () => {
+    if (window.confirm('소분글을 수정하시겠습니까?')) {
+      navigate(`/edit/${userPostId}`)
+    }
+  }
+
   return (
     <Container size="full-width" align="center" direction="column" style={{ marginTop: '60px' }}>
       {postDetail ? (
         <>
           <MainSection
+            userPostId={userPostId!}
             imageUrl={postDetail.imageUrl}
             title={postDetail.userPostDataOutDto.postTitle}
-            writerNickname={'정윤구스'}
+            writerNickname={postDetail.userNickname}
             link={postDetail.postDataOutDto.onlinePurchaseUrl}
             price={String(postDetail.postDataOutDto.originalPrice)}
             amount={String(postDetail.postDataOutDto.amount)}
@@ -81,6 +89,7 @@ export const DetailPage = () => {
             isActivate={postDetail.userParticipatingIn}
             isMyPosting={isMyPosting}
             onGoToCommentSection={scrollToCommentSection}
+            onClickEdit={clickEdit}
           />
           <InformationSection
             min={postDetail.postDataOutDto.minEngageCount}
@@ -108,7 +117,7 @@ export const DetailPage = () => {
           />
         </>
       ) : (
-        <p>Loading...</p>
+        <Container style={{ height: '100px' }}>Loading...</Container>
       )}
     </Container>
   )

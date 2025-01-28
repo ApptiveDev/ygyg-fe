@@ -15,11 +15,11 @@ interface MapProps {
 function MapSection({ place, detailPlace, meetAt, category, latitude, longitude }: MapProps) {
   const meetingDate = DateFromData(meetAt)
   const meetingTime = TimeFromData(meetAt)
-  const year = DateForUse(meetingDate)[0]
-  const month = DateForUse(meetingDate)[1]
-  const date = DateForUse(meetingDate)[2]
-  const hour = TimeForUse(meetingTime)[0]
-  const minute = TimeForUse(meetingTime)[1]
+  const year = DateForUse(meetingDate).year
+  const month = DateForUse(meetingDate).month
+  const date = DateForUse(meetingDate).date
+  const hour = TimeForUse(meetingTime).hour
+  const minute = TimeForUse(meetingTime).minute
 
   return (
     <Container size="full-width" direction="column" align="center" style={{ marginBottom: '50px' }}>

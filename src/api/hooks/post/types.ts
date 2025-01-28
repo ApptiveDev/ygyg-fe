@@ -3,6 +3,7 @@ export interface PostResponseData {
   unitName: string
   categoryName: string
   userParticipatingIn: boolean
+  userNickname: string
   userPostDataOutDto: UserPostDataOutDto
   postDataOutDto: PostDataOutDto
   // [key: string]: unknown
