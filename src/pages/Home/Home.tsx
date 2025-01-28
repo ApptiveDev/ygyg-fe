@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
 import styles from './Home.module.scss'
 import { Heading } from '@/components/atoms/Text/TextFactory'
 import SearchBar from '@/components/common/SearchBar/SearchBar'
@@ -10,16 +10,18 @@ import Button from '@/components/common/Button/Button'
 import { GoArrowUpRight } from 'react-icons/go'
 
 export const HomePage = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string>('')
-  
+  const navigate = useNavigate()
+  const [searchKeyword, setSearchKeyword] = useState('')
   const handleCategorySelect = (categoryName: string) => {
-    setSelectedCategory(categoryName)
+    navigate(`/list/category/${categoryName}`)
+  }
+  const search = () => {
+    if (searchKeyword) navigate(`/list/search/${searchKeyword}`)
   }
 
-  const navigate = useNavigate();
   const handleNavigation = () => {
-    navigate('/list');
-  };
+    navigate('/list')
+  }
 
   return (
     <Container size="full-width" direction="column" align="center">
@@ -38,15 +40,19 @@ export const HomePage = () => {
           }}
         >
           <div className={styles.bannerWrapper}>
-            <SearchBar width="95%" />
+            <SearchBar
+              width="95%"
+              onChange={(value) => setSearchKeyword(value)}
+              onSubmit={search}
+            />
             <div className={styles.categorytabsContainer}>
-            <CategoryTab onCategorySelect={handleCategorySelect} />
+              <CategoryTab onCategorySelect={handleCategorySelect} />
             </div>
           </div>
         </Container>
         <div className={styles.listContainer}>
           <Heading.Medium>양념장 소분 게시글 목록</Heading.Medium>
-          <CardList selectedCategory={selectedCategory} />
+          <CardList />
           <Button
             className={styles.navigateButton}
             theme="white"
