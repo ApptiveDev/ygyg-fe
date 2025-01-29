@@ -5,7 +5,7 @@ const myCardPath = '/api/v1/post/my/list'
 
 interface MyCardListParams {
   type: string
-  lastCursor: number
+  lastCursor: number | null
   order: string
   size: number
 }

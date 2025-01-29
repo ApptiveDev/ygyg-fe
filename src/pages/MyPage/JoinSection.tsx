@@ -1,38 +1,58 @@
 import { Heading } from '@/components/atoms/Text/TextFactory'
 import { ScrollableCardList } from '@/components/common/CardList/ScrollCardList/ScrollCardList'
 import styles from './MyPage.module.scss'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef, useCallback } from 'react'
 import { ScrollCardList } from '@/api/hooks/card/types'
 import { getMyCardList } from '@/api/hooks/card/cardApi'
 import Container from '@/components/atoms/Container/Container'
 
 export const JoinSection = () => {
-  const [joinCardList, setJoinCardList] = useState<ScrollCardList>()
+  const [cards, setCards] = useState<ScrollCardList['myPost']>([])
+  const [lastCursor, setLastCursor] = useState<number | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [hasMore, setHasMore] = useState(true)
+  const isFirstRender = useRef(true)
+
+  const fetchDetailData = async () => {
+    if (loading || !hasMore) return
+    setLoading(true)
+
+    try {
+      const data = await getMyCardList({
+        type: 'join',
+        lastCursor,
+        order: 'asc',
+        size: 10,
+      })
+
+      if (data) {
+        setCards((prev) => [...prev, ...data.myPost])
+        setLastCursor(data.lastCursor ?? null)
+        setHasMore(data.hasNext)
+      }
+    } catch (error) {
+      console.error('Failed to fetch:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
-    const fetchDetailData = async () => {
-      try {
-        const data = await getMyCardList({
-          type: 'join',
-          lastCursor: 0,
-          order: 'asc',
-          size: 10,
-        })
-        setJoinCardList(data)
-      } catch (error) {
-        console.error('Failed to fetch:', error)
-      }
+    if (isFirstRender.current) {
+      isFirstRender.current = false
+      return
     }
-    fetchDetailData()
-  }, [])
+
+    if (!loading) {
+      fetchDetailData()
+    }
+  }, [loading])
+
   return (
     <div className={styles.myposting}>
       <Heading.Small>현재 참여 중인 양념장 소분 게시글</Heading.Small>
-      {joinCardList ? (
-        <ScrollableCardList cards={joinCardList?.myPost} />
-      ) : (
-        <Container style={{ height: '100px' }}>Loading...</Container>
-      )}
+      <ScrollableCardList cards={cards} loadMore={fetchDetailData} />
+      {loading && <Container style={{ height: '100px' }}>Loading...</Container>}
     </div>
   )
 }

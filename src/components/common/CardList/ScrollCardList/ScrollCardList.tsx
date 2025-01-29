@@ -1,37 +1,51 @@
-import { useRef } from 'react'
+import { useRef, useEffect, useCallback, useState } from 'react'
 import Card from '../Card/Card'
 import styles from './ScrollCardList.module.scss'
 import { CardData } from '@/api/hooks/card/types'
 
-export const ScrollableCardList = ({ cards }: { cards: CardData[] }) => {
+export const ScrollableCardList = ({
+  cards,
+  loadMore,
+}: {
+  cards: CardData[]
+  loadMore: () => void
+}) => {
   const scrollRef = useRef<HTMLDivElement>(null)
+  const [isFetching, setIsFetching] = useState(false)
 
-  const handleMouseDown = (event: React.MouseEvent) => {
+  const handleScroll = useCallback(() => {
+    const container = scrollRef.current
+    if (!container || isFetching) return
+
+    const { scrollLeft, clientWidth, scrollWidth } = container
+    if (scrollLeft + clientWidth >= scrollWidth - 10) {
+      setIsFetching(true)
+      loadMore()
+    }
+  }, [isFetching, loadMore])
+
+  useEffect(() => {
     const container = scrollRef.current
     if (!container) return
 
-    const startX = event.pageX
-    const initialScrollLeft = container.scrollLeft
-
-    const handleMouseMove = (moveEvent: MouseEvent) => {
-      const deltaX = moveEvent.pageX - startX
-      container.scrollLeft = initialScrollLeft - deltaX
+    const handleDebouncedScroll = () => {
+      clearTimeout((container as any)._scrollTimeout)
+      ;(container as any)._scrollTimeout = setTimeout(handleScroll, 200)
     }
+    container.addEventListener('scroll', handleDebouncedScroll)
+    return () => container.removeEventListener('scroll', handleDebouncedScroll)
+  }, [handleScroll])
 
-    const handleMouseUp = () => {
-      document.removeEventListener('mousemove', handleMouseMove)
-      document.removeEventListener('mouseup', handleMouseUp)
-    }
-
-    document.addEventListener('mousemove', handleMouseMove)
-    document.addEventListener('mouseup', handleMouseUp)
-  }
+  useEffect(() => {
+    setIsFetching(false)
+  }, [cards])
 
   return (
     <div className={styles.cardListContainer}>
-      <div className={styles.cardList} ref={scrollRef} onMouseDown={handleMouseDown}>
+      <div className={styles.cardList} ref={scrollRef}>
         {cards.map((card) => (
           <Card
+            key={card.userPostId}
             userPostId={card.userPostId}
             thumbnail={card.imageUrl}
             title={card.postTitle}

@@ -31,12 +31,21 @@ const Card = ({
   const blocks = Array(10).fill(null)
   const [meeting, setMeeting] = useState('')
   const navigate = useNavigate()
+  const [titleForUse, setTitleForUse] = useState('')
 
   useEffect(() => {
     const { month, date } = DateForUse(DateFromData(meetingDate))
     const { hour, minute } = TimeForUse(TimeFromData(meetingDate))
     setMeeting(`${month}월 ${date}일 ${hour}시 ${minute}분`)
   }, [meetingDate])
+
+  useEffect(() => {
+    if (title.length > 19) {
+      setTitleForUse(title.slice(0, 17) + '...')
+    } else {
+      setTitleForUse(title)
+    }
+  }, [title])
 
   const clickCard = () => {
     navigate(`/detail/${userPostId}`)
@@ -57,7 +66,7 @@ const Card = ({
       </div>
       <div className={styles['card-content']}>
         <div className={styles['card-header-container']}>
-          <div className={styles['card-title']}>{title}</div>
+          <div className={styles['card-title']}>{titleForUse}</div>
           <div className={styles['card-price']}>
             <span className={styles['current-min-price']}>{minPrice}</span>
             <span className={styles['current-max-price']}>~ {maxPrice}</span>
