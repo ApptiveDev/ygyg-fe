@@ -1,8 +1,12 @@
 import defaultImg from '@/assets/images/default_image.png'
 import styles from '@/components/common/CardList/Card/Card.module.scss'
+import { DateForUse, DateFromData, TimeForUse, TimeFromData } from '@/hooks/useFormatDateAndTime'
+import { useEffect, useState } from 'react'
 import { BsClock } from 'react-icons/bs'
+import { useNavigate } from 'react-router-dom'
 
 interface CardProps {
+  userPostId: number
   thumbnail: string | null
   title: string
   minPrice: string
@@ -14,6 +18,7 @@ interface CardProps {
 }
 
 const Card = ({
+  userPostId,
   thumbnail,
   title,
   minPrice,
@@ -24,9 +29,30 @@ const Card = ({
   current,
 }: CardProps) => {
   const blocks = Array(10).fill(null)
+  const [meeting, setMeeting] = useState('')
+  const navigate = useNavigate()
+  const [titleForUse, setTitleForUse] = useState('')
+
+  useEffect(() => {
+    const { month, date } = DateForUse(DateFromData(meetingDate))
+    const { hour, minute } = TimeForUse(TimeFromData(meetingDate))
+    setMeeting(`${month}월 ${date}일 ${hour}시 ${minute}분`)
+  }, [meetingDate])
+
+  useEffect(() => {
+    if (title.length > 19) {
+      setTitleForUse(title.slice(0, 17) + '...')
+    } else {
+      setTitleForUse(title)
+    }
+  }, [title])
+
+  const clickCard = () => {
+    navigate(`/detail/${userPostId}`)
+  }
 
   return (
-    <div className={styles.card}>
+    <div className={styles.card} onClick={clickCard}>
       <div className={styles['card-image-container']}>
         <img
           src={thumbnail ? thumbnail : defaultImg}
@@ -35,12 +61,12 @@ const Card = ({
         />
         <div className={styles['card-time-container']}>
           <BsClock className={styles['clock-icon']} />
-          <div className={styles.meetingDate}>{meetingDate}</div>
+          <div className={styles.meetingDate}>{meeting}</div>
         </div>
       </div>
       <div className={styles['card-content']}>
         <div className={styles['card-header-container']}>
-          <div className={styles['card-title']}>{title}</div>
+          <div className={styles['card-title']}>{titleForUse}</div>
           <div className={styles['card-price']}>
             <span className={styles['current-min-price']}>{minPrice}</span>
             <span className={styles['current-max-price']}>~ {maxPrice}</span>

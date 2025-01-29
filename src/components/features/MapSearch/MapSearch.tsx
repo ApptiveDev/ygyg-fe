@@ -160,10 +160,6 @@ const MapSearch = ({
     markersRef.current = []
   }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setKeyword(e.target.value)
-  }
-
   const onPlaceClick = (place: any) => {
     const newSelectedPlace = {
       name: place.place_name,
@@ -193,7 +189,7 @@ const MapSearch = ({
             width="200px"
             isOpen={isOpen}
             toggleActive={isActive}
-            onChange={handleInputChange}
+            onChange={(value) => setKeyword(value)}
             onSubmit={searchPlaces}
             onToggle={() => setIsOpen((prev) => !prev)}
           />

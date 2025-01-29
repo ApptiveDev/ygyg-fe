@@ -33,7 +33,8 @@
 }
 
 .mypost,
-.myposting {
+.myposting,
+.postdone {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -42,24 +43,24 @@
   padding: 0 16px;
 }
 
-.cardListContainer {
-  width: 100%;
-  padding: 16px 0;
-  margin-left: 0;
-  overflow-x: auto;
-  overflow-y: hidden;
-  display: flex;
-  justify-content: center;
-}
+// .cardListContainer {
+//   width: 100%;
+//   padding: 16px 0;
+//   margin-left: 0;
+//   overflow-x: auto;
+//   overflow-y: hidden;
+//   display: flex;
+//   justify-content: center;
+// }
 
-.cardList {
-  display: flex;
-  gap: 16px;
-  width: 100%;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  padding: 19px 10px;
-}
+// .cardList {
+//   display: flex;
+//   gap: 16px;
+//   width: 100%;
+//   overflow-x: auto;
+//   scroll-behavior: smooth;
+//   padding: 19px 10px;
+// }
 
 .cardScrollbar {
   height: 8px;
@@ -103,6 +104,7 @@
 .postdone-comment {
   display: flex;
   flex-direction: row;
+  width: 100%;
   justify-content: space-between;
 }
 .postdone-cardContainer {
