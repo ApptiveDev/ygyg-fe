@@ -7,7 +7,7 @@ const mockData = Array(9).fill({
   title: '트레디종 홀그레인 머스타드',
   minPrice: '12,000원',
   maxPrice: '24,000원',
-  meetingDate: '10월 16일 19시 30분',
+  meetingDate: '2025-10-16T19:30:00',
   min: 4,
   max: 8,
   current: 5,

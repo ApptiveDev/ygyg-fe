@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react'
 import styles from './CategoryTabs.module.scss'
 
 import liquidIcon from '@/assets/icons/liquid-icon.svg'
@@ -7,6 +7,7 @@ import powderIcon from '@/assets/icons/powder-icon.svg'
 import jamIcon from '@/assets/icons/jam-icon.svg'
 import etcIcon from '@/assets/icons/etc-icon.svg'
 import { Heading } from '@/components/atoms/Text/TextFactory'
+import { useParams } from 'react-router-dom'
 
 const categories = [
   { id: 1, name: '액체류', icon: liquidIcon, link: '' },
@@ -18,12 +19,20 @@ const categories = [
 
 const CategoryTabs = ({
   showText = true,
+  initialSelected,
   onCategorySelect,
 }: {
-  showText?: boolean;
-  onCategorySelect: (category: string) => void;
+  showText?: boolean
+  initialSelected?: string
+  onCategorySelect: (category: string) => void
 }) => {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (initialSelected) {
+      setSelectedCategory(initialSelected)
+    }
+  }, [initialSelected])
 
   const handleClick = (categoryName: string) => {
     console.log(`카테고리 선택됨: ${categoryName}`);
@@ -47,13 +56,13 @@ const CategoryTabs = ({
       <div className={styles['category-tab']}>
         {categories.map((category) => (
           <div
-          className={`${styles['category-item']} ${
-            selectedCategory === category.name ? styles['active'] : ''
-          }`}
+            className={`${styles['category-item']} ${
+              selectedCategory === category.name ? styles['active'] : ''
+            }`}
             key={category.id}
             onClick={() => handleClick(category.name)}
           >
-          <img
+            <img
               src={category.icon}
               alt={category.name}
               className={styles['category-icon']}
@@ -61,7 +70,8 @@ const CategoryTabs = ({
                 display: selectedCategory === category.name ? 'none' : 'block', // 클릭 시 이미지 숨김
               }}
             />
-            <span className={styles['category-name']}>{category.name}</span> {/* 항상 텍스트 표시 */}
+            <span className={styles['category-name']}>{category.name}</span>{' '}
+            {/* 항상 텍스트 표시 */}
           </div>
         ))}
       </div>
@@ -69,4 +79,4 @@ const CategoryTabs = ({
   )
 }
 
-export default CategoryTabs;
+export default CategoryTabs

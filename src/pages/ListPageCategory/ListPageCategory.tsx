@@ -97,7 +97,11 @@ const ListPageCategory: React.FC = () => {
       <div className={styles.header}>
         <span className={styles.comment}>카테고리 선택하기</span>
         <div className={styles.wrapper}>
-          <CategoryTab showText={false} onCategorySelect={handleCategorySelect} />
+          <CategoryTab
+            showText={false}
+            initialSelected={category}
+            onCategorySelect={handleCategorySelect}
+          />
         </div>
       </div>
 
