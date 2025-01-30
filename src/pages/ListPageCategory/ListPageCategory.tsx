@@ -63,17 +63,22 @@ const ListPageCategory: React.FC = () => {
   }
 
   const handleCategorySelect = (categoryName: string) => {
-    setSelectedCategory(categoryName)
-    console.log(`선택된 카테고리: ${categoryName}`)
-    navigate(
-      `/list/category/${categoryName}?sort=${selected}&filter=${isChecked}&page=${activePage}`,
-    )
+    if (selectedCategory === categoryName) {
+      setSelectedCategory('')
+    } else {
+      setSelectedCategory(categoryName)
+    }
   }
 
   useEffect(() => {
-    if (category) {
-      setSelectedCategory(category)
+    if (selectedCategory === '') {
+      navigate(`/list?sort=${selected}&filter=${isChecked}&page=${activePage}`, { replace: true })
+    } else {
+      navigate(`/list/category/${selectedCategory}?sort=${selected}&filter=${isChecked}&page=${activePage}`, { replace: true })
     }
+  }, [selectedCategory, selected, isChecked, activePage, navigate])
+
+  useEffect(() => {
     const sort = searchParams.get('sort') || '최신 순'
     const filter = searchParams.get('filter') === 'true'
     const page = Number(searchParams.get('page')) || 1
@@ -81,6 +86,10 @@ const ListPageCategory: React.FC = () => {
     setSelected(sort)
     setIsChecked(filter)
     setActivePage(page)
+
+    if (!category) {
+      navigate(`/list?sort=${sort}&filter=${filter}&page=${page}`, { replace: true })
+    }
   }, [category, searchParams])
 
   return (

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import styles from './CategoryTabs.module.scss'
 
-//img
 import liquidIcon from '@/assets/icons/liquid-icon.svg'
 import sauceIcon from '@/assets/icons/sauce-icon.svg'
 import powderIcon from '@/assets/icons/powder-icon.svg'
@@ -28,8 +27,13 @@ const CategoryTabs = ({
 
   const handleClick = (categoryName: string) => {
     console.log(`카테고리 선택됨: ${categoryName}`);
-    setSelectedCategory(categoryName);
-    onCategorySelect(categoryName);
+    if (selectedCategory === categoryName) {
+      setSelectedCategory(null);
+      onCategorySelect('');
+    } else {
+      setSelectedCategory(categoryName);
+      onCategorySelect(categoryName);
+    }
   };
 
   return (
