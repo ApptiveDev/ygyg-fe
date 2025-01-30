@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styles from './Home.module.scss'
-import { Heading } from '@/components/atoms/Text/TextFactory'
 import SearchBar from '@/components/common/SearchBar/SearchBar'
 import CategoryTab from '@/components/common/CategoryTabs/CategoryTabs'
 import CardList from '@/components/common/CardList/CardList/CardList'
@@ -13,9 +12,8 @@ import Banner from '@/components/features/Banner/Banner';
 export const HomePage = () => {
   const navigate = useNavigate()
   const [searchKeyword, setSearchKeyword] = useState('')
-  const handleCategorySelect = (categoryName: string) => {
-    navigate(`/list/category/${categoryName}`)
-  }
+  const [selectedCategory, setSelectedCategory] = useState<string>('')
+
   const search = () => {
     if (searchKeyword) navigate(`/list/search/${searchKeyword}`)
   }
@@ -23,7 +21,10 @@ export const HomePage = () => {
   const handleNavigation = () => {
     navigate('/list')
   }
-
+  const handleCategorySelect = (categoryName: string) => {
+    setSelectedCategory(categoryName)
+    console.log(`선택된 카테고리: ${categoryName}`)
+  }
   return (
     <Container size="full-width" direction="column" align="center">
       <div className = {styles.bannerContainer}>
@@ -53,8 +54,17 @@ export const HomePage = () => {
           </div>
         </Container>
         <div className={styles.listContainer}>
-          <Heading.Medium>양념장 소분 게시글 목록</Heading.Medium>
-          <CardList />
+          <span className={styles.commentMain}>
+            {selectedCategory ? (
+                <>
+                  '<span className={styles.selectedCategoryText}>{selectedCategory}</span>' 소분 게시글
+                  목록
+                </>
+              ) : (
+                '양념장 소분 게시글 목록'
+            )}
+          </span>
+          <CardList selectedCategory={selectedCategory} />
           <Button
             className={styles.navigateButton}
             theme="white"
