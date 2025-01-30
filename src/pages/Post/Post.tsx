@@ -25,6 +25,7 @@ import {
 import { useSetTwoDigits } from '@/hooks/useSetTwoDigits'
 import { useNavigate, useParams } from 'react-router-dom'
 import { PostResponseData } from '@/api/hooks/post/types'
+import { useFormatPreSignedUrl } from '@/hooks/useFormatPreSignedUrl'
 
 export interface MapProps {
   name: string
@@ -57,6 +58,8 @@ export const PostPage = () => {
   const [link, setLink] = useState<string>('')
   const [price, setPrice] = useState<string>('')
   const [selectedImage, setSelectedImage] = useState<string>('')
+  const [preSignedUrl, setPreSignedUrl] = useState<string>('')
+  const [formattedPreSignedUrl, setFormattedPreSignedUrl] = useState<string>('')
   const [amount, setAmount] = useState<string>('')
   const [minPeople, setMinPeople] = useState<string>('')
   const [maxPeople, setMaxPeople] = useState<string>('')
@@ -79,6 +82,10 @@ export const PostPage = () => {
   }
 
   const [initialData, setInitialData] = useState<ExtendedPostResponseData>()
+
+  useEffect(() => {
+    setFormattedPreSignedUrl(useFormatPreSignedUrl(preSignedUrl))
+  }, [preSignedUrl])
 
   useEffect(() => {
     if (userPostId) {
