@@ -12,19 +12,31 @@ import Banner from '@/components/features/Banner/Banner';
 export const HomePage = () => {
   const navigate = useNavigate()
   const [searchKeyword, setSearchKeyword] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState<string>('')
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  const categoryLabelMap: Record<string, string> = {
+    liquid: '액체류',
+    sauce: '소스류',
+    powder: '가루류',
+    jam: '잼류',
+    etc: '기타',
+  };
 
   const search = () => {
     if (searchKeyword) navigate(`/list/search/${searchKeyword}`)
   }
 
   const handleNavigation = () => {
-    navigate('/list')
+    navigate('/list?sort=최신 순&page=1&filter=false')
   }
   const handleCategorySelect = (categoryName: string) => {
     setSelectedCategory(categoryName)
     console.log(`선택된 카테고리: ${categoryName}`)
   }
+
+  const displayedCategory = selectedCategory ? categoryLabelMap[selectedCategory] || selectedCategory : '';
+
+
   return (
     <Container size="full-width" direction="column" align="center">
       <div className = {styles.bannerContainer}>
@@ -57,14 +69,15 @@ export const HomePage = () => {
           <span className={styles.commentMain}>
             {selectedCategory ? (
                 <>
-                  '<span className={styles.selectedCategoryText}>{selectedCategory}</span>' 소분 게시글
+                  '<span className={styles.selectedCategoryText}>{displayedCategory}</span>' 소분 게시글
                   목록
                 </>
               ) : (
                 '양념장 소분 게시글 목록'
             )}
           </span>
-          <CardList selectedCategory={selectedCategory} />
+          <CardList selectedCategory={selectedCategory ?? undefined} />
+
           <Button
             className={styles.navigateButton}
             theme="white"

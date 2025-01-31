@@ -4,8 +4,10 @@ import CardList from '@/components/common/CardList/CardList/CardList'
 import Toggle from '@/components/atoms/Toggle/Toggle'
 import ListPageDropdown from '@/components/atoms/ListPageDropdown/ListPageDropdown'
 import Pagination from '@/components/atoms/Pagination/Pagination'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import { getCategoryPostList } from '@/api/hooks/card/cardApi'
+import { CardData } from '@/api/hooks/card/types'
 
 const ListPageCategory: React.FC = () => {
   const { category } = useParams<{ category: string }>()
@@ -14,11 +16,35 @@ const ListPageCategory: React.FC = () => {
   const [isChecked, setIsChecked] = useState<boolean>(searchParams.get('filter') === 'true')
   const [activePage, setActivePage] = useState<number>(Number(searchParams.get('page')) || 1)
   const [selected, setSelected] = useState<string>(searchParams.get('sort') || '최신 순')
-  const [selectedCategory, setSelectedCategory] = useState<string>(category || '')
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(category || null);
   const totalPages = 8
   const [isOpen, setIsOpen] = useState(false)
+  const [posts, setPosts] = useState<CardData[]>([]);
 
   const options = ['최신 순', '약속 시간 임박 순', '낮은 가격 순', '남은 인원 적은 순']
+
+  const categoryMap: Record<string, number> = {
+    liquid: 1,
+    sauce: 2,
+    powder: 3,
+    jam: 4,
+    etc: 5,
+  };
+  
+  const categoryLabelMap: Record<string, string> = {
+    liquid: '액체류',
+    sauce: '소스류',
+    powder: '가루류',
+    jam: '잼류',
+    etc: '기타',
+  };
+
+  const sortByMap: Record<string, string> = {
+    '최신 순': 'latest',
+    '약속 시간 임박 순': 'soonest',
+    '낮은 가격 순': 'lowestPrice',
+    '남은 인원 적은 순': 'lowestRemain',
+  };
 
   useEffect(() => {
     setSearchParams({
@@ -26,7 +52,34 @@ const ListPageCategory: React.FC = () => {
       filter: String(isChecked),
       page: String(activePage),
     })
-  }, [])
+  }, [selected, isChecked, activePage, setSearchParams])
+
+  const fetchPosts = useCallback(async () => {
+    const categoryId = selectedCategory ? categoryMap[selectedCategory] : 0; 
+    const sortBy = sortByMap[selected] || 'latest';
+    console.log('API:', { categoryId, sortBy, activePage, isChecked });
+
+    try {
+      const response = await getCategoryPostList({
+        categoryId : categoryId ?? undefined,
+        sortBy,
+        page: activePage,
+        size: 9,
+        isMinimumPeopleMet: isChecked,
+      });
+
+      setPosts(response.items);
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+    }
+  }, [selectedCategory, selected, activePage, isChecked]);
+
+  useEffect(() => {
+    fetchPosts();
+  }, [fetchPosts]);
+  useEffect(() => {
+    console.log('Fetched posts:', posts);
+  }, [posts]);
 
   const handleToggle = () => {
     const newFilterState = !isChecked
@@ -64,14 +117,14 @@ const ListPageCategory: React.FC = () => {
 
   const handleCategorySelect = (categoryName: string) => {
     if (selectedCategory === categoryName) {
-      setSelectedCategory('')
+      setSelectedCategory(null);
     } else {
-      setSelectedCategory(categoryName)
+      setSelectedCategory(categoryName);
     }
-  }
+  };
 
   useEffect(() => {
-    if (selectedCategory === '') {
+    if (!selectedCategory || selectedCategory === "0") {
       navigate(`/list?sort=${selected}&filter=${isChecked}&page=${activePage}`, { replace: true })
     } else {
       navigate(`/list/category/${selectedCategory}?sort=${selected}&filter=${isChecked}&page=${activePage}`, { replace: true })
@@ -87,10 +140,9 @@ const ListPageCategory: React.FC = () => {
     setIsChecked(filter)
     setActivePage(page)
 
-    if (!category) {
-      navigate(`/list?sort=${sort}&filter=${filter}&page=${page}`, { replace: true })
-    }
   }, [category, searchParams])
+
+  const displayedCategory = selectedCategory ? categoryLabelMap[selectedCategory] || selectedCategory : '';
 
   return (
     <div className={styles.wrapper}>
@@ -109,7 +161,7 @@ const ListPageCategory: React.FC = () => {
         <span className={styles.commentMain}>
           {selectedCategory ? (
             <>
-              '<span className={styles.selectedCategoryText}>{selectedCategory}</span>' 소분 게시글
+              '<span className={styles.selectedCategoryText}>{displayedCategory}</span>' 소분 게시글
               목록
             </>
           ) : (
@@ -128,7 +180,7 @@ const ListPageCategory: React.FC = () => {
             handleOptionClick={handleOptionClick}
           />
         </div>
-        <CardList selectedCategory={selectedCategory} />
+        <CardList selectedCategory={selectedCategory ?? "0"} />
         <Pagination totalPages={totalPages} activePage={activePage} onPageClick={handlePageClick} />
       </div>
     </div>
