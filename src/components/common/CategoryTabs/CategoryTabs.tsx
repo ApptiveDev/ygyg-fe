@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import styles from './CategoryTabs.module.scss';
+import React, { useEffect, useState } from 'react'
+import styles from './CategoryTabs.module.scss'
 
-import liquidIcon from '@/assets/icons/liquid-icon.svg';
-import sauceIcon from '@/assets/icons/sauce-icon.svg';
-import powderIcon from '@/assets/icons/powder-icon.svg';
-import jamIcon from '@/assets/icons/jam-icon.svg';
-import etcIcon from '@/assets/icons/etc-icon.svg';
-import { Heading } from '@/components/atoms/Text/TextFactory';
+import liquidIcon from '@/assets/icons/liquid-icon.svg'
+import sauceIcon from '@/assets/icons/sauce-icon.svg'
+import powderIcon from '@/assets/icons/powder-icon.svg'
+import jamIcon from '@/assets/icons/jam-icon.svg'
+import etcIcon from '@/assets/icons/etc-icon.svg'
+import { Heading } from '@/components/atoms/Text/TextFactory'
 
 const categoryLabelMap: Record<string, string> = {
   liquid: '액체류',
@@ -14,7 +14,7 @@ const categoryLabelMap: Record<string, string> = {
   powder: '가루류',
   jam: '잼류',
   etc: '기타',
-};
+}
 
 const categories = [
   { id: 1, name: 'liquid', icon: liquidIcon, link: '' },
@@ -22,35 +22,35 @@ const categories = [
   { id: 3, name: 'powder', icon: powderIcon, link: '' },
   { id: 4, name: 'jam', icon: jamIcon, link: '' },
   { id: 5, name: 'etc', icon: etcIcon, link: '' },
-];
+]
 
 const CategoryTabs = ({
   showText = true,
   initialSelected,
   onCategorySelect,
 }: {
-  showText?: boolean;
-  initialSelected?: string;
-  onCategorySelect: (category: string) => void;
+  showText?: boolean
+  initialSelected?: string
+  onCategorySelect: (category: string) => void
 }) => {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
 
   useEffect(() => {
     if (initialSelected) {
-      setSelectedCategory(initialSelected);
+      setSelectedCategory(initialSelected)
     }
-  }, [initialSelected]);
+  }, [initialSelected])
 
   const handleClick = (categoryName: string) => {
-    console.log(`카테고리 선택됨: ${categoryName}`);
+    console.log(`카테고리 선택됨: ${categoryName}`)
     if (selectedCategory === categoryName) {
-      setSelectedCategory(null);
-      onCategorySelect('');
+      setSelectedCategory(null)
+      onCategorySelect('')
     } else {
-      setSelectedCategory(categoryName);
-      onCategorySelect(categoryName);
+      setSelectedCategory(categoryName)
+      onCategorySelect(categoryName)
     }
-  };
+  }
 
   return (
     <div className={styles['category-container']}>
@@ -82,7 +82,7 @@ const CategoryTabs = ({
         ))}
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default CategoryTabs;
+export default CategoryTabs
