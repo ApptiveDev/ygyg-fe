@@ -293,30 +293,6 @@ export const PostPage = () => {
     })
   }
 
-  const uploadS3 = (formData: any) => {
-    const REGION = import.meta.env.REACT_APP_REGION
-    const ACESS_KEY_ID = import.meta.env.REACT_APP_ACCESS_KEY_ID
-    const SECRET_ACESS_KEY_ID = import.meta.env.REACT_APP_SECRET_ACCESS_KEY_ID
-
-      // AWS.config.update({
-      //     region: REGION,
-      //     accessKeyId: ACESS_KEY_ID,
-      //     secretAccessKey: SECRET_ACESS_KEY_ID,
-      // });
-
-      // const upload = new AWS.S3.ManagedUpload({
-      //     params: {
-      //         ACL: 'public-read',
-      //         Bucket: '버킷명',
-      //         Key: `upload/${imageFile.name}`,
-      //         Body: imageFile,
-      //     }
-      // })
-
-      // upload.promise()
-      .then(console.log('업로드'))
-  }
-
   const submit = async () => {
     try {
       if (isEditing) {

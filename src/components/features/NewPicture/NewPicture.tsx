@@ -1,9 +1,9 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { TextBody } from '@/components/atoms/Text/TextFactory'
 import plusIcon from '@/assets/icons/plus_icon.svg'
 import styles from './NewPicture.module.scss'
 import Container from '@/components/atoms/Container/Container'
-import { getPresignedUrl } from '@/api/hooks/post/imageApi'
+import { deleteImage, getPresignedUrl } from '@/api/hooks/post/imageApi'
 import axios from 'axios'
 import { useFormatPreSignedUrl } from '@/hooks/useFormatPreSignedUrl'
 
@@ -25,6 +25,8 @@ function NewPicture({
 }) {
   const [uploading, setUploading] = useState(false)
   const userEmail = localStorage.getItem('userEmail')
+  const [fileName, setFileName] = useState('')
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -39,6 +41,7 @@ function NewPicture({
     }
 
     setUploading(true)
+    setFileName(file.name)
 
     try {
       const preSignedUrl = await getPresignedUrl(file.name, contentType)
@@ -49,14 +52,21 @@ function NewPicture({
       setSelectedImage(fileUrl)
     } catch (error) {
       console.error('Image upload failed:', error)
-    } finally {
-      setUploading(false)
     }
   }
 
   const handleRemoveImage = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation()
-    setSelectedImage('')
+    if (selectedImage) {
+      setUploading(false)
+      deleteImage(`${userEmail}-${fileName}`)
+      setSelectedImage('')
+      setFileName('')
+
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ''
+      }
+    }
   }
 
   return (
@@ -79,6 +89,7 @@ function NewPicture({
           </div>
         )}
         <input
+          ref={fileInputRef}
           type="file"
           accept={ALLOWED_IMAGE_TYPES.join(',')}
           onChange={handleImageUpload}
