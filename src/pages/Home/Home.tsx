@@ -98,6 +98,7 @@ export const HomePage = () => {
         >
           <div className={styles.bannerWrapper}>
             <SearchBar
+              placeholder="검색하고 싶은 양념장을 입력하세요"
               width="95%"
               onChange={(value) => setSearchKeyword(value)}
               onSubmit={search}
