@@ -82,9 +82,13 @@ export const MainSection = ({
             <TextBody.Small className={styles.smallTitle} weight={700}>
               구매 링크
             </TextBody.Small>
-            <a href={link} className={styles.link} target="_blank">
-              바로가기
-            </a>
+            {link ? (
+              <a href={link} className={styles.link} target="_blank">
+                바로가기
+              </a>
+            ) : (
+              <TextBody.Medium className={styles.noLink}>등록된 링크가 없습니다.</TextBody.Medium>
+            )}
           </Container>
           <Container size="full-width" justify="space-between" gap={11}>
             <TextBody.Small className={styles.smallTitle} weight={700}>
