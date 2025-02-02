@@ -1,35 +1,32 @@
 import styles from './CardList.module.scss'
-import Card from '../Card/Card' 
-import MockImage from '@/assets/images/mock-image.png'
+import Card from '../Card/Card'
+import defaultImg from '@/assets/images/default_image.png'
+import { CardData } from '@/api/hooks/card/types'
 
-const mockData = Array(9).fill(
-  {
-    thumbnail: MockImage,
-    title: '트레디종 홀그레인 머스타드',
-    minPrice: '12,000원',
-    maxPrice: '24,000원',
-    meetingDate: '10월 16일 19시 30분',
-    min: 4,
-    max: 8,
-    current: 5,
-  });
+type CardListProps = {
+  cards: CardData[]
+  selectedCategory?: string
+}
 
-  type CardListProps = {
-    selectedCategory: string;
-  };
-
-  const CardList: React.FC<CardListProps> = ({ selectedCategory }) => {
-    const filteredData = selectedCategory
-      ? mockData.filter((item) => item.category === selectedCategory)
-      : mockData;
-
+const CardList: React.FC<CardListProps> = ({ cards }: CardListProps) => {
   return (
     <div className={styles['card-list']}>
-      {filteredData.map((item, index) => (
-        <Card key={index} {...item} />
+      {cards.map((card, index) => (
+        <Card
+          key={card.userPostId}
+          userPostId={card.userPostId}
+          thumbnail={card.imageUrl}
+          title={card.postTitle}
+          minPrice={String(Math.floor(card.originalPrice / card.maxEngageCount))}
+          maxPrice={String(Math.floor(card.originalPrice / card.minEngageCount))}
+          meetingDate={card.portioningDate}
+          min={card.minEngageCount}
+          max={card.maxEngageCount}
+          current={card.currentEngageCount}
+        />
       ))}
     </div>
-  );
-};
+  )
+}
 
-export default CardList;
+export default CardList

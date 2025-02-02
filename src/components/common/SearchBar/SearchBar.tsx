@@ -7,8 +7,10 @@ interface SearchBarProps {
   radius?: number
   value?: string
   placeholder?: string
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
-  onSubmit?: (event: React.MouseEvent<HTMLOrSVGElement>) => void
+  onChange: React.Dispatch<React.SetStateAction<string>>
+  onSubmit?: (
+    event: React.MouseEvent<HTMLOrSVGElement> | React.KeyboardEvent<HTMLInputElement>,
+  ) => void
   onToggle?: () => void
   isOpen?: boolean
   toggleActive?: boolean
@@ -28,6 +30,11 @@ function SearchBar({
   toggleActive,
   error = false,
 }: SearchBarProps) {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && onSubmit) {
+      onSubmit(e) // Enter 키 눌렀을 때 onSubmit 실행
+    }
+  }
   return (
     <div
       className={`${styles.Wrapper} ${error ? styles.error : ''}`}
@@ -41,7 +48,8 @@ function SearchBar({
         className={styles.InputWrapper}
         placeholder={placeholder}
         value={value}
-        onChange={onChange}
+        onChange={(e) => onChange(e.target.value)}
+        onKeyDown={handleKeyDown}
       />
       <div className={styles.arrowWrapper} onClick={onToggle}>
         {isOpen == null ? null : toggleActive ? (

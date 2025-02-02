@@ -1,11 +1,11 @@
 .dropdown {
   position: relative;
+  width: 180px;
   background-color: #fff;
   border-radius: 25px;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   user-select: none;
-
   &.open {
     border-radius: 25px;
   }
@@ -15,17 +15,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  text-align: center;
   font-size: 16px;
   color: #000000;
-  padding: 10px 15px;
+  padding: 12px 18px;
   border-radius: 25px;
   border: 2px solid transparent;
-
-  &.active {
-    display: inline-block;
-    color: #D6282C;
-    border: 1px solid #D6282C;
-  }
 }
 
 .arrow {
@@ -38,18 +33,18 @@
 
 .optionsContainer {
   position: absolute;
-  top: 100%;
+  top: 120%;
   left: 0;
   width: 100%;
   background-color: #fff;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+  border-radius: 25px;
   z-index: 10;
   overflow: hidden;
 }
 
 .option {
-  padding: 10px;
+  padding: 20px;
   font-size: 14px;
   color: #000;
   background-color: #fff;
@@ -61,5 +56,5 @@
 }
 
 .option + .option {
-  border-top: 1px solid #ccc;
+  border-top: 1px solid var(--gray-color2);
 }

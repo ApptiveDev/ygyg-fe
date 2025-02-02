@@ -4,13 +4,13 @@ import sampleImg from '@/assets/images/sample_image.png'
 import { Heading, TextBody } from '@/components/atoms/Text/TextFactory'
 import useFormatPrice from '@/hooks/useFormatPrice'
 import Button from '@/components/common/Button/Button'
-import { useState } from 'react'
+import defaultImg from '@/assets/images/default_image.png'
 import { deletePost } from '@/api/hooks/post/postApi'
 import { useNavigate } from 'react-router-dom'
 
 interface MainProps {
   userPostId: string
-  imageUrl: string
+  imageUrl: string | null
   title: string
   writerNickname: string
   link: string
@@ -22,6 +22,7 @@ interface MainProps {
   isMyPosting: boolean
   onGoToCommentSection: () => void
   onClickEdit: () => void
+  deletedUser: boolean
 }
 
 export const MainSection = ({
@@ -38,6 +39,7 @@ export const MainSection = ({
   isMyPosting,
   onGoToCommentSection,
   onClickEdit,
+  deletedUser,
 }: MainProps) => {
   const navigate = useNavigate()
 
@@ -55,7 +57,11 @@ export const MainSection = ({
 
   return (
     <Container size="full-width" align="flex-end" gap={50}>
-      <img src={imageUrl} alt="product-image" className={styles.productImage} />
+      <img
+        src={imageUrl ? imageUrl : defaultImg}
+        alt="product-image"
+        className={styles.productImage}
+      />
       <Container
         align="flex-start"
         direction="column"
@@ -69,7 +75,9 @@ export const MainSection = ({
       >
         <Container align="flex-start" direction="column" size="full-width" gap={15}>
           <Heading.Small>{title}</Heading.Small>
-          <TextBody.Small className={styles.author}>{writerNickname}</TextBody.Small>
+          <TextBody.Small className={`${styles.author} ${deletedUser ? styles.deletedUser : ''}`}>
+            {writerNickname}
+          </TextBody.Small>
           <Container size="full-width" justify="space-between" gap={11}>
             <TextBody.Small className={styles.smallTitle} weight={700}>
               구매 링크
