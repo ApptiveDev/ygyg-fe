@@ -32,6 +32,7 @@ const Card = ({
   const [meeting, setMeeting] = useState('')
   const navigate = useNavigate()
   const [titleForUse, setTitleForUse] = useState('')
+  const accessToken = localStorage.getItem('accessToken')
 
   useEffect(() => {
     const { month, date } = DateForUse(DateFromData(meetingDate))
@@ -48,7 +49,12 @@ const Card = ({
   }, [title])
 
   const clickCard = () => {
-    navigate(`/detail/${userPostId}`)
+    if (accessToken) {
+      navigate(`/detail/${userPostId}`)
+    } else {
+      alert('로그인 후 상세 내용을 볼 수 있습니다.')
+      navigate('/login')
+    }
   }
 
   return (
