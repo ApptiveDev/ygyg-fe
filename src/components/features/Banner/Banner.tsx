@@ -7,7 +7,7 @@ import banner2Image from '@/assets/images/banner2_image.png'
 import banner3Image from '@/assets/images/banner3_image.png'
 
 const Banner: React.FC = () => {
-  const images = [banner1Image, banner2Image, banner3Image]
+  const images = [banner2Image, banner3Image, banner1Image]
 
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isTransitioning, setIsTransitioning] = useState(true)
