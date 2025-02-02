@@ -175,7 +175,6 @@ const ListPageCategory: React.FC = () => {
 
         <div className={styles.toggleDropdownWrapper}>
           <Toggle isChecked={isChecked} onToggle={handleToggle} />
-
           <ListPageDropdown
             isOpen={isOpen}
             selected={selected}

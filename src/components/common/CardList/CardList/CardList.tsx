@@ -11,7 +11,7 @@ type CardListProps = {
 const CardList: React.FC<CardListProps> = ({ cards }: CardListProps) => {
   return (
     <div className={styles['card-list']}>
-      {cards.map((card, index) => (
+      {cards.map((card) => (
         <Card
           key={card.userPostId}
           userPostId={card.userPostId}
