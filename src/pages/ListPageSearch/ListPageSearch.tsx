@@ -3,8 +3,10 @@ import CardList from '@/components/common/CardList/CardList/CardList'
 import Toggle from '@/components/atoms/Toggle/Toggle'
 import ListPageDropdown from '@/components/atoms/ListPageDropdown/ListPageDropdown'
 import Pagination from '@/components/atoms/Pagination/Pagination'
-import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import React, { useCallback, useEffect, useState } from 'react'
+import { useParams, useSearchParams } from 'react-router-dom'
+import { getSearchPostList } from '@/api/hooks/card/cardApi'
+import { CardData } from '@/api/hooks/card/types'
 
 const ListPageSearch: React.FC = () => {
   const { search } = useParams<{ search: string }>()
@@ -14,8 +16,15 @@ const ListPageSearch: React.FC = () => {
   const [selected, setSelected] = useState<string>(searchParams.get('sort') || '최신 순')
   const totalPages = 8
   const [isOpen, setIsOpen] = useState(false)
+  const [posts, setPosts] = useState<CardData[]>([])
 
   const options = ['최신 순', '약속 시간 임박 순', '낮은 가격 순', '남은 인원 적은 순']
+  const sortByMap: Record<string, string> = {
+    '최신 순': 'latest',
+    '약속 시간 임박 순': 'soonest',
+    '낮은 가격 순': 'lowestPrice',
+    '남은 인원 적은 순': 'lowestRemain',
+  }
 
   useEffect(() => {
     setSearchParams({
@@ -23,7 +32,28 @@ const ListPageSearch: React.FC = () => {
       filter: String(isChecked),
       page: String(activePage),
     })
-  }, [])
+  }, [selected, isChecked, activePage, setSearchParams])
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const sortBy = sortByMap[selected] || 'latest'
+
+      try {
+        const response = await getSearchPostList({
+          keyword: search!,
+          sortBy,
+          page: activePage,
+          size: 9,
+          isMinimumPeopleMet: isChecked,
+        })
+
+        setPosts(response.items)
+      } catch (error) {
+        console.error('Error fetching posts:', error)
+      }
+    }
+    fetchPosts()
+  }, [search])
 
   const handleToggle = () => {
     const newFilterState = !isChecked
@@ -51,7 +81,6 @@ const ListPageSearch: React.FC = () => {
 
   const handlePageClick = (page: number) => {
     setActivePage(page)
-    console.log(`선택된 페이지: ${page}`)
     setSearchParams({
       sort: selected,
       filter: String(isChecked),
@@ -86,7 +115,7 @@ const ListPageSearch: React.FC = () => {
             handleOptionClick={handleOptionClick}
           />
         </div>
-        <CardList selectedCategory="" />
+        <CardList cards={posts} selectedCategory="" />
         <Pagination totalPages={totalPages} activePage={activePage} onPageClick={handlePageClick} />
       </div>
     </div>
