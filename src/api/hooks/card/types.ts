@@ -25,3 +25,19 @@ export interface PageInfo {
   currentPage: number
   size: number
 }
+
+export interface CategoryPostListParams {
+  categoryId: number
+  sortBy: string
+  page: number
+  size?: number
+  isMinimumPeopleMet?: boolean
+}
+
+export interface SearchPostListParams {
+  keyword: string
+  sortBy: string
+  page: number
+  size?: number
+  isMinimumPeopleMet?: boolean
+}
