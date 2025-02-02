@@ -8,6 +8,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { getCategoryPostList } from '@/api/hooks/card/cardApi'
 import { CardData } from '@/api/hooks/card/types'
+import Container from '@/components/atoms/Container/Container'
 
 const ListPageCategory: React.FC = () => {
   const { category } = useParams<{ category: string }>()
@@ -20,6 +21,7 @@ const ListPageCategory: React.FC = () => {
   const totalPages = 8
   const [isOpen, setIsOpen] = useState(false)
   const [posts, setPosts] = useState<CardData[]>([])
+  const [loading, setLoading] = useState(false)
 
   const options = ['최신 순', '약속 시간 임박 순', '낮은 가격 순', '남은 인원 적은 순']
 
@@ -57,7 +59,7 @@ const ListPageCategory: React.FC = () => {
   const fetchPosts = useCallback(async () => {
     const categoryId = selectedCategory ? categoryMap[selectedCategory] : 0
     const sortBy = sortByMap[selected] || 'latest'
-
+    setLoading(true)
     try {
       const response = await getCategoryPostList({
         categoryId: categoryId ?? undefined,
@@ -66,7 +68,7 @@ const ListPageCategory: React.FC = () => {
         size: 9,
         isMinimumPeopleMet: isChecked,
       })
-
+      setLoading(false)
       setPosts(response.items)
     } catch (error) {
       console.error('Error fetching posts:', error)
@@ -182,6 +184,11 @@ const ListPageCategory: React.FC = () => {
             handleOptionClick={handleOptionClick}
           />
         </div>
+        {loading && (
+          <Container align="center" justify="center" style={{ width: '100%', height: '100px' }}>
+            Loading...
+          </Container>
+        )}
         <CardList cards={posts} selectedCategory={selectedCategory ?? '0'} />
         <Pagination totalPages={totalPages} activePage={activePage} onPageClick={handlePageClick} />
       </div>

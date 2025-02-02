@@ -16,6 +16,7 @@ export const HomePage = () => {
   const [searchKeyword, setSearchKeyword] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [posts, setPosts] = useState<CardData[]>([])
+  const [loading, setLoading] = useState(false)
 
   const categoryMap: Record<string, number> = {
     etc: 1,
@@ -42,6 +43,7 @@ export const HomePage = () => {
 
   useEffect(() => {
     const fetchPosts = async () => {
+      setLoading(true)
       const categoryId = selectedCategory ? categoryMap[selectedCategory] : 0
       const sortBy = 'latest'
 
@@ -53,7 +55,7 @@ export const HomePage = () => {
           size: 9,
           isMinimumPeopleMet: false,
         })
-
+        setLoading(false)
         setPosts(response.items)
       } catch (error) {
         console.error('Error fetching posts:', error)
@@ -119,6 +121,8 @@ export const HomePage = () => {
               '양념장 소분 게시글 목록'
             )}
           </span>
+          {loading && <Container style={{ height: '100px' }}>Loading...</Container>}
+
           <CardList cards={posts} selectedCategory={selectedCategory ?? undefined} />
 
           <Button
