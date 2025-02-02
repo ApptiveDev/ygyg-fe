@@ -44,7 +44,11 @@ export const CompleteSection = () => {
   return (
     <div className={styles.mypost}>
       <Heading.Small>소분 종료된 게시글</Heading.Small>
-      <ScrollableCardList cards={cards} loadMore={fetchDetailData} />
+      <ScrollableCardList
+        cards={cards}
+        loadMore={fetchDetailData}
+        text="소분 종료된 게시글이 없습니다."
+      />
       {loading && <Container style={{ height: '100px' }}>Loading...</Container>}
     </div>
   )

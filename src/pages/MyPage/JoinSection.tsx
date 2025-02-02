@@ -45,7 +45,11 @@ export const JoinSection = () => {
   return (
     <div className={styles.myposting}>
       <Heading.Small>현재 참여 중인 양념장 소분 게시글</Heading.Small>
-      <ScrollableCardList cards={cards} loadMore={fetchDetailData} />
+      <ScrollableCardList
+        cards={cards}
+        loadMore={fetchDetailData}
+        text="참여 중인 소분 게시글이 없습니다."
+      />
       {loading && <Container style={{ height: '100px' }}>Loading...</Container>}
     </div>
   )

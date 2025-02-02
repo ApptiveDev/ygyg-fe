@@ -44,7 +44,7 @@ export const WrittenSection = () => {
   return (
     <div className={styles.mypost}>
       <Heading.Small>내가 작성한 양념장 소분 게시글</Heading.Small>
-      <ScrollableCardList cards={cards} loadMore={fetchDetailData} />
+      <ScrollableCardList cards={cards} loadMore={fetchDetailData} text="작성한 글이 없습니다." />
       {loading && <Container style={{ height: '100px' }}>Loading...</Container>}
     </div>
   )
