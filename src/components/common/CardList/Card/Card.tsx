@@ -1,6 +1,7 @@
 import defaultImg from '@/assets/images/default_image.png'
 import styles from '@/components/common/CardList/Card/Card.module.scss'
 import { DateForUse, DateFromData, TimeForUse, TimeFromData } from '@/hooks/useFormatDateAndTime'
+import useFormatPrice from '@/hooks/useFormatPrice'
 import { useEffect, useState } from 'react'
 import { BsClock } from 'react-icons/bs'
 import { useNavigate } from 'react-router-dom'
@@ -74,8 +75,12 @@ const Card = ({
         <div className={styles['card-header-container']}>
           <div className={styles['card-title']}>{titleForUse}</div>
           <div className={styles['card-price']}>
-            <span className={styles['current-min-price']}>{minPrice}</span>
-            <span className={styles['current-max-price']}>~ {maxPrice}</span>
+            <span className={styles['current-min-price']}>
+              {useFormatPrice(Number(minPrice))}원
+            </span>
+            <span className={styles['current-max-price']}>
+              ~ {useFormatPrice(Number(maxPrice))}원
+            </span>
           </div>
         </div>
         <div className={styles['card-count-block']}>

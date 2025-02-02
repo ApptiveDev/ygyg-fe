@@ -25,6 +25,8 @@
   display: flex;
   flex-direction: column;
   text-align: center;
+  justify-content: center;
+  align-items: center;
   width: 100%;
 }
 
@@ -44,4 +46,5 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
 }

@@ -1,10 +1,11 @@
-.toggleDropdownWrapper{
+.toggleDropdownWrapper {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  width: 100%;
 }
-.wrapper{
+.wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -14,28 +15,30 @@
   margin: 0;
   padding: 0;
 }
-.header{
+.header {
   display: flex;
   flex-direction: column;
-  gap:20px;
+  gap: 20px;
   text-align: center;
 }
-.comment{
+.comment {
   font-size: 30px;
   font-weight: 600;
   margin-top: 20px;
 }
-.mainbody{
+.mainbody {
   display: flex;
   flex-direction: column;
   text-align: center;
+  justify-content: center;
+  align-items: center;
   width: 100%;
 }
-.commentMain{
+.commentMain {
   font-size: 35px;
   font-weight: 600;
   margin-bottom: 10px;
 }
-.selectedCategoryText{
-  color: #D6282C;
+.selectedCategoryText {
+  color: #d6282c;
 }
