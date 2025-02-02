@@ -7,14 +7,21 @@ import powderIcon from '@/assets/icons/powder-icon.svg'
 import jamIcon from '@/assets/icons/jam-icon.svg'
 import etcIcon from '@/assets/icons/etc-icon.svg'
 import { Heading } from '@/components/atoms/Text/TextFactory'
-import { useParams } from 'react-router-dom'
+
+const categoryLabelMap: Record<string, string> = {
+  liquid: '액체류',
+  sauce: '소스류',
+  powder: '가루류',
+  jam: '잼류',
+  etc: '기타',
+}
 
 const categories = [
-  { id: 1, name: '액체류', icon: liquidIcon, link: '' },
-  { id: 2, name: '소스류', icon: sauceIcon, link: '' },
-  { id: 3, name: '가루류', icon: powderIcon, link: '' },
-  { id: 4, name: '잼류', icon: jamIcon, link: '' },
-  { id: 5, name: '기타', icon: etcIcon, link: '' },
+  { id: 1, name: 'liquid', icon: liquidIcon, link: '' },
+  { id: 2, name: 'sauce', icon: sauceIcon, link: '' },
+  { id: 3, name: 'powder', icon: powderIcon, link: '' },
+  { id: 4, name: 'jam', icon: jamIcon, link: '' },
+  { id: 5, name: 'etc', icon: etcIcon, link: '' },
 ]
 
 const CategoryTabs = ({
@@ -35,15 +42,15 @@ const CategoryTabs = ({
   }, [initialSelected])
 
   const handleClick = (categoryName: string) => {
-    console.log(`카테고리 선택됨: ${categoryName}`);
+    console.log(`카테고리 선택됨: ${categoryName}`)
     if (selectedCategory === categoryName) {
-      setSelectedCategory(null);
-      onCategorySelect('');
+      setSelectedCategory(null)
+      onCategorySelect('')
     } else {
-      setSelectedCategory(categoryName);
-      onCategorySelect(categoryName);
+      setSelectedCategory(categoryName)
+      onCategorySelect(categoryName)
     }
-  };
+  }
 
   return (
     <div className={styles['category-container']}>
@@ -67,11 +74,10 @@ const CategoryTabs = ({
               alt={category.name}
               className={styles['category-icon']}
               style={{
-                display: selectedCategory === category.name ? 'none' : 'block', // 클릭 시 이미지 숨김
+                display: selectedCategory === category.name ? 'none' : 'block',
               }}
             />
-            <span className={styles['category-name']}>{category.name}</span>{' '}
-            {/* 항상 텍스트 표시 */}
+            <span className={styles['category-name']}>{categoryLabelMap[category.name]}</span>
           </div>
         ))}
       </div>
