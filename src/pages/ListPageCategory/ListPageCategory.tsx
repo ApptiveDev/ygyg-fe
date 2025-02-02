@@ -57,7 +57,6 @@ const ListPageCategory: React.FC = () => {
   const fetchPosts = useCallback(async () => {
     const categoryId = selectedCategory ? categoryMap[selectedCategory] : 0
     const sortBy = sortByMap[selected] || 'latest'
-    console.log('API:', { categoryId, sortBy, activePage, isChecked })
 
     try {
       const response = await getCategoryPostList({

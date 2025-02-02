@@ -53,7 +53,7 @@ const ListPageSearch: React.FC = () => {
       }
     }
     fetchPosts()
-  }, [search])
+  }, [search, isChecked, selected])
 
   const handleToggle = () => {
     const newFilterState = !isChecked
