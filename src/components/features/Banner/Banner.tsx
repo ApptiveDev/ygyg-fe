@@ -2,11 +2,12 @@ import styles from '@/components/features/Banner/Banner.module.scss'
 import React, { useState, useEffect, useRef } from 'react'
 import { FaChevronLeft } from 'react-icons/fa6'
 import { FaChevronRight } from 'react-icons/fa6'
+import banner1Image from '@/assets/images/banner1_image.png'
 import banner2Image from '@/assets/images/banner2_image.png'
 import banner3Image from '@/assets/images/banner3_image.png'
 
 const Banner: React.FC = () => {
-  const images = [banner2Image, banner3Image]
+  const images = [banner1Image, banner2Image, banner3Image]
 
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isTransitioning, setIsTransitioning] = useState(true)
@@ -16,7 +17,7 @@ const Banner: React.FC = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       handleNext()
-    }, 6000)
+    }, 9000)
 
     return () => clearInterval(interval)
   }, [currentIndex])

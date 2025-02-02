@@ -130,6 +130,7 @@ export const PostPage = () => {
           setSelectedTime(useFormatTimeToShow(Number(hour)).split(' ')[0])
           setSelectedHour(useFormatTimeToShow(Number(hour)).split(' ')[1])
           setSelectedMinute(minute)
+          console.log(selectedHour)
           setContent(description)
           setLatitude(portioningPlaceLatitude.toString())
           setLongitude(portioningPlaceLongitude.toString())
@@ -318,6 +319,7 @@ export const PostPage = () => {
           seasoningCategoryId: useFormatSeasoningCategoryId(category!),
         })
         alert('소분글이 수정되었습니다!')
+        navigate(`/detail/${userPostId}`)
       } else {
         await postPostData({
           userPostDataInDto: {
@@ -341,8 +343,8 @@ export const PostPage = () => {
           seasoningCategoryId: useFormatSeasoningCategoryId(category!),
         })
         alert('소분글이 등록되었습니다!')
+        navigate('/')
       }
-      navigate('/')
     } catch (error) {
       alert('소분글 등록에 실패하였습니다.')
     }

@@ -7,6 +7,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 import { getSearchPostList } from '@/api/hooks/card/cardApi'
 import { CardData } from '@/api/hooks/card/types'
+import Container from '@/components/atoms/Container/Container'
 
 const ListPageSearch: React.FC = () => {
   const { search } = useParams<{ search: string }>()
@@ -17,6 +18,7 @@ const ListPageSearch: React.FC = () => {
   const totalPages = 8
   const [isOpen, setIsOpen] = useState(false)
   const [posts, setPosts] = useState<CardData[]>([])
+  const [loading, setLoading] = useState(false)
 
   const options = ['최신 순', '약속 시간 임박 순', '낮은 가격 순', '남은 인원 적은 순']
   const sortByMap: Record<string, string> = {
@@ -37,7 +39,7 @@ const ListPageSearch: React.FC = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       const sortBy = sortByMap[selected] || 'latest'
-
+      setLoading(true)
       try {
         const response = await getSearchPostList({
           keyword: search!,
@@ -46,6 +48,7 @@ const ListPageSearch: React.FC = () => {
           size: 9,
           isMinimumPeopleMet: isChecked,
         })
+        setLoading(false)
 
         setPosts(response.items)
       } catch (error) {
@@ -53,7 +56,7 @@ const ListPageSearch: React.FC = () => {
       }
     }
     fetchPosts()
-  }, [search])
+  }, [search, isChecked, selected])
 
   const handleToggle = () => {
     const newFilterState = !isChecked
@@ -115,6 +118,11 @@ const ListPageSearch: React.FC = () => {
             handleOptionClick={handleOptionClick}
           />
         </div>
+        {loading && (
+          <Container align="center" justify="center" style={{ width: '100%', height: '100px' }}>
+            Loading...
+          </Container>
+        )}
         <CardList cards={posts} selectedCategory="" />
         <Pagination totalPages={totalPages} activePage={activePage} onPageClick={handlePageClick} />
       </div>

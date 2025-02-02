@@ -6,9 +6,11 @@ import { CardData } from '@/api/hooks/card/types'
 export const ScrollableCardList = ({
   cards,
   loadMore,
+  text,
 }: {
   cards: CardData[]
   loadMore: () => void
+  text: string
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null)
   const [isFetching, setIsFetching] = useState(false)
@@ -43,6 +45,7 @@ export const ScrollableCardList = ({
   return (
     <div className={styles.cardListContainer}>
       <div className={styles.cardList} ref={scrollRef}>
+        {(!cards || cards.length === 0) && <div>{text}</div>}
         {cards.map((card) => (
           <Card
             key={card.userPostId}
