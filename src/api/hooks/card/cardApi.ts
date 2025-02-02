@@ -5,6 +5,7 @@ import {
   SearchPostListParams,
 } from '@/api/hooks/card/types'
 import { CardList } from '@/api/hooks/card/types'
+import { apiInstance } from '@/provider/Auth/apiInstance'
 
 const myCardPath = `/api/v1/post/my/list`
 const categoryListPagePath = `/api/v1/post/list`
@@ -29,14 +30,6 @@ export const getMyCardList = async ({
   return response.data.result
 }
 
-// interface CategoryPostListParams {
-//   categoryId: number
-//   sortBy: string
-//   page: number
-//   size?: number
-//   isMinimumPeopleMet?: boolean
-// }
-
 export const getCategoryPostList = async ({
   categoryId,
   sortBy,
@@ -49,7 +42,7 @@ export const getCategoryPostList = async ({
       categoryId && categoryId !== 0
         ? `${categoryListPagePath}/${categoryId}`
         : categoryListPagePath
-    const response = await fetchInstance.get(path, {
+    const response = await apiInstance.get(path, {
       params: { sortBy, page, size, isMinimumPeopleMet },
     })
 
@@ -72,7 +65,7 @@ export const getSearchPostList = async ({
   isMinimumPeopleMet = false,
 }: SearchPostListParams): Promise<CardList> => {
   try {
-    const response = await fetchInstance.get(searchListPagePath, {
+    const response = await apiInstance.get(searchListPagePath, {
       params: { keyword, sortBy, page, size, isMinimumPeopleMet },
     })
 

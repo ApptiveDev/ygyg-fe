@@ -93,6 +93,7 @@ export const LoginPage = () => {
               width="416px"
               shadow="0 0 10px rgba(0, 0, 0, 0.15)"
               style={{ borderRadius: '8px' }}
+              type="button"
               onClick={() => navigate('/join')}
             >
               회원가입 하기
