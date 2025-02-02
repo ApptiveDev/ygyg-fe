@@ -2,7 +2,7 @@ import { Heading } from '@/components/atoms/Text/TextFactory'
 import { ScrollableCardList } from '@/components/common/CardList/ScrollCardList/ScrollCardList'
 import styles from './MyPage.module.scss'
 import { ScrollCardList } from '@/api/hooks/card/types'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { getMyCardList } from '@/api/hooks/card/cardApi'
 import Container from '@/components/atoms/Container/Container'
 
@@ -11,7 +11,6 @@ export const WrittenSection = () => {
   const [lastCursor, setLastCursor] = useState<number | null>(null)
   const [loading, setLoading] = useState(false)
   const [hasMore, setHasMore] = useState(true)
-  const isFirstRender = useRef(true)
 
   const fetchDetailData = async () => {
     if (loading || !hasMore) return
@@ -38,11 +37,6 @@ export const WrittenSection = () => {
   }
 
   useEffect(() => {
-    // if (isFirstRender.current) {
-    //   isFirstRender.current = false
-    //   return
-    // }
-
     if (!loading) {
       fetchDetailData()
     }
