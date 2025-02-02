@@ -40,10 +40,10 @@ export const CompleteSection = () => {
   }
 
   useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false
-      return
-    }
+    // if (isFirstRender.current) {
+    //   isFirstRender.current = false
+    //   return
+    // }
 
     if (!loading) {
       fetchDetailData()
