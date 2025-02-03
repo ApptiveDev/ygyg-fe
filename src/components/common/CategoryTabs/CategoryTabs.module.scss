@@ -12,6 +12,7 @@
   display: flex;
   flex-direction: column;
   line-height: 2.1rem;
+  min-width: 215px;
 }
 
 .category-title span:first-child {
@@ -50,7 +51,9 @@
   position: relative;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
 
-  transition: background-color 0.3s, color 0.3s, ;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
 }
 
 .category-item img {
@@ -71,12 +74,19 @@
   color: #ffffff;
   opacity: 1;
 }
-
 .category-item:hover span {
   color: #ffffff;
   opacity: 1;
 }
-
 .category-item:hover img {
   opacity: 0;
+}
+
+.category-item.active {
+  background-color: #d6282c;
+  color: #ffffff;
+}
+.category-item.active span {
+  color: #ffffff;
+  opacity: 1;
 }

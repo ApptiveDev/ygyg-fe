@@ -1,47 +1,59 @@
 import Container from '@/components/atoms/Container/Container'
 import { MainSection } from './MainSection'
-import sampleImg from '@/assets/images/sample_image.png'
 import InformationSection from './InformationSection'
 import MapSection from './MapSection'
 import CommentSection from './CommentSection'
-import { useRef, useState } from 'react'
-
-const exampleValue = {
-  writerUuid: 5,
-  thumbnail: sampleImg,
-  title: '게시글 제목',
-  author: '작성자',
-  link: 'http://localhost:5173/detail',
-  price: '20000',
-  meetAt: '2025-01-24 18:30',
-  min: 4,
-  max: 8,
-  amount: '1',
-  unit: 'kg',
-  description:
-    '설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.설명이 들어가는 칸입니다.',
-  current: 6,
-  place: '스타벅스 부산대정문점',
-  detailPlace: '1층 입구 앞',
-  latitude: '35.2314079',
-  longitude: '129.0843855',
-  category: '소스류',
-  isActivate: false,
-}
+import { useEffect, useRef, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { getPostData, postJoinPost } from '@/api/hooks/post/postApi'
+import { PostResponseData } from '@/api/hooks/post/types'
+import { useSetDeletedUser } from '@/hooks/useSetDeletedUser'
 
 export const DetailPage = () => {
-  const [isActivate, setIsActivate] = useState(exampleValue.isActivate)
+  const { userPostId } = useParams<{ userPostId: string }>()
+  const [postDetail, setPostDetail] = useState<PostResponseData>()
   const commentSectionRef = useRef<HTMLDivElement>(null)
-  const userId = 5
-  // const userId = Number(localStorage.getItem('userId'))
-  const isMyPosting = exampleValue.writerUuid === userId
+  const userUuid = localStorage.getItem('userUuid')
+  const [isMyPosting, setIsMyPosting] = useState(false)
+  const [writerNickname, setWriterNickname] = useState('')
+  const [deletedUser, setDeletedUser] = useState(false)
 
-  const handleActivate = () => {
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (userPostId) {
+      const fetchDetailData = async () => {
+        try {
+          const data = await getPostData(Number(userPostId))
+          setPostDetail(data)
+          if (data.userPostDataOutDto.writerUuid) {
+            setWriterNickname(data.userNickname)
+            setIsMyPosting(data.userPostDataOutDto.writerUuid === userUuid)
+          } else {
+            setWriterNickname(useSetDeletedUser())
+            setDeletedUser(true)
+            alert('탈퇴한 회원이 게시한 소분글입니다.')
+          }
+        } catch (error) {
+          console.error('Failed to fetch:', error)
+        }
+      }
+      fetchDetailData()
+    }
+  }, [userPostId])
+
+  const handleActivate = async () => {
     const confirmParticipation = window.confirm(
       '정말 소분에 참여하시겠습니까? 참여 시 철회할 수 없습니다.',
     )
     if (confirmParticipation) {
-      setIsActivate(true)
+      try {
+        await postJoinPost(Number(userPostId))
+        alert('성공적으로 소분에 참여되었습니다!')
+        window.location.reload()
+      } catch (error) {
+        alert('소분 참여에 실패하였습니다.')
+      }
     }
   }
 
@@ -58,44 +70,60 @@ export const DetailPage = () => {
     }
   }
 
+  const clickEdit = async () => {
+    if (window.confirm('소분글을 수정하시겠습니까?')) {
+      navigate(`/edit/${userPostId}`)
+    }
+  }
+
   return (
     <Container size="full-width" align="center" direction="column" style={{ marginTop: '60px' }}>
-      <MainSection
-        thumbnail={exampleValue.thumbnail}
-        title={exampleValue.title}
-        author={exampleValue.author}
-        link={exampleValue.link}
-        price={exampleValue.price}
-        amount={exampleValue.amount}
-        unit={exampleValue.unit}
-        description={exampleValue.description}
-        isActivate={isActivate}
-        isMyPosting={isMyPosting}
-        onGoToCommentSection={scrollToCommentSection}
-      />
-      <InformationSection
-        min={exampleValue.min}
-        max={exampleValue.max}
-        current={exampleValue.current}
-        price={exampleValue.price}
-        amount={exampleValue.amount}
-        unit={exampleValue.unit}
-      />
-      <MapSection
-        place={exampleValue.place}
-        detailPlace={exampleValue.detailPlace}
-        meetAt={exampleValue.meetAt}
-        category={exampleValue.category}
-        latitude={exampleValue.latitude}
-        longitude={exampleValue.longitude}
-      />
-      <div ref={commentSectionRef} />
-      <CommentSection
-        userId={userId}
-        isActivate={isActivate}
-        onActivate={handleActivate}
-        isMyPosting={isMyPosting}
-      />
+      {postDetail ? (
+        <>
+          <MainSection
+            userPostId={userPostId!}
+            imageUrl={postDetail.imageUrl}
+            title={postDetail.userPostDataOutDto.postTitle}
+            writerNickname={writerNickname}
+            link={postDetail.postDataOutDto.onlinePurchaseUrl}
+            price={String(postDetail.postDataOutDto.originalPrice)}
+            amount={String(postDetail.postDataOutDto.amount)}
+            unit={postDetail.unitName}
+            description={postDetail.postDataOutDto.description}
+            isActivate={postDetail.userParticipatingIn}
+            isMyPosting={isMyPosting}
+            onGoToCommentSection={scrollToCommentSection}
+            onClickEdit={clickEdit}
+            deletedUser={deletedUser}
+          />
+          <InformationSection
+            min={postDetail.postDataOutDto.minEngageCount}
+            max={postDetail.postDataOutDto.maxEngageCount}
+            current={postDetail.postDataOutDto.currentEngageCount}
+            price={String(postDetail.postDataOutDto.originalPrice)}
+            amount={String(postDetail.postDataOutDto.amount)}
+            unit={postDetail.unitName}
+          />
+          <MapSection
+            place={postDetail.postDataOutDto.portioningPlaceAddress}
+            detailPlace={postDetail.postDataOutDto.portioningPlaceDetailAddress}
+            meetAt={postDetail.userPostDataOutDto.portioningDate}
+            category={postDetail.categoryName}
+            latitude={String(postDetail.postDataOutDto.portioningPlaceLatitude)}
+            longitude={String(postDetail.postDataOutDto.portioningPlaceLongitude)}
+          />
+          <div ref={commentSectionRef} />
+          <CommentSection
+            userPostId={userPostId!}
+            userUuid={userUuid!}
+            isActivate={postDetail.userParticipatingIn}
+            onActivate={handleActivate}
+            isMyPosting={isMyPosting}
+          />
+        </>
+      ) : (
+        <Container style={{ height: '100px' }}>Loading...</Container>
+      )}
     </Container>
   )
 }

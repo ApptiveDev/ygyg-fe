@@ -18,13 +18,24 @@
   margin-bottom: 5px;
 }
 
+.deletedUser {
+  font-style: normal;
+  transform: skew(-10deg);
+  text-decoration: line-through;
+}
+
 .link {
   font-size: 16px;
   color: var(--gray-color3);
+  font-style: italic;
 }
 
 .infoText {
   color: var(--gray-color5);
+}
+
+.noLink {
+  color: var(--gray-color3);
 }
 
 //InformationSection

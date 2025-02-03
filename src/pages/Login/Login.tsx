@@ -1,12 +1,15 @@
 import Container from '@/components/atoms/Container/Container'
 import styles from './Login.module.scss'
-import logo from '@/assets/images/logo.svg'
 import { Heading, TextBody } from '@/components/atoms/Text/TextFactory'
 import InputText from '@/components/atoms/InputText/InputText'
 import Button from '@/components/common/Button/Button'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { AuthProvider } from '@/provider/Auth/authApi'
+import login1Image from '@/assets/images/login1_image.png'
+import login2Image from '@/assets/images/login2_image.png'
+import login3Image from '@/assets/images/login3_image.png'
+import login4Image from '@/assets/images/login4_image.png'
 
 export const LoginPage = () => {
   const [email, setEmail] = useState('')
@@ -44,14 +47,12 @@ export const LoginPage = () => {
   return (
     <Container size="full-width" align="center" direction="column">
       <Container
-        gap={30}
         align="center"
         direction="column"
-        style={{ marginTop: '60px', marginBottom: '40px' }}
+        style={{ marginTop: '130px', marginBottom: '40px' }}
       >
-        <img src={logo} className={styles.logo} />
         <Heading.XSmall weight={500}>
-          안녕하세요! 양념장 소분 서비스 <span className={styles.point}>야금야금</span>입니다.
+          안녕하세요! 양념장 소분 중개 플랫폼 <span className={styles.point}>야금야금</span>입니다.
         </Heading.XSmall>
       </Container>
       <form onSubmit={login}>
@@ -93,6 +94,7 @@ export const LoginPage = () => {
               width="416px"
               shadow="0 0 10px rgba(0, 0, 0, 0.15)"
               style={{ borderRadius: '8px' }}
+              type="button"
               onClick={() => navigate('/join')}
             >
               회원가입 하기
@@ -118,10 +120,10 @@ export const PictureArea = () => {
       <Heading.XSmall>실제 소분은 이렇게 이루어지고 있어요!</Heading.XSmall>
       <Container align="center" direction="column">
         <div className={styles.gridContainer}>
-          <img src="image1.jpg" alt="Image 1" className={styles.gridImage} />
-          <img src="image2.jpg" alt="Image 2" className={styles.gridImage} />
-          <img src="image3.jpg" alt="Image 3" className={styles.gridImage} />
-          <img src="image4.jpg" alt="Image 4" className={styles.gridImage} />
+          <img src={login1Image} alt="Image 1" className={styles.gridImage} />
+          <img src={login2Image} alt="Image 2" className={styles.gridImage} />
+          <img src={login3Image} alt="Image 3" className={styles.gridImage} />
+          <img src={login4Image} alt="Image 4" className={styles.gridImage} />
         </div>
       </Container>
     </Container>

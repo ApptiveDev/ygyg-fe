@@ -4,12 +4,15 @@ import sampleImg from '@/assets/images/sample_image.png'
 import { Heading, TextBody } from '@/components/atoms/Text/TextFactory'
 import useFormatPrice from '@/hooks/useFormatPrice'
 import Button from '@/components/common/Button/Button'
-import { useState } from 'react'
+import defaultImg from '@/assets/images/default_image.png'
+import { deletePost } from '@/api/hooks/post/postApi'
+import { useNavigate } from 'react-router-dom'
 
 interface MainProps {
-  thumbnail: string
+  userPostId: string
+  imageUrl: string | null
   title: string
-  author: string
+  writerNickname: string
   link: string
   price: string
   amount: string
@@ -18,12 +21,15 @@ interface MainProps {
   isActivate: boolean
   isMyPosting: boolean
   onGoToCommentSection: () => void
+  onClickEdit: () => void
+  deletedUser: boolean
 }
 
 export const MainSection = ({
-  thumbnail,
+  userPostId,
+  imageUrl,
   title,
-  author,
+  writerNickname,
   link,
   price,
   amount,
@@ -32,10 +38,30 @@ export const MainSection = ({
   isActivate,
   isMyPosting,
   onGoToCommentSection,
+  onClickEdit,
+  deletedUser,
 }: MainProps) => {
+  const navigate = useNavigate()
+
+  const clickDelete = async () => {
+    if (window.confirm('소분글을 삭제하시겠습니까?')) {
+      try {
+        await deletePost(Number(userPostId))
+        alert('소분글 삭제가 완료되었습니다!')
+        navigate('/')
+      } catch (error) {
+        alert('소분글 삭제에 실패하였습니다.')
+      }
+    }
+  }
+
   return (
     <Container size="full-width" align="flex-end" gap={50}>
-      <img src={thumbnail} alt="product-image" className={styles.productImage} />
+      <img
+        src={imageUrl ? imageUrl : defaultImg}
+        alt="product-image"
+        className={styles.productImage}
+      />
       <Container
         align="flex-start"
         direction="column"
@@ -49,14 +75,20 @@ export const MainSection = ({
       >
         <Container align="flex-start" direction="column" size="full-width" gap={15}>
           <Heading.Small>{title}</Heading.Small>
-          <TextBody.Small className={styles.author}>{author}</TextBody.Small>
+          <TextBody.Small className={`${styles.author} ${deletedUser ? styles.deletedUser : ''}`}>
+            {writerNickname}
+          </TextBody.Small>
           <Container size="full-width" justify="space-between" gap={11}>
             <TextBody.Small className={styles.smallTitle} weight={700}>
               구매 링크
             </TextBody.Small>
-            <a href={link} className={styles.link} target="_blank">
-              {link}
-            </a>
+            {link ? (
+              <a href={link} className={styles.link} target="_blank">
+                바로가기
+              </a>
+            ) : (
+              <TextBody.Medium className={styles.noLink}>등록된 링크가 없습니다.</TextBody.Medium>
+            )}
           </Container>
           <Container size="full-width" justify="space-between" gap={11}>
             <TextBody.Small className={styles.smallTitle} weight={700}>
@@ -79,7 +111,8 @@ export const MainSection = ({
               boxSizing: 'border-box',
               lineHeight: '1.5rem',
               flexGrow: '1',
-              maxHeight: isMyPosting ? '85px' : '145px',
+              minHeight: isMyPosting ? '80px' : '145px',
+              maxHeight: isMyPosting ? '80px' : '145px',
               overflowY: 'scroll',
             }}
           >
@@ -94,6 +127,7 @@ export const MainSection = ({
               height="45px"
               shadow="0 0 10px rgba(0,0,0,0.1)"
               style={{ fontSize: '16px', minWidth: '130px' }}
+              onClick={onClickEdit}
             >
               게시글 수정하기
             </Button>
@@ -103,6 +137,7 @@ export const MainSection = ({
               height="45px"
               shadow="0 0 10px rgba(0,0,0,0.1)"
               style={{ fontSize: '16px', minWidth: '130px' }}
+              onClick={clickDelete}
             >
               게시글 삭제하기
             </Button>

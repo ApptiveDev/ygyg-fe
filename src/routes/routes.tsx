@@ -8,6 +8,8 @@ import { LoginPage } from '@/pages/Login/Login'
 import { JoinPage } from '@/pages/Join/Join'
 import { DetailPage } from '@/pages/Detail/Detail'
 import { PolicyPage } from '@/pages/Policy/Policy'
+import { ListPageCategory } from '@/pages/ListPageCategory/ListPageCategory'
+import { ListPageSearch } from '@/pages/ListPageSearch/ListPageSearch'
 
 const router = createBrowserRouter([
   {
@@ -21,6 +23,9 @@ const router = createBrowserRouter([
     children: [
       { path: RouterPath.DETAIL, element: <DetailPage /> },
       { path: RouterPath.MYPAGE, element: <MyPage /> },
+      { path: RouterPath.LISTPAGE, element: <ListPageCategory /> },
+      { path: RouterPath.LISTPAGE_SEARCH, element: <ListPageSearch /> },
+      { path: RouterPath.LISTPAGE_CATEGORY, element: <ListPageCategory /> },
     ],
   },
   {
@@ -28,10 +33,11 @@ const router = createBrowserRouter([
     element: <Page floatingButton={false} />,
     children: [
       { path: RouterPath.POST, element: <PostPage /> },
+      { path: RouterPath.EDIT, element: <PostPage /> },
       { path: RouterPath.LOGIN, element: <LoginPage /> },
       { path: RouterPath.JOIN, element: <JoinPage /> },
-      { 
-        path: RouterPath.POLICY, 
+      {
+        path: RouterPath.POLICY,
         element: <PolicyPage />,
         children: [
           { path: RouterPath.PRIVACY_POLICY, element: <PolicyPage /> },

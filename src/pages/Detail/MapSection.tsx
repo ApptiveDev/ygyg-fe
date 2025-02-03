@@ -1,7 +1,7 @@
 import Container from '@/components/atoms/Container/Container'
 import { Heading, TextBody } from '@/components/atoms/Text/TextFactory'
 import { Map } from '@/components/features/Map/Map'
-import { DateForUse, TimeForUse } from '@/hooks/useFormatDateAndTime'
+import { DateForUse, DateFromData, TimeForUse, TimeFromData } from '@/hooks/useFormatDateAndTime'
 
 interface MapProps {
   place: string
@@ -13,11 +13,13 @@ interface MapProps {
 }
 
 function MapSection({ place, detailPlace, meetAt, category, latitude, longitude }: MapProps) {
-  const year = DateForUse(meetAt?.split(' ')[0]!)[0]
-  const month = DateForUse(meetAt?.split(' ')[0]!)[1]
-  const date = DateForUse(meetAt?.split(' ')[0]!)[2]
-  const hour = TimeForUse(meetAt?.split(' ')[1]!)[0]
-  const minute = TimeForUse(meetAt?.split(' ')[1]!)[1]
+  const meetingDate = DateFromData(meetAt)
+  const meetingTime = TimeFromData(meetAt)
+  const year = DateForUse(meetingDate).year
+  const month = DateForUse(meetingDate).month
+  const date = DateForUse(meetingDate).date
+  const hour = TimeForUse(meetingTime).hour
+  const minute = TimeForUse(meetingTime).minute
 
   return (
     <Container size="full-width" direction="column" align="center" style={{ marginBottom: '50px' }}>

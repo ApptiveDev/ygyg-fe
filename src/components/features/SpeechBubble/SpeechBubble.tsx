@@ -8,13 +8,20 @@ interface SpeechBubbleProps {
   text: string
   nickname: string
   createdAt: string
+  deletedUser?: boolean
 }
 
-function SpeechBubble({ fromMe = false, text, nickname, createdAt }: SpeechBubbleProps) {
-  const month = DateForUse(createdAt?.split(' ')[0]!)[1]
-  const date = DateForUse(createdAt?.split(' ')[0]!)[2]
-  const hour = TimeForUse(createdAt?.split(' ')[1]!)[0]
-  const minute = TimeForUse(createdAt?.split(' ')[1]!)[1]
+function SpeechBubble({
+  fromMe = false,
+  text,
+  nickname,
+  createdAt,
+  deletedUser = false,
+}: SpeechBubbleProps) {
+  const month = DateForUse(createdAt?.split('T')[0]!).month
+  const date = DateForUse(createdAt?.split('T')[0]!).date
+  const hour = TimeForUse(createdAt?.split('T')[1]!).hour
+  const minute = TimeForUse(createdAt?.split('T')[1]!).minute
 
   return fromMe ? (
     <div className={`${styles.speechBubble} ${styles.fromMe}`}>
@@ -30,7 +37,9 @@ function SpeechBubble({ fromMe = false, text, nickname, createdAt }: SpeechBubbl
     <div className={`${styles.speechBubble} ${styles.fromThem}`}>
       <div className={styles.text}>{text}</div>
       <Container justify="space-between">
-        <div className={styles.information}>{nickname}</div>
+        <div className={`${styles.information} ${deletedUser ? styles.deletedUser : ''}`}>
+          {nickname}
+        </div>
         <div className={styles.information}>
           {month}/{date} {hour}:{minute}
         </div>
