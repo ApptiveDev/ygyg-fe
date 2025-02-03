@@ -84,7 +84,7 @@ export const verifyAuthCode = async (userEmail: string, authCode: string): Promi
 export const deleteAccount = async (): Promise<boolean> => {
   try {
     const response = await fetchInstance.delete(deleteAccountPath)
-    const isSuccess = response.data.result.isSuccess
+    const isSuccess = response.data.isSuccess
     return isSuccess
   } catch (error) {
     console.error('회원탈퇴 실패:', error)

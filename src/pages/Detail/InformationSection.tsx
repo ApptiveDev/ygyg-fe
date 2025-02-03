@@ -1,7 +1,7 @@
 import Container from '@/components/atoms/Container/Container'
 import styles from './Detail.module.scss'
 import { TextBody } from '@/components/atoms/Text/TextFactory'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import useFormatPrice from '@/hooks/useFormatPrice'
 import useSetAmount from '@/hooks/useSetAmount'
 
@@ -16,6 +16,12 @@ interface InformationProps {
 
 function InformationSection({ min, max, current, price, amount, unit }: InformationProps) {
   const [currentLocal, setCurrentLocal] = useState(current)
+
+  useEffect(() => {
+    if (current == 0) {
+      setCurrentLocal(1)
+    }
+  }, [current])
 
   const calculatePrice = (people: number) => Math.floor(Number(price) / people)
 

@@ -33,6 +33,7 @@ export const DetailPage = () => {
             setWriterNickname(useSetDeletedUser())
             setDeletedUser(true)
             alert('탈퇴한 회원이 게시한 소분글입니다.')
+            navigate(-1)
           }
         } catch (error) {
           console.error('Failed to fetch:', error)

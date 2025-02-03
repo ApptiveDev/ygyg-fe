@@ -12,7 +12,6 @@ export const MyPage = () => {
   const name = localStorage.getItem('userName')
   const email = localStorage.getItem('userEmail')
 
-
   const navigate = useNavigate()
 
   const submitDelete = async () => {
@@ -20,10 +19,11 @@ export const MyPage = () => {
       if (window.confirm(`정말로 탈퇴하시겠어요?`)) {
         try {
           await deleteAccount()
-          alert('회원탈퇴 되었습니다.')
+          localStorage.clear()
+          alert('회원 탈퇴 되었습니다.')
           navigate('/')
         } catch (error) {
-          alert('회원탈퇴에 실패하였습니다.')
+          alert('회원 탈퇴에 실패하였습니다.')
         }
       }
     }
@@ -51,7 +51,9 @@ export const MyPage = () => {
       <WrittenSection />
       <JoinSection />
       <CompleteSection />
-      <div className={styles.delete}>회원 탈퇴하기</div>
+      <div className={styles.delete} onClick={submitDelete}>
+        회원 탈퇴하기
+      </div>
       <FloatingButton />
     </div>
   )
