@@ -376,11 +376,12 @@ export const PostPage = () => {
         </Heading.XSmall>
         <Container gap="7px" direction="column" style={{ width: '100%' }}>
           <InputText
-            placeholder="제목을 입력해주세요."
+            placeholder="제목을 입력해주세요. (20자 이내)"
             width="100%"
             value={title}
             onChange={handleInputChange('title', setTitle)}
             error={!!errors.title}
+            maxLength={20}
           />
           {errors.title && (
             <TextBody.XSmall style={{ color: 'red' }}>{errors.title}</TextBody.XSmall>
@@ -636,7 +637,7 @@ export const PostPage = () => {
         />
         <TextBody.Medium style={{ fontWeight: '500' }}>상세 위치 (선택)</TextBody.Medium>
         <InputText
-          placeholder="상세한 위치를 입력해주세요"
+          placeholder="상세한 위치를 입력해주세요. (15자 이내)"
           width="100%"
           value={detailPlace}
           onChange={(e) => setDetailPlace(e.target.value)}

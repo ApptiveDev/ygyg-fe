@@ -24,44 +24,31 @@ function useSetAmount({ amount, unit, people }: AmountProps): SetAmountResult {
 
     let numericAmount = Number(amount) / people
 
+    const convertUnit = (value: number, baseUnit: string, smallUnit: string, largeUnit: string) => {
+      if (value >= 1000) {
+        return { amount: parseFloat((value / 1000).toFixed(2)), unit: largeUnit }
+      }
+      return { amount: Math.floor(value), unit: smallUnit }
+    }
+
     if (unit === 'L' || unit === 'ml') {
-      if (unit === 'L') {
-        numericAmount = numericAmount * 1000
-        if (numericAmount >= 1000) {
-          setCalculatedAmount(Number((numericAmount / 1000).toFixed(2)))
-          setDisplayUnit('L')
-        } else {
-          setCalculatedAmount(Math.floor(numericAmount))
-          setDisplayUnit('ml')
-        }
-      } else {
-        if (numericAmount >= 1000) {
-          setCalculatedAmount(Number((numericAmount / 1000).toFixed(2)))
-          setDisplayUnit('L')
-        } else {
-          setCalculatedAmount(Math.floor(numericAmount))
-          setDisplayUnit('ml')
-        }
-      }
+      const { amount, unit: newUnit } = convertUnit(
+        unit === 'L' ? numericAmount * 1000 : numericAmount,
+        'ml',
+        'ml',
+        'L',
+      )
+      setCalculatedAmount(amount)
+      setDisplayUnit(newUnit)
     } else if (unit === 'kg' || unit === 'g') {
-      if (unit === 'kg') {
-        numericAmount = numericAmount * 1000
-        if (numericAmount >= 1000) {
-          setCalculatedAmount(Number((numericAmount / 1000).toFixed(2)))
-          setDisplayUnit('kg')
-        } else {
-          setCalculatedAmount(Math.floor(numericAmount))
-          setDisplayUnit('g')
-        }
-      } else {
-        if (numericAmount >= 1000) {
-          setCalculatedAmount(Number((numericAmount / 1000).toFixed(2)))
-          setDisplayUnit('kg')
-        } else {
-          setCalculatedAmount(Math.floor(numericAmount))
-          setDisplayUnit('g')
-        }
-      }
+      const { amount, unit: newUnit } = convertUnit(
+        unit === 'kg' ? numericAmount * 1000 : numericAmount,
+        'g',
+        'g',
+        'kg',
+      )
+      setCalculatedAmount(amount)
+      setDisplayUnit(newUnit)
     } else {
       setCalculatedAmount(numericAmount)
       setDisplayUnit(unit)
