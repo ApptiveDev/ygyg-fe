@@ -43,7 +43,7 @@ const Card = ({
 
   useEffect(() => {
     if (title.length > 19) {
-      setTitleForUse(title.slice(0, 17) + '...')
+      setTitleForUse(title.slice(0, 15) + '...')
     } else {
       setTitleForUse(title)
     }
