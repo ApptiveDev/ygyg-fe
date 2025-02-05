@@ -10,7 +10,7 @@ export const postPostData = async ({
   imageUrl,
   unitId,
   seasoningCategoryId,
-}: PostRequestData): Promise<boolean> => {
+}: PostRequestData): Promise<number> => {
   try {
     const response = await fetchInstance.post(postPath, {
       userPostDataInDto,
@@ -19,8 +19,8 @@ export const postPostData = async ({
       unitId,
       seasoningCategoryId,
     })
-    const isSuccess = response.data.isSuccess
-    return isSuccess
+    const userPostId = response.data.result.userPostId
+    return userPostId
   } catch (error) {
     if (axios.isAxiosError(error)) {
       if (error.response) {
