@@ -321,7 +321,7 @@ export const PostPage = () => {
         alert('소분글이 수정되었습니다!')
         navigate(`/detail/${userPostId}`)
       } else {
-        await postPostData({
+        const userPostId = await postPostData({
           userPostDataInDto: {
             postTitle: title,
             portioningDate: portioningDate,
@@ -343,7 +343,7 @@ export const PostPage = () => {
           seasoningCategoryId: useFormatSeasoningCategoryId(category!),
         })
         alert('소분글이 등록되었습니다!')
-        navigate('/')
+        navigate(`/detail/${userPostId}`)
       }
     } catch (error) {
       alert('소분글 등록에 실패하였습니다.')
