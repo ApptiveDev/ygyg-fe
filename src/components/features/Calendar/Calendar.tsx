@@ -30,14 +30,30 @@ export const Calendar = ({ selectedDateInfo, setSelectedDateInfo, setErrors }: C
     setStartDay(firstDayOfMonth)
   }, [year, month])
 
+  const checkDate = (year: number, month: number, date: number) => {
+    if (year < todayYear) {
+      return false
+    } else if (year == todayYear) {
+      if (month < todayMonth) {
+        return false
+      } else if (month == todayMonth) {
+        if (date <= todayDate) {
+          return false
+        } else return true
+      } else return true
+    } else return true
+  }
+
   const dayClick = (day: number) => {
-    setSelectedDateInfo({ ...selectedDateInfo, date: day.toString() })
-    if (setErrors) {
-      setErrors((prevErrors) => {
-        const newErrors = { ...prevErrors }
-        delete newErrors.selectedDate // 오류 제거
-        return newErrors
-      })
+    if (checkDate(selectedDateInfo.year, selectedDateInfo.month, day)) {
+      setSelectedDateInfo({ ...selectedDateInfo, date: day.toString() })
+      if (setErrors) {
+        setErrors((prevErrors) => {
+          const newErrors = { ...prevErrors }
+          delete newErrors.selectedDate // 오류 제거
+          return newErrors
+        })
+      }
     }
   }
 
