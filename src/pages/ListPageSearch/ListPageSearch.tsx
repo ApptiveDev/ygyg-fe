@@ -6,7 +6,7 @@ import Pagination from '@/components/atoms/Pagination/Pagination'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 import { getSearchPostList } from '@/api/hooks/card/cardApi'
-import { CardData } from '@/api/hooks/card/types'
+import { CardData, PageInfo } from '@/api/hooks/card/types'
 import Container from '@/components/atoms/Container/Container'
 
 const ListPageSearch: React.FC = () => {
@@ -15,10 +15,16 @@ const ListPageSearch: React.FC = () => {
   const [isChecked, setIsChecked] = useState<boolean>(searchParams.get('filter') === 'true')
   const [activePage, setActivePage] = useState<number>(Number(searchParams.get('page')) || 1)
   const [selected, setSelected] = useState<string>(searchParams.get('sort') || '최신 순')
-  const totalPages = 8
+  const [totalPages, setTotalPages] = useState<number>(0)
+  const [initialTotalItems, setInitialTotalItems] = useState<number>(0)
   const [isOpen, setIsOpen] = useState(false)
   const [posts, setPosts] = useState<CardData[]>([])
   const [loading, setLoading] = useState(false)
+  const [pageInfo, setPageInfo] = useState<PageInfo>({
+    totalItemsLength: 0,
+    currentPage: 1,
+    size: 9,
+  })
 
   const options = ['최신 순', '약속 시간 임박 순', '낮은 가격 순', '남은 인원 적은 순']
   const sortByMap: Record<string, string> = {
@@ -49,7 +55,7 @@ const ListPageSearch: React.FC = () => {
           isMinimumPeopleMet: isChecked,
         })
         setLoading(false)
-
+        setPageInfo(response.pageInfoDto)
         setPosts(response.items)
       } catch (error) {
         console.error('Error fetching posts:', error)
@@ -57,6 +63,19 @@ const ListPageSearch: React.FC = () => {
     }
     fetchPosts()
   }, [search, isChecked, selected])
+
+  useEffect(() => {
+    if (pageInfo.totalItemsLength > 0) {
+      if (initialTotalItems === 0 || search) {
+        setInitialTotalItems(pageInfo.totalItemsLength)
+        setTotalPages(Math.ceil(pageInfo.totalItemsLength / pageInfo.size))
+      }
+    }
+  }, [search, pageInfo.totalItemsLength, pageInfo.size])
+
+  useEffect(() => {
+    setActivePage(1)
+  }, [search])
 
   const handleToggle = () => {
     const newFilterState = !isChecked
@@ -107,7 +126,6 @@ const ListPageSearch: React.FC = () => {
         <span className={styles.commentMain}>
           '<span className={styles.searchWordText}>{search}</span>' 의 검색 결과
         </span>
-
         <div className={styles.toggleDropdownWrapper}>
           <Toggle isChecked={isChecked} onToggle={handleToggle} />
           <ListPageDropdown
@@ -124,7 +142,13 @@ const ListPageSearch: React.FC = () => {
           </Container>
         )}
         <CardList cards={posts} selectedCategory="" />
-        <Pagination totalPages={totalPages} activePage={activePage} onPageClick={handlePageClick} />
+        <Pagination
+          totalItemsLength={pageInfo.totalItemsLength}
+          size={pageInfo.size}
+          activePage={activePage}
+          totalPages={totalPages}
+          onPageClick={handlePageClick}
+        />
       </div>
     </div>
   )
