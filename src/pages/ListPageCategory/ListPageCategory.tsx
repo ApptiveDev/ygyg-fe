@@ -1,29 +1,32 @@
-import styles from '@/pages/ListPageCategory/ListPageCategory.module.scss'
-import CategoryTab from '@/components/common/CategoryTabs/CategoryTabs'
-import CardList from '@/components/common/CardList/CardList/CardList'
-import Toggle from '@/components/atoms/Toggle/Toggle'
-import ListPageDropdown from '@/components/atoms/ListPageDropdown/ListPageDropdown'
-import Pagination from '@/components/atoms/Pagination/Pagination'
-import React, { useCallback, useEffect, useState } from 'react'
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import { getCategoryPostList } from '@/api/hooks/card/cardApi'
-import { CardData } from '@/api/hooks/card/types'
-import Container from '@/components/atoms/Container/Container'
+import styles from '@/pages/ListPageCategory/ListPageCategory.module.scss';
+import CategoryTab from '@/components/common/CategoryTabs/CategoryTabs';
+import CardList from '@/components/common/CardList/CardList/CardList';
+import Toggle from '@/components/atoms/Toggle/Toggle';
+import ListPageDropdown from '@/components/atoms/ListPageDropdown/ListPageDropdown';
+import Pagination from '@/components/atoms/Pagination/Pagination';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { getCategoryPostList } from '@/api/hooks/card/cardApi';
+import { CardData, PageInfo } from '@/api/hooks/card/types';
+import Container from '@/components/atoms/Container/Container';
 
 const ListPageCategory: React.FC = () => {
-  const { category } = useParams<{ category: string }>()
-  const [searchParams, setSearchParams] = useSearchParams()
-  const navigate = useNavigate()
-  const [isChecked, setIsChecked] = useState<boolean>(searchParams.get('filter') === 'true')
-  const [activePage, setActivePage] = useState<number>(Number(searchParams.get('page')) || 1)
-  const [selected, setSelected] = useState<string>(searchParams.get('sort') || '최신 순')
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(category || null)
-  const totalPages = 8
-  const [isOpen, setIsOpen] = useState(false)
-  const [posts, setPosts] = useState<CardData[]>([])
-  const [loading, setLoading] = useState(false)
+  const { category } = useParams<{ category: string }>();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const [isChecked, setIsChecked] = useState<boolean>(searchParams.get('filter') === 'true');
+  const [activePage, setActivePage] = useState<number>(Number(searchParams.get('page')) || 1);
+  const [selected, setSelected] = useState<string>(searchParams.get('sort') || '최신 순');
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(category || null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [posts, setPosts] = useState<CardData[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [pageInfo, setPageInfo] = useState<PageInfo>({ totalItemsLength: 0, currentPage: 1, size: 9 });
 
-  const options = ['최신 순', '약속 시간 임박 순', '낮은 가격 순', '남은 인원 적은 순']
+  const [totalPages, setTotalPages] = useState<number>(0);
+  const [initialTotalItems, setInitialTotalItems] = useState<number>(0); // ✅ 최초 totalItemsLength 저장
+
+  const options = ['최신 순', '약속 시간 임박 순', '낮은 가격 순', '남은 인원 적은 순'];
 
   const categoryMap: Record<string, number> = {
     etc: 1,
@@ -31,7 +34,7 @@ const ListPageCategory: React.FC = () => {
     sauce: 3,
     powder: 4,
     jam: 5,
-  }
+  };
 
   const categoryLabelMap: Record<string, string> = {
     liquid: '액체류',
@@ -39,27 +42,27 @@ const ListPageCategory: React.FC = () => {
     powder: '가루류',
     jam: '잼류',
     etc: '기타',
-  }
+  };
 
   const sortByMap: Record<string, string> = {
     '최신 순': 'latest',
     '약속 시간 임박 순': 'soonest',
     '낮은 가격 순': 'lowestPrice',
     '남은 인원 적은 순': 'lowestRemain',
-  }
+  };
 
   useEffect(() => {
     setSearchParams({
       sort: selected,
       filter: String(isChecked),
       page: String(activePage),
-    })
-  }, [selected, isChecked, activePage, setSearchParams])
+    });
+  }, [selected, isChecked, activePage, setSearchParams]);
 
   const fetchPosts = useCallback(async () => {
-    const categoryId = selectedCategory ? categoryMap[selectedCategory] : 0
-    const sortBy = sortByMap[selected] || 'latest'
-    setLoading(true)
+    const categoryId = selectedCategory ? categoryMap[selectedCategory] : 0;
+    const sortBy = sortByMap[selected] || 'latest';
+    setLoading(true);
     try {
       const response = await getCategoryPostList({
         categoryId: categoryId ?? undefined,
@@ -67,98 +70,93 @@ const ListPageCategory: React.FC = () => {
         page: activePage,
         size: 9,
         isMinimumPeopleMet: isChecked,
-      })
-      setLoading(false)
-      setPosts(response.items)
+      });
+      setLoading(false);
+      setPosts(response.items);
+      setPageInfo(response.pageInfoDto);
     } catch (error) {
-      console.error('Error fetching posts:', error)
+      console.error('Error fetching posts:', error);
     }
-  }, [selectedCategory, selected, activePage, isChecked])
+  }, [selectedCategory, selected, activePage, isChecked]);
 
   useEffect(() => {
-    fetchPosts()
-  }, [fetchPosts])
+    fetchPosts();
+  }, [fetchPosts]);
+
   useEffect(() => {
-    console.log('Fetched posts:', posts)
-  }, [posts])
+    console.log('Fetched posts:', posts);
+  }, [posts]);
+
+  // ✅ totalPages를 카테고리 변경 시 초기화, fetchPosts 실행 시 변경되지 않도록 함
+  useEffect(() => {
+    if (pageInfo.totalItemsLength > 0) {
+      if (initialTotalItems === 0 || selectedCategory) {
+        setInitialTotalItems(pageInfo.totalItemsLength);
+        setTotalPages(Math.ceil(pageInfo.totalItemsLength / pageInfo.size));
+      }
+    }
+  }, [selectedCategory, pageInfo.totalItemsLength, pageInfo.size]);
+
+  // ✅ 카테고리가 변경되면 activePage를 1로 초기화
+  useEffect(() => {
+    setActivePage(1);
+  }, [selectedCategory]);
 
   const handleToggle = () => {
-    const newFilterState = !isChecked
-    setIsChecked(newFilterState)
+    const newFilterState = !isChecked;
+    setIsChecked(newFilterState);
     setSearchParams({
       sort: selected,
       filter: String(newFilterState),
       page: String(activePage),
-    })
-  }
+    });
+  };
 
   const toggleDropdown = () => {
-    setIsOpen(!isOpen)
-  }
+    setIsOpen(!isOpen);
+  };
 
   const handleOptionClick = (option: string) => {
-    setSelected(option)
-    setIsOpen(false)
+    setSelected(option);
+    setIsOpen(false);
     setSearchParams({
       sort: option,
       filter: String(isChecked),
       page: String(activePage),
-    })
-  }
+    });
+  };
 
   const handlePageClick = (page: number) => {
-    setActivePage(page)
-    console.log(`선택된 페이지: ${page}`)
+    setActivePage(page);
+
     setSearchParams({
       sort: selected,
       filter: String(isChecked),
       page: String(page),
-    })
-  }
+    });
+
+    navigate(
+      selectedCategory
+        ? `/list/category/${selectedCategory}?sort=${selected}&filter=${isChecked}&page=${page}`
+        : `/list?sort=${selected}&filter=${isChecked}&page=${page}`,
+      { replace: true }
+    );
+  };
 
   const handleCategorySelect = (categoryName: string) => {
     if (selectedCategory === categoryName) {
-      setSelectedCategory(null)
+      setSelectedCategory(null);
     } else {
-      setSelectedCategory(categoryName)
+      setSelectedCategory(categoryName);
     }
-  }
-
-  useEffect(() => {
-    if (!selectedCategory || selectedCategory === '0') {
-      navigate(`/list?sort=${selected}&filter=${isChecked}&page=${activePage}`, { replace: true })
-    } else {
-      navigate(
-        `/list/category/${selectedCategory}?sort=${selected}&filter=${isChecked}&page=${activePage}`,
-        { replace: true },
-      )
-    }
-  }, [selectedCategory, selected, isChecked, activePage, navigate])
-
-  useEffect(() => {
-    const sort = searchParams.get('sort') || '최신 순'
-    const filter = searchParams.get('filter') === 'true'
-    const page = Number(searchParams.get('page')) || 1
-
-    setSelected(sort)
-    setIsChecked(filter)
-    setActivePage(page)
-  }, [category, searchParams])
-
-  const displayedCategory = selectedCategory
-    ? categoryLabelMap[selectedCategory] || selectedCategory
-    : ''
+  };
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.header}>
         <span className={styles.comment}>카테고리 선택하기</span>
         <div className={styles.wrapper}>
-          <CategoryTab
-            showText={false}
-            initialSelected={category}
-            onCategorySelect={handleCategorySelect}
-          />
+          <CategoryTab showText={false} initialSelected={category} onCategorySelect={handleCategorySelect} />
         </div>
       </div>
 
@@ -166,8 +164,7 @@ const ListPageCategory: React.FC = () => {
         <span className={styles.commentMain}>
           {selectedCategory ? (
             <>
-              '<span className={styles.selectedCategoryText}>{displayedCategory}</span>' 소분 게시글
-              목록
+              '<span className={styles.selectedCategoryText}>{categoryLabelMap[selectedCategory]}</span>' 소분 게시글 목록
             </>
           ) : (
             '양념장 소분 게시글 목록'
@@ -176,24 +173,16 @@ const ListPageCategory: React.FC = () => {
 
         <div className={styles.toggleDropdownWrapper}>
           <Toggle isChecked={isChecked} onToggle={handleToggle} />
-          <ListPageDropdown
-            isOpen={isOpen}
-            selected={selected}
-            options={options}
-            toggleDropdown={toggleDropdown}
-            handleOptionClick={handleOptionClick}
-          />
+          <ListPageDropdown isOpen={isOpen} selected={selected} options={options} toggleDropdown={toggleDropdown} handleOptionClick={handleOptionClick} />
         </div>
-        {loading && (
-          <Container align="center" justify="center" style={{ width: '100%', height: '100px' }}>
-            Loading...
-          </Container>
-        )}
+
+        {loading && <Container align="center" justify="center" style={{ width: '100%', height: '100px' }}>Loading...</Container>}
         <CardList cards={posts} selectedCategory={selectedCategory ?? '0'} />
-        <Pagination totalPages={totalPages} activePage={activePage} onPageClick={handlePageClick} />
+
+        <Pagination totalItemsLength={pageInfo.totalItemsLength} size={pageInfo.size} activePage={activePage} totalPages={totalPages} onPageClick={handlePageClick} />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export { ListPageCategory }
+export { ListPageCategory };
