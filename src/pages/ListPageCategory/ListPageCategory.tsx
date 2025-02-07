@@ -91,11 +91,6 @@ const ListPageCategory: React.FC = () => {
     console.log('Fetched posts:', posts)
   }, [posts])
 
-  useEffect(() => {
-    if (pageInfo.totalItemsLength > 0) {
-      setTotalPages(Math.ceil(pageInfo.totalItemsLength / pageInfo.size))
-    }
-  }, [selectedCategory, pageInfo.totalItemsLength, pageInfo.size])
 
   useEffect(() => {
     setActivePage(1)
@@ -149,6 +144,18 @@ const ListPageCategory: React.FC = () => {
       setSelectedCategory(categoryName)
     }
   }
+
+  useEffect(() => {
+    if (totalPages === 0 && pageInfo.totalItemsLength > 0) {
+      setTotalPages(Math.ceil(pageInfo.totalItemsLength / pageInfo.size))
+    }
+  }, [pageInfo.totalItemsLength, pageInfo.size])
+  
+  useEffect(() => {
+    if (activePage === 1) {
+      setTotalPages(Math.ceil(pageInfo.totalItemsLength / pageInfo.size))
+    }
+  }, [selectedCategory, pageInfo.totalItemsLength, pageInfo.size])
 
   return (
     <div className={styles.wrapper}>
